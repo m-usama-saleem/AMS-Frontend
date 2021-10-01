@@ -135,23 +135,23 @@ class AuthenticatedApp extends Component {
             {
                 label: 'Appointments', icon: 'fa fa-file', to: ROUTES.APPOINTMENT_LIST
             },
-            // {
-            //     label: 'Finance', icon: 'fa fa-file',
-            //     items: [
-            //         { label: 'Receivables', icon: 'fa fa-file-archive-o', to: ROUTES.FINANCE__RECEIVE },
-            //         { label: 'Payables', icon: 'fa fa-rss', to: ROUTES.FINANCE__PAY },
-            //     ]
-            // },
-            // {
-            //     label: 'Translators', icon: 'fa fa-users', to: ROUTES.TRANSLATOR_LIST
-            // },
-            // {
-            //     label: 'Users', icon: 'fa fa-users', roles: [ROLES.ADMIN],
-            //     items: [
-            //         { label: 'List', icon: 'fa fa-list', to: ROUTES.CLIENT_LIST },
-            //         { label: 'New', icon: 'fa fa-user-plus', to: ROUTES.CLIENT_ADD },
-            //     ]
-            // },
+            {
+                label: 'Finance', icon: 'fa fa-file',
+                items: [
+                    { label: 'Receivables', icon: 'fa fa-file-archive-o', to: ROUTES.FINANCE__RECEIVE },
+                    { label: 'Payables', icon: 'fa fa-rss', to: ROUTES.FINANCE__PAY },
+                ]
+            },
+            {
+                label: 'Translators', icon: 'fa fa-users', to: ROUTES.TRANSLATOR_LIST
+            },
+            {
+                label: 'Users', icon: 'fa fa-users', roles: [ROLES.ADMIN],
+                items: [
+                    { label: 'List', icon: 'fa fa-list', to: ROUTES.CLIENT_LIST },
+                    { label: 'New', icon: 'fa fa-user-plus', to: ROUTES.CLIENT_ADD },
+                ]
+            },
         ];
     }
 
