@@ -1,0 +1,39 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    font-size: $fontSize;
+    color: $textColor;
+    background-color: $bodyBgColor;
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    text-decoration: none;
+}
+
+.layout-wrapper {
+    padding: 0;
+    min-height: 100vh;
+}
+
+.ui-btns
+{
+    background: linear-gradient(to right, #0388E5 0%, #07BDF4 100%);;
+    color: #fff;
+}
+
+.ui-btns-download
+{
+    background: linear-gradient(to right, #f39b49 0%, #f49507 100%);;
+    color: #fff;
+}

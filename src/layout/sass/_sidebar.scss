@@ -1,0 +1,51 @@
+.layout-sidebar {
+    position: fixed;
+    width: 250px;
+    height: 100%;
+    z-index: 999;
+    overflow-y: auto;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    @include transition(left $transitionDuration);
+    @include shadow(0 0 6px 0 rgba(0, 0, 0, 0.16));
+
+    .layout-logo {
+        text-align: center;
+        margin-top: 10%;
+        margin-bottom: 10%;
+    }
+
+    .menuitem-badge {
+        display: inline-block;
+        margin-left: 4px;
+        font-size: 10px;
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        text-align: center;
+        color: $menuitemBadgeColor;
+        background-color: $menuitemBadgeBgColor;
+        @include border-radius(50%);
+    }
+}
+
+/* The emerging W3C standard
+   that is currently Firefox-only */
+   * {
+    scrollbar-width: thin;
+    scrollbar-color: #767c7c #e5cfd1;
+  }
+  
+  /* Works on Chrome/Edge/Safari */
+  *::-webkit-scrollbar {
+    width: 11px;
+  }
+  *::-webkit-scrollbar-track {
+    background: #e5cfd1;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: #767c7c;
+    border-radius: 20px;
+    border: 3px solid #e5cfd1;
+  }

@@ -1,0 +1,129 @@
+body {
+  background: rgb(201, 214, 236);
+  color: #fff;
+  font-family: arial, helvetica, sans-serif;
+  line-height: 1.4;
+  font-size: 0.6em;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css);
+
+.login-form-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  width: 370px;
+  border-radius: 3px;
+  background: linear-gradient(to bottom, #d488f1 0%, #9519dd 100%);
+  overflow: hidden;
+  .denied & {
+    animation: shake 0.35s normal forwards ease-in-out;
+  }
+  fieldset {
+    border: none;
+  }
+  header {
+    background-color: #6a0883;
+    color: #ffffff;
+    display: block;
+    padding: 1.5em;
+    text-align: center;
+  }
+  .input-wrapper {
+    position: relative;
+    display: block;
+    margin: 1em auto;
+    border-bottom: 1px solid #fff;
+    border-radius: 3px;
+    width: 80%;
+    padding-left: 20px;
+    input {
+      width: 100%;
+      line-height: 2;
+      background-color: transparent;
+      border: none;
+      padding: 0.6em 0.5em;
+      color: rgb(0, 0, 0);
+      outline: 0;
+      &::-webkit-input-placeholder,
+      &::-moz-placeholder,
+      &:-ms-input-placeholder {
+        color: #ffffff;
+      }
+    }
+    &:before {
+      font-family: FontAwesome;
+      position: absolute;
+      display: inline-block;
+      top: 9px;
+      left: 8px;
+      font-size: 10px;
+      color: #fff;
+    }
+    &:nth-child(1):before {
+      content: "\f007";
+    }
+    &:nth-child(2):before {
+      content: "\f023";
+    }
+    &:focus {
+      background-color: transparent;
+    }
+  }
+  button {
+    outline: 0;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    background: linear-gradient(to right, #c1f82a 0%, #04833d 100%);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    width: 175px;
+    padding: 0.8em 0;
+    margin: 2em auto;
+    display: block;
+    border-top: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+    &:hover {
+      border-bottom-color: darken(#0388e5, 25);
+    }
+  }
+}
+
+@keyframes shake {
+  0% {
+    margin-left: 0;
+  }
+  12% {
+    margin-left: 0;
+  }
+  25% {
+    margin-left: -10px;
+  }
+  50% {
+    margin-left: 10px;
+  }
+  75% {
+    margin-left: -10px;
+  }
+  87% {
+    margin-left: 0;
+  }
+  100% {
+    margin-left: 0;
+  }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-internal-autofill-selected {
+  background: transparent !important;
+}
