@@ -181,7 +181,7 @@ class AuthenticatedApp extends Component {
     }
 
     render() {
-        const logo = this.state.layoutColorMode === 'dark' ? 'assets/layout/images/olympianLogoPNG.png' : 'assets/layout/images/olympianLogoPNG.png';
+        const logo = this.state.layoutColorMode === 'dark' ? '../../../assets/Qureshi-01.png' : '../../../assets/Qureshi-01.png';
 
         const wrapperClass = classNames('layout-wrapper', {
             'layout-overlay': this.state.layoutMode === 'overlay',
@@ -206,7 +206,7 @@ class AuthenticatedApp extends Component {
 
                 <div ref={(el) => this.sidebar = el} className={sidebarClassName} onClick={this.onSidebarClick}>
                     <div className="layout-logo" >
-                        <img width='55%' alt="Logo" src={logo} />
+                        <img width='80%' alt="Logo" src={logo} />
                     </div>
                     <AppProfile />
                     <AppMenu model={this.menu} onMenuItemClick={this.onMenuItemClick} />

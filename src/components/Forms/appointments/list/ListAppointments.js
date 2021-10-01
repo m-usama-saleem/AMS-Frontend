@@ -301,28 +301,55 @@ class ListAppointments extends Component {
         this.setState({ StartDate: date })
     }
 
+    editProduct(product) {
+        // this.setState({
+        //     product: { ...product },
+        //     productDialog: true
+        // });
+    }
+
+    confirmDeleteProduct(product) {
+        // this.setState({
+        //     product,
+        //     deleteProductDialog: true
+        // });
+    }
+
+    deleteProduct() {
+        // let products = this.state.products.filter(val => val.id !== this.state.product.id);
+        // this.setState({
+        //     products,
+        //     deleteProductDialog: false,
+        //     product: this.emptyProduct
+        // });
+        // this.toast.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+    }
+
+    actionBodyTemplate(rowData) {
+        return (
+            <React.Fragment>
+                <Button icon="pi pi-pencil" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-success p-mr-2" onClick={() => this.editProduct(rowData)} />
+                <Button icon="pi pi-trash" style={{ float: 'right' }} className="p-button-rounded p-button-danger" onClick={() => this.confirmDeleteProduct(rowData)} />
+            </React.Fragment>
+        );
+    }
+
     render() {
         var { disableFields, disableDeleteButton, disableApproveButton } = this.state
         var header;
         let dialogFooter;
 
-        header = <div className="p-sm-12 p-md-6 p-lg-6" style={{ textAlign: 'left', display: 'flex' }}>
-            <div className="p-sm-6 p-md-3 p-lg-3">
+        header = <div className="row">
+            <div className="col-sm-6 col-md-4 col-lg-4">
+                <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Search" size="20" />
+            </div>
+            <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
                 <Button className="p-button-info" icon="pi pi-plus" iconPos="left" label="Add"
                     onClick={(e) => this.setState({ displayCreateDialog: true })} />
             </div>
-            <div className="p-sm-6 p-md-3 p-lg-3">
-                <Button className="p-button-danger" icon="pi pi-trash" iconPos="left" label="Delete"
-                    disabled={disableDeleteButton} onClick={(e) => this.showDeleteModal()} />
-            </div>
+
         </div>
-        const cities = [
-            { name: 'New York', code: 'NY' },
-            { name: 'Rome', code: 'RM' },
-            { name: 'London', code: 'LDN' },
-            { name: 'Istanbul', code: 'IST' },
-            { name: 'Paris', code: 'PRS' }
-        ];
+
         return (
             <div>
                 <Growl ref={(el) => this.growl = el}></Growl>
@@ -331,16 +358,23 @@ class ListAppointments extends Component {
                         <h1>Appointments List</h1>
                         <div className="p-grid" style={{ marginTop: '8px' }} ></div>
                         <div className="content-section implementation">
-                            <DataTable header={header} value={this.state.AllAppointments} paginator={this.state.isLoading === false} rows={15}
+                            <DataTable ref={(el) => this.dt = el}
+                                header={header} value={this.state.AllAppointments}
+                                // paginator={this.state.isLoading === false} rows={15}
                                 onRowDoubleClick={this.dblClickAppointment} responsive={true} selectionMode="single"
-                                selection={this.state.selectedAppointment} onSelectionChange={e => this.setState({ selectedAppointment: e.value })}
-                                resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/
-                                onRowClick={e => this.onAppointmentRowSelect(e)} sortField="appointmentDate" sortOrder={1}>
-                                <Column field="appointmentId" header="Appointment ID" filter={true} filterPlaceholder="search by name" />
-                                <Column field="appointmentDate" header="Appointment Date" filter={true} sortable={true} />
-                                <Column field="translatorName" value="Translator" header="Site Address" filter={true} filterPlaceholder="search by keyword" />
-                                <Column field="institutionName" header="Institution" filter={true} sortable={true} />
-                                <Column field="type" header="Type" filter={true} filterPlaceholder="search by type" />
+                                selection={this.state.selectedAppointment}
+                                onSelectionChange={e => this.setState({ selectedAppointment: e.value })}
+                                resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/ globalFilter={this.state.globalFilter}
+                                onRowClick={e => this.onAppointmentRowSelect(e)} sortField="appointmentDate" sortOrder={1}
+                                paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
+                                dataKey="id"
+                            >
+                                <Column field="appointmentId" header="Appointment ID" sortable={true} />
+                                <Column field="appointmentDate" header="Appointment Date" sortable={true} />
+                                <Column field="translatorName" header="Translator" sortable={true} />
+                                <Column field="institutionName" header="Institution" sortable={true} />
+                                <Column field="type" header="Type" sortable={true} />
+                                <Column header="Action" body={this.actionBodyTemplate}></Column>
                             </DataTable>
 
                             <div className="p-col-12 p-sm-12 p-md-12 p-lg-12" style={{ paddingTop: '20px' }}>
