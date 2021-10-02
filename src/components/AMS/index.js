@@ -19,13 +19,13 @@ import 'primeflex/primeflex.css';
 import '../../layout/layout.scss'
 import './App.scss';
 
-import AddEmployee from '../Employees/Add';
-import EmployeeList from '../Employees/List';
-import AddClient from '../Client/Add';
-import ClientList from '../Client/List';
+import { AuthUserContext } from '../Session';
 import Appointments from '../Forms/appointments/add/Appointments';
 import ListAppointments from '../Forms/appointments/list/ListAppointments';
-import { AuthUserContext } from '../Session';
+
+import InstitutiontList from '../Institutions';
+import TranslatorList from '../Translators';
+import AppUsers from '../AppUsers';
 
 const App = (props) => (
     <div>
@@ -146,11 +146,10 @@ class AuthenticatedApp extends Component {
                 label: 'Translators', icon: 'fa fa-users', to: ROUTES.TRANSLATOR_LIST
             },
             {
-                label: 'Users', icon: 'fa fa-users', roles: [ROLES.ADMIN],
-                items: [
-                    { label: 'List', icon: 'fa fa-list', to: ROUTES.CLIENT_LIST },
-                    { label: 'New', icon: 'fa fa-user-plus', to: ROUTES.CLIENT_ADD },
-                ]
+                label: 'Institutions', icon: 'fa fa-users', to: ROUTES.INSTITUTION_LIST
+            },
+            {
+                label: 'Users', icon: 'fa fa-users', to: ROUTES.USER_LIST
             },
         ];
     }
@@ -218,10 +217,11 @@ class AuthenticatedApp extends Component {
                     <Route path={ROUTES.APPOINTMENT_ADD} render={() => <Appointments />} />
                     <Route path={ROUTES.APPOINTMENT_LIST} render={() => <ListAppointments />} />
 
-                    <Route path={ROUTES.EMPLOYEE_ADD} component={AddEmployee} />
-                    <Route path={ROUTES.EMPLOYEE_LIST} component={EmployeeList} />
-                    <Route path={ROUTES.CLIENT_ADD} component={AddClient} />
-                    <Route path={ROUTES.CLIENT_LIST} component={ClientList} />
+                    <Route path={ROUTES.TRANSLATOR_LIST} component={TranslatorList} />
+                    <Route path={ROUTES.INSTITUTION_LIST} component={InstitutiontList} />
+                    <Route path={ROUTES.USER_LIST} component={AppUsers} />
+
+
                 </div>
 
                 {/* <AppFooter  /> */}

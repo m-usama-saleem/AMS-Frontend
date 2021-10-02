@@ -18,6 +18,7 @@ export const USER_ADD = '/admin/add'
 export const PASSWORD_FORGET = '/pw-forget';
 
 export const TRANSLATOR_LIST = '/translator/list';
+export const INSTITUTION_LIST = '/institution/list';
 export const APPOINTMENT_ADD = '/appointment/add';
 export const APPOINTMENT_LIST = '/appointment/list';
 

@@ -347,7 +347,6 @@ class ListAppointments extends Component {
                 <Button className="p-button-info" icon="pi pi-plus" iconPos="left" label="Add"
                     onClick={(e) => this.setState({ displayCreateDialog: true })} />
             </div>
-
         </div>
 
         return (
