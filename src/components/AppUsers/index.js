@@ -134,6 +134,7 @@ class AppUsers extends Component {
                 this.setState({ isLoading: false });
             })
     }
+
     editUser = () => {
         let user = {
             Id: this.state.selectedUserId,
@@ -148,7 +149,7 @@ class AppUsers extends Component {
             .EditAppUser(user)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'User Created' });
+                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'User Updated' });
                     var UsersList = this.state.users;
 
                     var ind = UsersList.findIndex(x => x.id == user.Id);

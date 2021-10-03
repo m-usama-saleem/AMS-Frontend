@@ -106,13 +106,14 @@ class InstitutionList extends Component {
     }
 
     saveUser = () => {
+        debugger
         let user = {
             Name: this.state.name,
             Email: this.state.email,
             Type: this.state.type,
             Address: this.state.address,
             CreatedAt: new Date(),
-            CreatedBy: "Usama"
+            CreatedBy: this.props.authUser.id
         }
         this.userSerivce
             .AddInstitution(user)
@@ -141,13 +142,13 @@ class InstitutionList extends Component {
             Email: this.state.email,
             Type: this.state.type,
             Address: this.state.address,
-            CreatedBy: "Usama"
+            CreatedBy: this.props.authUser.id
         }
         this.userSerivce
             .EditInstitution(user)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Instituition Created' });
+                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Instituition Updated' });
                     var UsersList = this.state.users;
 
                     var ind = UsersList.findIndex(x => x.id == user.Id);

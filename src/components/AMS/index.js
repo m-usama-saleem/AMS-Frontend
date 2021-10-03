@@ -196,7 +196,8 @@ class AuthenticatedApp extends Component {
         });
         return (
             <div className={wrapperClass} onClick={this.onWrapperClick}>
-                <AppTopbar onToggleMenu={this.onToggleMenu}
+                <AppTopbar authUser={this.props.authUser}
+                    onToggleMenu={this.onToggleMenu}
                     setLayoutColorModeDark={this.setLayoutColorModeDark}
                     setLayoutColorModeLight={this.setLayoutColorModeLight}
                     setLayoutModeOverlay={this.setLayoutModeOverlay}
@@ -207,19 +208,19 @@ class AuthenticatedApp extends Component {
                     <div className="layout-logo" >
                         <img width='80%' alt="Logo" src={logo} />
                     </div>
-                    <AppProfile />
+                    <AppProfile authUser={this.props.authUser} />
                     <AppMenu model={this.menu} onMenuItemClick={this.onMenuItemClick} />
                 </div>
 
                 <div className="layout-main">
                     <Route path={ROUTES.HOME_PAGE} component={HomePage} />
 
-                    <Route path={ROUTES.APPOINTMENT_ADD} render={() => <Appointments />} />
-                    <Route path={ROUTES.APPOINTMENT_LIST} render={() => <ListAppointments />} />
+                    <Route path={ROUTES.APPOINTMENT_ADD} render={() => <Appointments authUser={this.props.authUser} />} />
+                    <Route path={ROUTES.APPOINTMENT_LIST} render={() => <ListAppointments authUser={this.props.authUser} />} />
 
-                    <Route path={ROUTES.TRANSLATOR_LIST} component={TranslatorList} />
-                    <Route path={ROUTES.INSTITUTION_LIST} component={InstitutiontList} />
-                    <Route path={ROUTES.USER_LIST} component={AppUsers} />
+                    <Route path={ROUTES.TRANSLATOR_LIST} render={() => <TranslatorList authUser={this.props.authUser} />} />
+                    <Route path={ROUTES.INSTITUTION_LIST} render={() => <InstitutiontList authUser={this.props.authUser} />} />
+                    <Route path={ROUTES.USER_LIST} render={() => <AppUsers authUser={this.props.authUser} />} />
 
 
                 </div>
