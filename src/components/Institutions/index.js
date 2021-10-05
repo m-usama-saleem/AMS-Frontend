@@ -106,7 +106,6 @@ class InstitutionList extends Component {
     }
 
     saveUser = () => {
-        debugger
         let user = {
             Name: this.state.name,
             Email: this.state.email,
@@ -127,7 +126,6 @@ class InstitutionList extends Component {
                         displayCreateDialog: false
                     });
                     this.onReset();
-
                 }
             })
             .catch((error) => {
@@ -202,7 +200,7 @@ class InstitutionList extends Component {
         }
     }
 
-    onReset = (e) => {
+    onReset() {
         this.setState({ name: '', email: '', type: '', address: '', isTypeValid: true });
     }
 
@@ -217,6 +215,11 @@ class InstitutionList extends Component {
                 displayEditDialog: true,
             })
         }
+    }
+    AddNew() {
+        this.setState({ name: '', email: '', type: '', address: '', isTypeValid: true }, () => {
+            this.setState({ displayCreateDialog: true })
+        });
     }
 
     actionBodyTemplate(rowData) {
@@ -238,7 +241,7 @@ class InstitutionList extends Component {
             </div>
             <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
                 <Button className="p-button-info" icon="pi pi-plus" iconPos="left" label="Add"
-                    onClick={(e) => this.setState({ displayCreateDialog: true })} />
+                    onClick={() => this.AddNew()} />
             </div>
         </div>
 
@@ -298,10 +301,12 @@ class InstitutionList extends Component {
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Name" Type="text" IsRequired={true}
+                                                            Value={this.state.name}
                                                             onChange={(val) => this.setState({ name: val })} />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Email" Type="email" IsRequired={true}
+                                                            Value={this.state.email}
                                                             onChange={(val) => this.setState({ email: val })} />
                                                     </div>
                                                 </div>
@@ -323,6 +328,7 @@ class InstitutionList extends Component {
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <AMSInputField Label="Address" Type="text" IsRequired={true}
+                                                            Value={this.state.address}
                                                             onChange={(val) => this.setState({ address: val })} />
                                                     </div>
                                                 </div>
@@ -335,7 +341,7 @@ class InstitutionList extends Component {
                                                 <div className="row" style={{ marginTop: 15, justifyContent: 'right' }}>
                                                     <div className="col-sm-4 col-md-2 col-lg-2">
                                                         <span className="ui-float-label">
-                                                            <Button label="Reset" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset(e)} />
+                                                            <Button label="Reset" className="p-button-secondary " disabled={this.state.isLoading} onClick={() => this.onReset()} />
                                                         </span>
                                                     </div>
                                                     <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>

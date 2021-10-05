@@ -27,14 +27,14 @@ export class AppProfile extends Component {
                 {/* <div>
                     <img src="assets/layout/images/transparent-default.png" alt="" />
                 </div> */}
-                <button className="p-link layout-profile-link" onClick={this.onClick}>
+                {/* <button className="p-link layout-profile-link" onClick={this.onClick}>
                     <span className="username" style={{ marginRight: 20 }}>{this.props.authUser.name}</span>
                     <i className="pi pi-fw pi-cog" />
                 </button>
                 <ul className={classNames({ 'layout-profile-expanded': this.state.expanded })}>
-                    {/* <li><button className="p-link"><i className="pi pi-fw pi-inbox"/><span>Notifications</span><span className="menuitem-badge">2</span></button></li> */}
+                    <li><button className="p-link"><i className="pi pi-fw pi-inbox"/><span>Notifications</span><span className="menuitem-badge">2</span></button></li>
                     <li><button className="p-link" onClick={this.signOut}><i className="pi pi-fw pi-power-off" /><span>Logout</span></button></li>
-                </ul>
+                </ul> */}
             </div>
         );
     }

@@ -112,7 +112,7 @@ class AppUsers extends Component {
             Type: "Admin",
             Status: "Active",
             CreatedAt: new Date(),
-            CreatedBy: "Usama"
+            CreatedBy: this.props.authUser.id
         }
         this.userSerivce
             .AddAppUser(user)
@@ -143,7 +143,7 @@ class AppUsers extends Component {
             Type: "Admin",
             Status: "Active",
             Password: this.state.password,
-            CreatedBy: "Usama"
+            CreatedBy: this.props.authUser.id
         }
         this.userSerivce
             .EditAppUser(user)
@@ -203,7 +203,7 @@ class AppUsers extends Component {
         }
     }
 
-    onReset = (e) => {
+    onReset() {
         this.setState({ name: '', email: '', type: '', password: '' });
     }
 
@@ -231,6 +231,12 @@ class AppUsers extends Component {
         );
     }
 
+    AddNew() {
+        this.setState({ name: '', email: '', type: '', address: '', isTypeValid: true }, () => {
+            this.setState({ displayCreateDialog: true })
+        });
+    }
+
     render() {
         const { users, loading } = this.state;
         const header = <div className="row">
@@ -239,7 +245,7 @@ class AppUsers extends Component {
             </div>
             <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
                 <Button className="p-button-info" icon="pi pi-plus" iconPos="left" label="Add"
-                    onClick={(e) => this.setState({ displayCreateDialog: true })} />
+                    onClick={(e) => this.AddNew()} />
             </div>
         </div>
 
@@ -297,16 +303,19 @@ class AppUsers extends Component {
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Name" Type="text" IsRequired={true}
+                                                            Value={this.state.name}
                                                             onChange={(val) => this.setState({ name: val })} />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Email" Type="email" IsRequired={true}
+                                                            Value={this.state.email}
                                                             onChange={(val) => this.setState({ email: val })} />
                                                     </div>
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <AMSInputField Label="Password" Type="password" IsRequired={true}
+                                                            Value={this.state.password}
                                                             onChange={(val) => this.setState({ password: val })} />
                                                     </div>
                                                 </div>
@@ -319,7 +328,7 @@ class AppUsers extends Component {
                                                 <div className="row" style={{ marginTop: 15, justifyContent: 'right' }}>
                                                     <div className="col-sm-4 col-md-2 col-lg-2">
                                                         <span className="ui-float-label">
-                                                            <Button label="Reset" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset(e)} />
+                                                            <Button label="Reset" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset()} />
                                                         </span>
                                                     </div>
                                                     <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>

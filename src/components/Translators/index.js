@@ -113,7 +113,7 @@ class TranslatorList extends Component {
             Type: this.state.type,
             Language: this.state.SelectedLanguageName.value,
             CreatedAt: new Date(),
-            CreatedBy: "Usama"
+            CreatedBy: this.props.authUser.id
         }
         this.userSerivce
             .AddTranslator(user)
@@ -142,7 +142,7 @@ class TranslatorList extends Component {
             Email: this.state.email,
             Type: this.state.type,
             Language: this.state.SelectedLanguageName.value,
-            CreatedBy: "Usama"
+            CreatedBy: this.props.authUser.id
         }
         this.userSerivce
             .EditTranslator(user)
@@ -202,7 +202,7 @@ class TranslatorList extends Component {
         }
     }
 
-    onReset = (e) => {
+    onReset() {
         this.setState({ name: '', email: '', type: '', SelectedLanguageName: '', isTypeValid: true });
     }
     onLanguageSelected(obj) {
@@ -232,6 +232,11 @@ class TranslatorList extends Component {
             </React.Fragment>
         );
     }
+    AddNew() {
+        this.setState({ name: '', email: '', type: '', SelectedLanguageName: '', isTypeValid: true }, () => {
+            this.setState({ displayCreateDialog: true })
+        });
+    }
 
     render() {
         const { users, loading } = this.state;
@@ -241,7 +246,7 @@ class TranslatorList extends Component {
             </div>
             <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
                 <Button className="p-button-info" icon="pi pi-plus" iconPos="left" label="Add"
-                    onClick={(e) => this.setState({ displayCreateDialog: true })} />
+                    onClick={(e) => this.AddNew()} />
             </div>
         </div>
 
@@ -302,10 +307,12 @@ class TranslatorList extends Component {
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Name" Type="text" IsRequired={true}
+                                                            Value={this.state.name}
                                                             onChange={(val) => this.setState({ name: val })} />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Email" Type="email" IsRequired={true}
+                                                            Value={this.state.email}
                                                             onChange={(val) => this.setState({ email: val })} />
                                                     </div>
                                                 </div>
@@ -347,7 +354,7 @@ class TranslatorList extends Component {
                                                 <div className="row" style={{ marginTop: 15, justifyContent: 'right' }}>
                                                     <div className="col-sm-4 col-md-2 col-lg-2">
                                                         <span className="ui-float-label">
-                                                            <Button label="Reset" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset(e)} />
+                                                            <Button label="Reset" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset()} />
                                                         </span>
                                                     </div>
                                                     <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
