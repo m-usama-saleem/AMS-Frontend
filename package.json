@@ -26,6 +26,8 @@
     "react-transition-group": "^4.4.2",
     "recompose": "^0.30.0",
     "rxjs": "^7.3.0",
+    "js-file-download": "^0.4.12",
+    "jspdf": "^2.1.1",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

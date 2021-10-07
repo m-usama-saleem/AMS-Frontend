@@ -19,6 +19,8 @@ import Select from 'react-select'
 import "react-datepicker/dist/react-datepicker.css";
 import AppointmentService from '../../../../api/appointments/appointmentservice';
 import * as ROLES from '../../../../constants/roles';
+import AMSInputField from '../../../Common/AMSInputField';
+import { ListAppointmentType } from '../../../../constants/languages';
 
 const errorBox = {
     borderRadius: '3px', borderColor: 'rgba(242, 38, 19, 1)'
@@ -40,13 +42,8 @@ const INITIAL_STATE = {
     SelectedInstituteName: '',
     EntryDate: new Date(),
     AppointmentDate: '',
-    TypeNames: [],
+    Type: '',
     SelectedTypeName: '',
-    Tax: '',
-    Rate: '',
-    Hour: '',
-    Discount: '',
-    NetAmount: '',
     Attachments: '',
     files: [],
 
@@ -71,10 +68,10 @@ class ListAppointments extends Component {
         super(props);
         this.state = INITIAL_STATE;
         this.service = new AppointmentService();
+        this.actionBodyTemplate = this.actionBodyTemplate.bind(this);
     }
 
     getLists() {
-        // var role = this.props.authUser.roles;
         this.getAppointmentList();
         this.service.GetInstitutions().then(data => {
             this.setState({ AllInstitutions: data })
@@ -89,53 +86,40 @@ class ListAppointments extends Component {
         this.getLists();
     }
 
-    // getClientName() {
-    //     this.service.GetClients().then(data => {
-    //         this.setState({
-    //             ClientNames: data
-    //         })
-    //     });
-    // }
-
     getAppointmentList(id) {
         this.service.GetAll(id).then(data => {
             if (data && data !== "" && data.length > 0) {
-                // data.forEach(element => {
-                //     element.date = new Date(element.date).toDateString()
-                // });
                 this.setState({ AllAppointments: data })
             }
         })
             .catch(err => {
                 this.growl.show({ severity: 'error', summary: 'Error', detail: err });
             })
-
     }
 
     validateForm = () => {
         let error = "";
-        if (!this.state.StartDate || (this.state.StartDate && this.state.StartDate.toString().trim() === '')) {
+        if (!this.state.SelectedAppointmentDate || (this.state.SelectedAppointmentDate && this.state.SelectedAppointmentDate.toString().trim() === '')) {
             this.setState({ isAppointmentDateValid: false });
-            error += "Date cannot be empty \n";
+            error += "Appointment Date cannot be empty \n";
         } else { this.setState({ isAppointmentDateValid: true }); }
 
-        if (!this.state.SelectedClientName.userId || (this.state.SelectedClientName && this.state.SelectedClientName.userId &&
-            this.state.SelectedClientName.userId.trim() === '')) {
-            this.setState({ isSelectedClientNameValid: false });
-            error += "Client Name cannot be empty \n";
-        } else { this.setState({ isSelectedClientNameValid: true }); }
+        if (this.state.Type.trim() === '') {
+            this.setState({ isTypeValid: false });
+            error += "Type cannot be empty \n";
+        } else { this.setState({ isTypeValid: true }); }
 
-        if (this.state.SiteAddress.trim() === '') {
-            this.setState({ isSiteAddressValid: false });
-            error += "Site Address cannot be empty \n";
-        } else { this.setState({ isSiteAddressValid: true }); }
+        if (!this.state.SelectedInstituteName || this.state.SelectedInstituteName == undefined) {
+            this.setState({ isInstituteValid: false });
+            error += "Institute cannot be empty \n";
+        } else { this.setState({ isInstituteValid: true }); }
 
         if (error !== "") {
-            this.setState({ isValidForm: false, error: true });
+            this.setState({ error: true });
             return false;
         }
         else {
-            this.setState({ isValidForm: true, error: false });
+            this.setState({ error: false });
             return true;
         }
     }
@@ -143,13 +127,16 @@ class ListAppointments extends Component {
     resetForm = () => {
         this.setState({
             isUploading: '',
-            StartDate: '',
-            StartTime: '',
-            EndTime: '',
-            ClientNames: [],
-            SelectedClientName: '',
-            SiteAddress: '',
-            TimeDetails: '',
+
+            Id: 0,
+            AppointmentId: '',
+            SelectedTranslatorName: '',
+            SelectedInstituteName: '',
+            EntryDate: new Date(),
+            AppointmentDate: '',
+            SelectedTypeName: '',
+            Attachments: '',
+            files: [],
 
             isAppointmentDateValid: true,
             isAppointmentIdValid: true,
@@ -159,122 +146,157 @@ class ListAppointments extends Component {
             displayDeleteDialog: false,
             disableDeleteButton: true,
             disableApproveButton: true,
-            AllAppointments: [],
             displayCreateDialog: false
         }, () => {
-            this.getLists();
+            // this.getLists();
         })
     }
-
-    // Delete = () => {
-    //     var Obj = {
-    //         SysSerial: this.state.SecurityLogId,
-    //         ClientId: this.state.SelectedClientName.userId,                    //"1",
-    //         Date: this.state.StartDate,                                 //"2020/03/03",
-    //         EndTime: this.state.EndTime,                                //"2020/03/03",
-    //         SiteAddress: this.state.SiteAddress,                        //"abc",
-    //         StartTime: this.state.StartTime,                            //"2020/03/03",
-    //         TimeDetails: this.state.TimeDetails,                        //"abc"
-    //     }
-
-    //     try {
-    //         this.service.Delete(Obj).then(() => {
-    //             this.resetForm();
-    //             this.setState({
-    //                 displayDialog: false,
-    //                 displayDeleteDialog: false,
-    //                 disableDeleteButton: true,
-    //                 disableApproveButton: true
-    //             })
-    //         })
-    //     } catch (e) {
-    //         debugger;
-    //         this.growl.show({ severity: 'error', summary: 'Error', detail: 'Cannot Delete' });
-    //         this.setState({ isLoading: false });
-    //         console.log(e);
-    //     }
-    // }
 
     dblClickAppointment = (e) => {
-        console.log("e.data")
-        console.log(e.data)
-        this.setState({
-            displayDialog: true,
-            // StartDate: new Date(e.data.date),
-            // SelectedClientName: { userName: e.data.clientName, userId: e.data.clientId.toString() },
+        this.editMode(e.data)
+    }
 
-            AppointmentId: e.data.appointmentId,
-            AppointmentDate: e.data.appointmentDate,
-            TranslatorName: e.data.translatorName,
-            InstitutionName: e.data.institutionName,
-            Type: e.data.type,
+    onSaveAppointment() {
+        this.setState({ isLoading: true });
+        let result = this.validateForm();
+        if (result !== false) {
+            this.SaveAppointment();
+        }
+        else {
+            this.setState({ isLoading: false });
+        }
+    }
 
-            disableDeleteButton: false,
-            // SecurityLog: Object.assign({}, e.data)
-        });
+    SaveAppointment() {
+        const { AppointmentId, Type, SelectedTranslatorName, SelectedInstituteName, SelectedAppointmentDate } = this.state
+        let app = {
+            AppointmentId,
+            Type,
+            EntryDate: new Date(),
+            TranslatorId: SelectedTranslatorName.value,
+            TranslatorName: SelectedTranslatorName.label,
+            InstitutionId: SelectedInstituteName.value,
+            InstitutionName: SelectedInstituteName.label,
+            AppointmentDate: SelectedAppointmentDate,
+            Status: 'Pending',
+            CreatedBy: this.props.authUser.id
+        }
+
+        debugger
+        var filesArray = this.state.files;
+
+        if (filesArray && filesArray.length > 0) {
+
+            let f = new FormData();
+            f = new FormData();
+            filesArray.forEach(element => {
+                f.append("File[]", element)
+            });
+
+            this.service.UploadFile(f).then((fileName) => {
+                app.Attachments = fileName;
+
+                this.service.Add(app)
+                    .then((data) => {
+                        if (data.success == true) {
+                            var savedAppointment = data.appointment;
+                            savedAppointment.translatorName = app.TranslatorName;
+                            savedAppointment.institutionName = app.InstitutionName;
+
+                            this.setState({
+                                AllAppointments: [...this.state.AllAppointments, savedAppointment],
+                                isLoading: false,
+                                displayCreateDialog: false
+                            });
+
+                            this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Created' });
+                            this.resetForm();
+                        }
+                    })
+                    .catch((error) => {
+                        this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Appointment' });
+                        this.setState({ isLoading: false });
+                    })
+            })
+        }
+        else {
+            this.service.Add(app)
+                .then((data) => {
+                    if (data.success == true) {
+                        var savedAppointment = data.appointment;
+                        savedAppointment.translatorName = app.TranslatorName;
+                        savedAppointment.institutionName = app.InstitutionName;
+
+                        this.setState({
+                            AllAppointments: [...this.state.AllAppointments, savedAppointment],
+                            isLoading: false,
+                            displayCreateDialog: false
+                        });
+
+                        this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Created' });
+                        this.resetForm();
+                    }
+                })
+                .catch((error) => {
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Appointment' });
+                    this.setState({ isLoading: false });
+                })
+        }
 
     }
 
-    onClientSelected(name) {
-        this.setState({ SelectedClientName: name.value })
+    onEditAppointment() {
+        this.setState({ isLoading: true });
+        let result = this.validateForm();
+        if (result !== false) {
+            this.EditAppointment();
+        }
     }
 
-    // SaveEdit = (approve) => {
-    //     var validForm = this.validateForm();
-    //     if (validForm) {
+    EditAppointment() {
+        const { selectedAppointmentId, AppointmentId, Type, SelectedTranslatorName,
+            SelectedInstituteName, SelectedAppointmentDate, AttachmentFiles } = this.state
 
-    //         var Obj = {
-    //             SysSerial: this.state.SecurityLogId,
-    //             ClientId: this.state.SelectedClientName.userId,                    //"1",
-    //             Date: this.state.StartDate.toLocaleString(),                                 //"2020/03/03",
-    //             EndTime: this.state.EndTime,                                //"2020/03/03",
-    //             SiteAddress: this.state.SiteAddress,                        //"abc",
-    //             StartTime: this.state.StartTime,                            //"2020/03/03",
-    //             TimeDetails: this.state.TimeDetails,                        //"abc"
-    //         }
+        let app = {
+            Id: selectedAppointmentId,
+            AppointmentId,
+            Type,
+            EntryDate: new Date(),
+            TranslatorId: SelectedTranslatorName.value,
+            TranslatorName: SelectedTranslatorName.label,
+            InstitutionId: SelectedInstituteName.value,
+            InstitutionName: SelectedInstituteName.label,
+            AppointmentDate: SelectedAppointmentDate,
+            Status: 'Pending',
+            CreatedBy: this.props.authUser.id,
+            Attachments: AttachmentFiles
+        }
 
-    //         this.service
-    //             .Edit(Obj)
-    //             .then(() => {
-    //                 if (approve && approve === true) {
-    //                     this.growl.show({ severity: 'success', summary: 'Success', detail: 'Approved' });
-    //                 }
-    //                 else {
-    //                     this.growl.show({ severity: 'success', summary: 'Success', detail: 'Successfully Updated' });
-    //                 }
-    //                 this.setState({
-    //                     displayDialog: false,
-    //                     disableDeleteButton: true,
-    //                     disableApproveButton: true
-    //                 })
-    //                 this.resetForm();
-    //             })
-    //             .catch((error) => {
-    //                 this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating' });
-    //                 this.setState({ isLoading: false });
-    //             })
-    //     }
-    //     else {
+        this.service.Edit(app)
+            .then((data) => {
+                if (data.success == true) {
+                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Updated' });
+                    var editedAppointment = data.appointment;
+                    editedAppointment.translatorName = app.TranslatorName;
+                    editedAppointment.institutionName = app.InstitutionName;
 
-    //     }
-    // }
-    onAppointmentRowSelect(e) {
-        this.setState({
-            // StartDate: new Date(e.data.date),
-            // SelectedClientName: { userName: e.data.clientName, userId: e.data.clientId.toString() },
-            AppointmentId: e.data.appointmentId,
-            AppointmentDate: e.data.appointmentDate,
-            TranslatorName: e.data.translatorName,
-            InstitutionName: e.data.institutionName,
-            Type: e.data.type,
-            disableDeleteButton: false,
-        })
+                    var AllAppointments = this.state.AllAppointments;
+                    var ind = AllAppointments.findIndex(x => x.id == editedAppointment.id);
+                    AllAppointments[ind] = editedAppointment;
 
+                    this.setState({
+                        AllAppointments: AllAppointments,
+                        isLoading: false,
+                        displayEditDialog: false
+                    });
+                    this.resetForm();
+                }
+            })
+            .catch((error) => {
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Appointment' });
+                this.setState({ isLoading: false });
+            })
     }
-
-    // ApproveSecurityReport() {
-    //     this.SaveEdit(true);
-    // }
 
     // rowClass(data) {
     //     return {
@@ -292,52 +314,98 @@ class ListAppointments extends Component {
     }
 
     onInstitutionSelected(obj) {
-        this.setState({ SelectedClientName: obj })
+        this.setState({ SelectedInstituteName: obj })
     }
+
     onTranslatorSelected(obj) {
         this.setState({ SelectedTranslatorName: obj })
     }
-    setStartDate(date) {
-        this.setState({ StartDate: date })
+
+    setAppointmentDate(date) {
+        this.setState({ SelectedAppointmentDate: date })
     }
 
-    editProduct(product) {
-        // this.setState({
-        //     product: { ...product },
-        //     productDialog: true
-        // });
+    editMode(appointment) {
+        const { AllTranslators, AllInstitutions } = this.state
+        const transInd = AllTranslators.findIndex(x => x.value == appointment.translatorId)
+        const instInd = AllInstitutions.findIndex(x => x.value == appointment.institutionId)
+
+        if (appointment) {
+            this.setState({
+                selectedAppointmentId: appointment.id,
+
+                Id: appointment.id,
+                AppointmentId: appointment.appointmentId,
+                SelectedTranslatorName: AllTranslators[transInd],
+                SelectedInstituteName: AllInstitutions[instInd],
+                Type: appointment.type,
+                EntryDate: new Date(appointment.entryDate).toDateString(),
+                SelectedAppointmentDate: new Date(appointment.appointmentDate),
+                displayEditDialog: true,
+                AttachmentFiles: appointment.attachments
+            })
+        }
     }
 
-    confirmDeleteProduct(product) {
-        // this.setState({
-        //     product,
-        //     deleteProductDialog: true
-        // });
+    confirmDeleteAppointment(appointment) {
+        if (appointment != undefined && appointment != null) {
+            this.setState({
+                displayDeleteDialog: true,
+                selectedAppointmentId: appointment.id
+            })
+        }
     }
 
-    deleteProduct() {
-        // let products = this.state.products.filter(val => val.id !== this.state.product.id);
-        // this.setState({
-        //     products,
-        //     deleteProductDialog: false,
-        //     product: this.emptyProduct
-        // });
-        // this.toast.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+    onDeleteAppointment() {
+        var id = this.state.selectedAppointmentId;
+        this.setState({ loadingModel: true });
+        if (id != undefined && id != null && id != 0) {
+            this.service.Delete(id).then(() => {
+                var list = this.state.AllAppointments.filter(x => x.id !== id)
+                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Deleted Successfully' });
+                this.setState({
+                    AllAppointments: [...list],
+                    displayDeleteDialog: false,
+                    loadingModel: false,
+                    error: ''
+                })
+            })
+                .catch(error => {
+                    this.setState({ loading: false, error: error, displayDeleteDialog: false, })
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error Deleting Appointment' });
+                });
+        }
     }
 
     actionBodyTemplate(rowData) {
         return (
             <React.Fragment>
-                <Button icon="pi pi-pencil" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-success p-mr-2" onClick={() => this.editProduct(rowData)} />
-                <Button icon="pi pi-trash" style={{ float: 'right' }} className="p-button-rounded p-button-danger" onClick={() => this.confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-pencil" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-success p-mr-2"
+                    onClick={() => this.editMode(rowData)} />
+                <Button icon="pi pi-trash" style={{ float: 'right' }} className="p-button-rounded p-button-danger"
+                    onClick={() => this.confirmDeleteAppointment(rowData)} />
             </React.Fragment>
         );
+    }
+
+    onFileSelected = (event) => {
+        debugger
+        const { target: { files } } = event;
+        const filesToStore = [];
+
+        [...files].map(file => {
+            filesToStore.push(file)
+        });
+
+        this.setState({ files: filesToStore });
+    }
+    downloadFile(name) {
+        this.service.downloadFile(name);
     }
 
     render() {
         var { disableFields, disableDeleteButton, disableApproveButton } = this.state
         var header;
-        let dialogFooter;
 
         header = <div className="row">
             <div className="col-sm-6 col-md-4 col-lg-4">
@@ -348,6 +416,24 @@ class ListAppointments extends Component {
                     onClick={(e) => this.setState({ displayCreateDialog: true })} />
             </div>
         </div>
+
+        var AppointmentType = ListAppointmentType.map(obj =>
+            <div key={obj.value} style={{ display: 'inline-block' }}>
+                <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">{obj.value}</span>
+                <RadioButton value={obj.value} name="Type"
+                    onChange={(e) => this.setState({ Type: e.value })}
+                    checked={this.state.Type === obj.value} />
+            </div>
+        )
+
+        var DownloadPhotos;
+        if (this.state.AttachmentFiles && this.state.AttachmentFiles != "" && this.state.AttachmentFiles.split(',').length > 0) {
+            DownloadPhotos = this.state.AttachmentFiles.split(',').map((x, ind) =>
+                <div key={ind} >
+                    <span onClick={() => { this.downloadFile(x) }} style={{ color: 'blue', cursor: 'pointer' }}>{x.split('_')[1]}</span>
+                </div>
+            )
+        }
 
         return (
             <div>
@@ -360,11 +446,12 @@ class ListAppointments extends Component {
                             <DataTable ref={(el) => this.dt = el}
                                 header={header} value={this.state.AllAppointments}
                                 // paginator={this.state.isLoading === false} rows={15}
-                                onRowDoubleClick={this.dblClickAppointment} responsive={true} selectionMode="single"
+                                onRowDoubleClick={this.dblClickAppointment} responsive={true}
                                 selection={this.state.selectedAppointment}
                                 onSelectionChange={e => this.setState({ selectedAppointment: e.value })}
-                                resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/ globalFilter={this.state.globalFilter}
-                                onRowClick={e => this.onAppointmentRowSelect(e)} sortField="appointmentDate" sortOrder={1}
+                                resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/
+                                globalFilter={this.state.globalFilter}
+                                sortField="appointmentDate" sortOrder={1}
                                 paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                                 dataKey="id"
                             >
@@ -390,14 +477,14 @@ class ListAppointments extends Component {
                                 modal={true} onHide={() => this.setState({ displayDeleteDialog: false })}>
                                 {
                                     <div className="ui-dialog-buttonpane p-clearfix">
-                                        <Button label="Yes" style={{ width: 100 }} className="p-button-danger" onClick={() => this.Delete()} />
+                                        <Button label="Yes" style={{ width: 100 }} className="p-button-danger" onClick={() => this.onDeleteAppointment()} />
                                         <Button label="No" style={{ width: 100, marginLeft: 5 }} className="p-button-primary" onClick={() => this.setState({ displayDeleteDialog: false })} />
                                     </div>
                                 }
                             </Dialog>
 
-                            <Dialog visible={this.state.displayDialog} style={{ width: '60vw' }} header="Appointment Information"
-                                modal={true} footer={dialogFooter} onHide={() => this.setState({ displayDialog: false })}
+                            <Dialog visible={this.state.displayEditDialog} style={{ width: '60vw' }} header="Appointment Information"
+                                modal={true} onHide={() => this.setState({ displayEditDialog: false })}
                                 contentStyle={{ maxHeight: "550px", overflow: "auto" }}>
                                 {
                                     <div className="p-grid p-fluid">
@@ -406,46 +493,46 @@ class ListAppointments extends Component {
                                             <div className="p-grid" >
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Appointment ID <span style={{ color: 'red' }}>*</span></label>
-                                                            <InputText placeholderText="Unique Appointment ID" value={this.state.AppointmentId} type="text" size="30"
-                                                                onChange={(e) => this.setState({ AppointmentId: e.target.value })}
-                                                                style={this.state.isAppointmentIdValid === true ? normalBox : errorBox} />
-                                                        </span>
+                                                        <AMSInputField Label="Appointment ID" Type="text" IsRequired={true}
+                                                            Value={this.state.AppointmentId} PlaceholderText="Unique Appointment ID"
+                                                            onChange={(val) => this.setState({ AppointmentId: val })}
+                                                        />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                                         <span className="ui-float-label">
                                                             <label htmlFor="float-input">Date</label>
-                                                            <InputText placeholderText="Select Date" value={new Date().toDateString()} type="text" size="30" disabled={true} />
+                                                            <InputText placeholderText="Select Date" value={this.state.EntryDate}
+                                                                type="text" size="30" disabled={true} />
                                                         </span>
                                                     </div>
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Translator Name<span style={{ color: 'red' }}>*</span></label>
+                                                        <span className="ui-float-label"
+                                                            style={this.state.isInstituteValid === true ? {} : errorBoxForCheckBox}  >
+                                                            <label htmlFor="float-input">Translator Name <span style={{ color: 'red' }}>*</span></label>
                                                             <Select
                                                                 value={this.state.SelectedTranslatorName}
                                                                 onChange={(e) => this.onTranslatorSelected(e)}
                                                                 options={this.state.AllTranslators}
-                                                            />
+                                                                sty />
                                                         </span>
-
                                                     </div>
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <label htmlFor="float-input">Institution Name<span style={{ color: 'red' }}>*</span></label>
+                                                        <label htmlFor="float-input">Institution Name <span style={{ color: 'red' }}>*</span></label>
                                                         <Select
-                                                            value={this.state.SelectedInstitutionName}
+                                                            value={this.state.SelectedInstituteName}
                                                             onChange={(e) => this.onInstitutionSelected(e)}
-                                                            options={this.state.AllInstitutions}
-                                                        />
+                                                            options={this.state.AllInstitutions} />
                                                     </div>
                                                 </div>
                                                 <div className="row">
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                                         <span className="ui-float-label">
                                                             <label htmlFor="float-input">Appointment Date <span style={{ color: 'red' }}>*</span></label>
-                                                            <DatePicker placeholderText="Select Date" selected={this.state.StartDate} onChange={date => this.setStartDate(date)}
+                                                            <DatePicker dateFormat="dd/MM/yyyy" placeholderText="Select date for appointment"
+                                                                selected={this.state.SelectedAppointmentDate}
+                                                                onChange={date => this.setAppointmentDate(date)}
                                                                 className={this.state.isAppointmentDateValid === true ? "p-inputtext normalbox" : "p-inputtext errorBox"} />
                                                         </span>
                                                     </div>
@@ -453,58 +540,8 @@ class ListAppointments extends Component {
                                                         <span className="ui-float-label">
                                                             <label htmlFor="float-input">Type: <span style={{ color: 'red' }}>*</span></label>
                                                             <div style={this.state.isTypeValid === true ? {} : errorBoxForCheckBox}>
-                                                                <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">SCHREIBEN</span>
-                                                                <RadioButton value="SCHREIBEN" name="Type"
-                                                                    onChange={(e) => this.setState({ Type: e.value })}
-                                                                    checked={this.state.Type === 'SCHREIBEN'} />
-                                                                <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">SPRACHEN</span>
-                                                                <RadioButton value="SPRACHEN" name="Type"
-                                                                    onChange={(e) => this.setState({ Type: e.value })}
-                                                                    checked={this.state.Type === 'SPRACHEN'} />
+                                                                {AppointmentType}
                                                             </div>
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                                <h1>Payment Information</h1>
-                                                <div className="row">
-                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Tax</label>
-                                                            <InputText placeholderText="Tax" value={this.state.Tax} type="number" size="30"
-                                                                onChange={(e) => this.setState({ Tax: e.target.value })} />
-                                                        </span>
-                                                    </div>
-                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Rate</label>
-                                                            <InputText placeholderText="Rate" value={this.state.Rate} type="number" size="30"
-                                                                onChange={(e) => this.setState({ Rate: e.target.value })} />
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Hours</label>
-                                                            <InputText placeholderText="Hours" value={this.state.Hours} type="number" size="30"
-                                                                onChange={(e) => this.setState({ Hours: e.target.value })} />
-                                                        </span>
-                                                    </div>
-                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Discount</label>
-                                                            <InputText placeholderText="Discount" value={this.state.Discount} type="number" size="30"
-                                                                onChange={(e) => this.setState({ Discount: e.target.value })} />
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Net Payable</label>
-                                                            <InputText placeholderText="Net Payable" value={this.state.NetPayable} type="number" size="30"
-                                                                onChange={(e) => this.setState({ NetPayable: e.target.value })} />
                                                         </span>
                                                     </div>
                                                 </div>
@@ -516,6 +553,13 @@ class ListAppointments extends Component {
                                                         </div>
                                                     </span>
                                                 </div>
+                                                <div className=" p-col-12 p-sm-12 p-md-6 p-lg-6" style={{ marginBottom: 20 }}>
+                                                    <span className="ui-float-label">
+                                                        <label htmlFor="float-input">Download Attachments</label>
+                                                        <div>{DownloadPhotos}</div>
+                                                    </span>
+                                                </div>
+
 
                                                 <div className="p-col-12 p-sm-12 p-md-12 p-lg-12">
                                                     {this.state.isLoading === true ? <ProgressBar mode="indeterminate" style={{ height: '2px' }} /> : null}
@@ -525,7 +569,7 @@ class ListAppointments extends Component {
                                                 </div>
                                                 <div className="sm-4 md-2 lg-2">
                                                     <span className="ui-float-label" style={{ float: 'right' }}>
-                                                        <Button label="Create Appointment" className="ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onSaveAppointments(e)} />
+                                                        <Button label="Update Appointment" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditAppointment()} />
                                                     </span>
                                                 </div>
                                             </div>
@@ -535,7 +579,7 @@ class ListAppointments extends Component {
                             </Dialog>
 
                             <Dialog visible={this.state.displayCreateDialog} style={{ width: '60vw' }} header="Create New Appointment"
-                                modal={true} footer={dialogFooter} onHide={() => this.setState({ displayCreateDialog: false })}
+                                modal={true} onHide={() => this.setState({ displayCreateDialog: false })}
                                 contentStyle={{ maxHeight: "550px", overflow: "auto", }}>
                                 {
                                     <div className="p-grid p-fluid">
@@ -544,12 +588,9 @@ class ListAppointments extends Component {
                                             <div className="p-grid" >
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Appointment ID <span style={{ color: 'red' }}>*</span></label>
-                                                            <InputText placeholderText="Unique Appointment ID" value={this.state.AppointmentId} type="text" size="30"
-                                                                onChange={(e) => this.setState({ AppointmentId: e.target.value })}
-                                                                style={this.state.isAppointmentIdValid === true ? normalBox : errorBox} />
-                                                        </span>
+                                                        <AMSInputField Label="Appointment ID" Type="text" IsRequired={true}
+                                                            Value={this.state.AppointmentId} PlaceholderText="Unique Appointment ID"
+                                                            onChange={(val) => this.setState({ AppointmentId: val })} />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                                         <span className="ui-float-label">
@@ -573,7 +614,7 @@ class ListAppointments extends Component {
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <label htmlFor="float-input">Institution Name<span style={{ color: 'red' }}>*</span></label>
                                                         <Select
-                                                            value={this.state.SelectedInstitutionName}
+                                                            value={this.state.SelectedInstituteName}
                                                             onChange={(e) => this.onInstitutionSelected(e)}
                                                             options={this.state.AllInstitutions}
                                                         />
@@ -583,7 +624,9 @@ class ListAppointments extends Component {
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                                         <span className="ui-float-label">
                                                             <label htmlFor="float-input">Appointment Date <span style={{ color: 'red' }}>*</span></label>
-                                                            <DatePicker placeholderText="Select Date" selected={this.state.StartDate} onChange={date => this.setStartDate(date)}
+                                                            <DatePicker dateFormat="dd/MM/yyyy" placeholderText="Select date for appointment"
+                                                                selected={this.state.SelectedAppointmentDate}
+                                                                onChange={date => this.setAppointmentDate(date)}
                                                                 className={this.state.isAppointmentDateValid === true ? "p-inputtext normalbox" : "p-inputtext errorBox"} />
                                                         </span>
                                                     </div>
@@ -591,61 +634,12 @@ class ListAppointments extends Component {
                                                         <span className="ui-float-label">
                                                             <label htmlFor="float-input">Type: <span style={{ color: 'red' }}>*</span></label>
                                                             <div style={this.state.isTypeValid === true ? {} : errorBoxForCheckBox}>
-                                                                <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">SCHREIBEN</span>
-                                                                <RadioButton value="SCHREIBEN" name="Type"
-                                                                    onChange={(e) => this.setState({ Type: e.value })}
-                                                                    checked={this.state.Type === 'SCHREIBEN'} />
-                                                                <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">SPRACHEN</span>
-                                                                <RadioButton value="SPRACHEN" name="Type"
-                                                                    onChange={(e) => this.setState({ Type: e.value })}
-                                                                    checked={this.state.Type === 'SPRACHEN'} />
+                                                                {AppointmentType}
                                                             </div>
                                                         </span>
                                                     </div>
                                                 </div>
 
-                                                <h1>Payment Information</h1>
-                                                <div className="row">
-                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Tax</label>
-                                                            <InputText placeholderText="Tax" value={this.state.Tax} type="number" size="30"
-                                                                onChange={(e) => this.setState({ Tax: e.target.value })} />
-                                                        </span>
-                                                    </div>
-                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Rate</label>
-                                                            <InputText placeholderText="Rate" value={this.state.Rate} type="number" size="30"
-                                                                onChange={(e) => this.setState({ Rate: e.target.value })} />
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Hours</label>
-                                                            <InputText placeholderText="Hours" value={this.state.Hours} type="number" size="30"
-                                                                onChange={(e) => this.setState({ Hours: e.target.value })} />
-                                                        </span>
-                                                    </div>
-                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Discount</label>
-                                                            <InputText placeholderText="Discount" value={this.state.Discount} type="number" size="30"
-                                                                onChange={(e) => this.setState({ Discount: e.target.value })} />
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Net Payable</label>
-                                                            <InputText placeholderText="Net Payable" value={this.state.NetPayable} type="number" size="30"
-                                                                onChange={(e) => this.setState({ NetPayable: e.target.value })} />
-                                                        </span>
-                                                    </div>
-                                                </div>
                                                 <div className=" p-col-12 p-sm-12 p-md-6 p-lg-6" style={{ marginBottom: 20 }}>
                                                     <span className="ui-float-label">
                                                         <label htmlFor="float-input">Attachments</label>
@@ -663,7 +657,7 @@ class ListAppointments extends Component {
                                                 </div>
                                                 <div className="sm-4 md-2 lg-2">
                                                     <span className="ui-float-label" style={{ float: 'right' }}>
-                                                        <Button label="Create Appointment" className="ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onSaveAppointments(e)} />
+                                                        <Button label="Create Appointment" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onSaveAppointment()} />
                                                     </span>
                                                 </div>
                                             </div>

@@ -24,3 +24,14 @@ export const Languages = [
         value: "Arabic"
     },
 ]
+
+export const ListAppointmentType = [
+    {
+        name: "SCHREIBEN",
+        value: "SCHREIBEN"
+    },
+    {
+        name: "SPRACHEN",
+        value: "SPRACHEN"
+    },
+]

@@ -30,6 +30,7 @@ export default class AMSInputField extends Component {
     getRequiredSpan() {
         return <span style={{ color: 'red' }}>*</span>
     }
+
     ValidateType() {
         const type = this.props.Type;
         if (type === "email") {
@@ -68,9 +69,9 @@ export default class AMSInputField extends Component {
         this.props.onChange(e.target.value);
     }
     render() {
-        const { Label, Type, IsRequired, Value, Disabled, ReadOnly } = this.props;
+        const { Label, Type, IsRequired, Value, Disabled, ReadOnly, PlaceholderText } = this.props;
         const required = IsRequired == true ? this.getRequiredSpan() : <span></span>
-        var id = "txt" + Label
+        var id = "txt" + Label.replaceAll(" ", '')
 
         return (
             <span className="ui-float-label">
@@ -78,6 +79,7 @@ export default class AMSInputField extends Component {
                 <InputText id={id} value={Value != null ? Value : this.state.val} type={Type}
                     style={this.state.isValid === false ? errorBox : normalBox}
                     onBlur={() => this.checkForValidation()} disabled={Disabled} readOnly={ReadOnly}
+                    placeholder={PlaceholderText}
                     size="30" onChange={(e) => { this.onChange(e) }} />
             </span>
         )

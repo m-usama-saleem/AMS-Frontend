@@ -135,6 +135,7 @@ class TranslatorList extends Component {
                 this.setState({ isLoading: false });
             })
     }
+
     editUser = () => {
         let user = {
             Id: this.state.selectedUserId,
@@ -150,7 +151,6 @@ class TranslatorList extends Component {
                 if (data.success == true) {
                     this.growl.show({ severity: 'success', summary: 'Success', detail: 'Translator Updated' });
                     var UsersList = this.state.users;
-                    debugger
                     var ind = UsersList.findIndex(x => x.id == user.Id);
                     UsersList[ind] = {
                         id: user.Id,
