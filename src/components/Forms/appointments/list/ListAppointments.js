@@ -92,7 +92,7 @@ class ListAppointments extends Component {
     getAppointmentList() {
         this.service.GetAll().then(data => {
             if (data && data !== "" && data.length > 0) {
-                data.forEach(x => x.appointmentDate = new Date(x.appointmentDate).toDateString())
+                data.forEach(x => x.appointmentDate = new Date(x.appointmentDate).toLocaleDateString())
                 this.setState({ AllAppointments: data })
             }
         })
@@ -206,6 +206,7 @@ class ListAppointments extends Component {
                     .then((data) => {
                         if (data.success == true) {
                             var savedAppointment = data.appointment;
+                            savedAppointment.appointmentDate = new Date(app.AppointmentDate).toLocaleDateString();
                             savedAppointment.translatorName = app.TranslatorName;
                             savedAppointment.institutionName = app.InstitutionName;
 
@@ -232,6 +233,7 @@ class ListAppointments extends Component {
                         var savedAppointment = data.appointment;
                         savedAppointment.translatorName = app.TranslatorName;
                         savedAppointment.institutionName = app.InstitutionName;
+                        savedAppointment.appointmentDate = new Date(app.AppointmentDate).toLocaleDateString();
 
                         this.setState({
                             AllAppointments: [...this.state.AllAppointments, savedAppointment],
@@ -286,6 +288,8 @@ class ListAppointments extends Component {
                     var editedAppointment = data.appointment;
                     editedAppointment.translatorName = app.TranslatorName;
                     editedAppointment.institutionName = app.InstitutionName;
+                    debugger
+                    editedAppointment.appointmentDate = new Date(app.AppointmentDate).toLocaleDateString();
 
                     var AllAppointments = this.state.AllAppointments;
                     var ind = AllAppointments.findIndex(x => x.id == editedAppointment.id);
@@ -357,7 +361,7 @@ class ListAppointments extends Component {
                 SelectedInstituteName: AllInstitutions[instInd],
                 SelectedLanguageName: Languages[langId],
                 Type: appointment.type,
-                EntryDate: new Date(appointment.entryDate).toDateString(),
+                EntryDate: new Date(appointment.entryDate).toLocaleDateString(),
                 SelectedAppointmentDate: new Date(appointment.appointmentDate),
                 displayEditDialog: true,
                 langList: LanguageSelection,
@@ -503,12 +507,10 @@ class ListAppointments extends Component {
                                 </div>
                                 <div className="row">
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <label htmlFor="float-input">Institution Name<span style={{ color: 'red' }}>*</span></label>
-                                        <Select
-                                            value={this.state.SelectedInstituteName}
-                                            onChange={(e) => this.onInstitutionSelected(e)}
-                                            options={this.state.AllInstitutions}
-                                            maxMenuHeight={150}
+                                        <AMSInputField Label="Institution Name" Type="ddl_select" IsRequired={true}
+                                            Value={this.state.SelectedInstituteName} PlaceholderText="Select Institution"
+                                            ItemsList={this.state.AllInstitutions}
+                                            onChange={(val) => this.setState({ SelectedInstituteName: val })}
                                         />
                                     </div>
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
@@ -619,7 +621,7 @@ class ListAppointments extends Component {
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
                                             <label htmlFor="float-input">Date</label>
-                                            <InputText placeholderText="Select Date" value={new Date().toDateString()} type="text" size="30" disabled={true} />
+                                            <InputText placeholderText="Select Date" value={new Date().toLocaleDateString()} type="text" size="30" disabled={true} />
                                         </span>
                                     </div>
                                 </div>
@@ -685,8 +687,6 @@ class ListAppointments extends Component {
                                         </span>
                                     </div>
                                 </div>
-
-
 
                                 <div className="p-col-12 p-sm-12 p-md-12 p-lg-12">
                                     {this.state.isLoading === true ? <ProgressBar mode="indeterminate" style={{ height: '2px' }} /> : null}

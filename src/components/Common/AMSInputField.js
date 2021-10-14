@@ -6,6 +6,7 @@ import { Dialog } from 'primereact/dialog';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputText } from 'primereact/inputtext';
 import { Component } from 'react';
+import Select from 'react-select'
 
 const errorBox = {
     borderRadius: '3px', borderColor: 'rgba(242, 38, 19, 1)'
@@ -68,20 +69,62 @@ export default class AMSInputField extends Component {
         this.setState({ val: e.target.value })
         this.props.onChange(e.target.value);
     }
+
+    onChangeSelection(obj) {
+        this.setState({ val: obj })
+        this.props.onChange(obj);
+
+    }
+
+    getInputField() {
+        const { Label, Type, IsRequired, Value, Disabled, ReadOnly, PlaceholderText, ItemsList } = this.props;
+        const required = IsRequired == true ? this.getRequiredSpan() : <span></span>
+        var id = "txt" + Label.replaceAll(" ", '')
+
+        switch (Type) {
+            case "text":
+                return (
+                    <span key={id} className="ui-float-label">
+                        <label htmlFor="float-input">{Label} {required} </label>
+                        <InputText id={id} value={Value != null ? Value : this.state.val} type={Type}
+                            style={this.state.isValid === false ? errorBox : normalBox}
+                            onBlur={() => this.checkForValidation()} disabled={Disabled} readOnly={ReadOnly}
+                            placeholder={PlaceholderText}
+                            size="30" onChange={(e) => { this.onChange(e) }} />
+                    </span>
+                );
+            case "ddl_select":
+                return (
+                    <div key={id} >
+                        <label htmlFor="float-input">{Label} {required}</label>
+                        <Select
+                            value={Value != null ? Value : this.state.val}
+                            onChange={(e) => this.onChangeSelection(e)}
+                            options={ItemsList}
+                            maxMenuHeight={150}
+                        />
+                    </div>
+                );
+            default:
+                return <div></div>
+        }
+    }
+
     render() {
         const { Label, Type, IsRequired, Value, Disabled, ReadOnly, PlaceholderText } = this.props;
         const required = IsRequired == true ? this.getRequiredSpan() : <span></span>
         var id = "txt" + Label.replaceAll(" ", '')
 
+        var inputField = <div></div>;
+        if (Type && Type != undefined) {
+            inputField = this.getInputField();
+        }
         return (
-            <span className="ui-float-label">
-                <label htmlFor="float-input">{Label} {required} </label>
-                <InputText id={id} value={Value != null ? Value : this.state.val} type={Type}
-                    style={this.state.isValid === false ? errorBox : normalBox}
-                    onBlur={() => this.checkForValidation()} disabled={Disabled} readOnly={ReadOnly}
-                    placeholder={PlaceholderText}
-                    size="30" onChange={(e) => { this.onChange(e) }} />
-            </span>
+            <div>
+                {
+                    inputField
+                }
+            </div>
         )
     }
 }
