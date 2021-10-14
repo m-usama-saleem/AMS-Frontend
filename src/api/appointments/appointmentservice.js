@@ -64,21 +64,24 @@ class AppointmentService {
         });
     }
 
-    // Delete = async (obj) => {
-    //     await http.post("/securitylogs/delete", obj,
-    //         {
-    //             headers: {
-    //                 'Authorization': 'Bearer ' + this.currentUserSubject.token,
-    //             }
-    //         })
-    //         .then(response => {
-    //             if (response.data !== null && response.data.token !== null) {
-    //             }
-    //         })
-    //         .catch(function (error) {
-    //             throw error
-    //         });
-    // }
+    Approve = (appId) => {
+        return new Promise((resolve, reject) => {
+            http.post("/AppointmentService/ApproveAppointment", { id: appId },
+                {
+                    headers: {
+                        // 'Authorization': 'Bearer ' + this.currentUserSubject.token,
+                    }
+                })
+                .then(response => {
+                    if (response.data !== null && response.data !== undefined) {
+                        resolve(response.data);
+                    }
+                })
+                .catch((error) => {
+                    reject(handleResponseError(error));
+                });
+        });
+    }
 
     GetAll() {
         return new Promise((resolve, reject) => {
@@ -129,7 +132,7 @@ class AppointmentService {
                     var list = [];
                     if (response.data.length > 0) {
                         response.data.forEach(x => {
-                            list.push({ label: x.name, value: x.id })
+                            list.push({ label: x.firstName, value: x.id, languages: x.language })
                         })
                     }
                     resolve(list);

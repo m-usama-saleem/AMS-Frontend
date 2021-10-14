@@ -38,7 +38,6 @@ class InstitutionList extends Component {
             displayDeleteDialog: false,
             displayCreateDialog: false,
             displayEditDialog: false,
-            isTypeValid: true,
             error: '',
         };
         this.userSerivce = new UserService();
@@ -109,8 +108,9 @@ class InstitutionList extends Component {
         let user = {
             Name: this.state.name,
             Email: this.state.email,
-            Type: this.state.type,
             Address: this.state.address,
+            City: this.state.city,
+            Postcode: this.state.postcode,
             CreatedAt: new Date(),
             CreatedBy: this.props.authUser.id
         }
@@ -138,8 +138,9 @@ class InstitutionList extends Component {
             Id: this.state.selectedUserId,
             Name: this.state.name,
             Email: this.state.email,
-            Type: this.state.type,
             Address: this.state.address,
+            City: this.state.city,
+            Postcode: this.state.postcode,
             CreatedBy: this.props.authUser.id
         }
         this.userSerivce
@@ -154,8 +155,9 @@ class InstitutionList extends Component {
                         id: user.Id,
                         name: user.Name,
                         email: user.Email,
-                        type: user.Type,
                         address: user.Address,
+                        city: user.City,
+                        postcode: user.Postcode,
                     };
 
                     this.setState({
@@ -201,7 +203,7 @@ class InstitutionList extends Component {
     }
 
     onReset() {
-        this.setState({ name: '', email: '', type: '', address: '', isTypeValid: true });
+        this.setState({ name: '', email: '', address: '', city: '', postcode: '' });
     }
 
     EditMode(user) {
@@ -210,14 +212,15 @@ class InstitutionList extends Component {
                 selectedUserId: user.id,
                 name: user.name,
                 email: user.email,
-                type: user.type,
+                city: user.city,
+                postcode: user.postcode,
                 address: user.address,
                 displayEditDialog: true,
             })
         }
     }
     AddNew() {
-        this.setState({ name: '', email: '', type: '', address: '', isTypeValid: true }, () => {
+        this.setState({ name: '', email: '', address: '', city: '', postcode: '' }, () => {
             this.setState({ displayCreateDialog: true })
         });
     }
@@ -257,8 +260,8 @@ class InstitutionList extends Component {
                             >
                                 <Column field="name" header="Name" sortable={true} />
                                 <Column field="email" header="Email" sortable={true} />
-                                <Column field="address" header="address" sortable={true} />
-                                <Column field="type" header="Type" sortable={true} />
+                                <Column field="address" header="Address" sortable={true} />
+                                <Column field="city" header="City" sortable={true} />
                                 <Column header="Action" body={this.actionBodyTemplate}></Column>
                             </DataTable>
                             <div className="p-col-12 p-sm-12 p-md-12 p-lg-12" style={{ paddingTop: '20px' }}>
@@ -311,25 +314,22 @@ class InstitutionList extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="row">
-                                                    <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Type: <span style={{ color: 'red' }}>*</span></label>
-                                                            <div style={this.state.isTypeValid === true ? {} : errorBoxForCheckBox}>
-                                                                <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">SCHREIBEN</span>
-                                                                <RadioButton value="SCHREIBEN" name="Type"
-                                                                    onChange={(e) => this.setState({ type: e.value })}
-                                                                    checked={this.state.type === 'SCHREIBEN'} />
-                                                                <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">SPRACHEN</span>
-                                                                <RadioButton value="SPRACHEN" name="Type"
-                                                                    onChange={(e) => this.setState({ type: e.value })}
-                                                                    checked={this.state.type === 'SPRACHEN'} />
-                                                            </div>
-                                                        </span>
-                                                    </div>
-                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                                                    <div className="col-sm-12 col-md-12 col-lg-12" style={{ marginBottom: 20 }}>
                                                         <AMSInputField Label="Address" Type="text" IsRequired={true}
                                                             Value={this.state.address}
                                                             onChange={(val) => this.setState({ address: val })} />
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                                                        <AMSInputField Label="Postcode" Type="text"
+                                                            Value={this.state.postcode}
+                                                            onChange={(val) => this.setState({ postcode: val })} />
+                                                    </div>
+                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                                                        <AMSInputField Label="City" Type="text"
+                                                            Value={this.state.city}
+                                                            onChange={(val) => this.setState({ city: val })} />
                                                     </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
@@ -376,25 +376,22 @@ class InstitutionList extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="row">
-                                                    <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Type: <span style={{ color: 'red' }}>*</span></label>
-                                                            <div style={this.state.isTypeValid === true ? {} : errorBoxForCheckBox}>
-                                                                <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">SCHREIBEN</span>
-                                                                <RadioButton value="SCHREIBEN" name="Type"
-                                                                    onChange={(e) => this.setState({ type: e.value })}
-                                                                    checked={this.state.type === 'SCHREIBEN'} />
-                                                                <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">SPRACHEN</span>
-                                                                <RadioButton value="SPRACHEN" name="Type"
-                                                                    onChange={(e) => this.setState({ type: e.value })}
-                                                                    checked={this.state.type === 'SPRACHEN'} />
-                                                            </div>
-                                                        </span>
-                                                    </div>
-                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                                                    <div className="col-sm-12 col-md-12 col-lg-12" style={{ marginBottom: 20 }}>
                                                         <AMSInputField Label="Address" Type="text" IsRequired={true}
                                                             Value={this.state.address}
                                                             onChange={(val) => this.setState({ address: val })} />
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                                                        <AMSInputField Label="Postcode" Type="text"
+                                                            Value={this.state.postcode}
+                                                            onChange={(val) => this.setState({ postcode: val })} />
+                                                    </div>
+                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                                                        <AMSInputField Label="City" Type="text"
+                                                            Value={this.state.city}
+                                                            onChange={(val) => this.setState({ city: val })} />
                                                     </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">

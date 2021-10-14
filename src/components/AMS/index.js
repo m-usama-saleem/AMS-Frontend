@@ -20,12 +20,14 @@ import '../../layout/layout.scss'
 import './App.scss';
 
 import { AuthUserContext } from '../Session';
-import Appointments from '../Forms/appointments/add/Appointments';
 import ListAppointments from '../Forms/appointments/list/ListAppointments';
 
 import InstitutiontList from '../Institutions';
 import TranslatorList from '../Translators';
 import AppUsers from '../AppUsers';
+import TranslatorInvoice from '../Forms/invoices/TranslatorInvoice';
+import TranslatorInvoiceSpeaking from '../Forms/invoices/TranslatorInvoiceSpeaking';
+import ListPayables from '../Finance/Payables';
 
 const App = (props) => (
     <div>
@@ -138,8 +140,8 @@ class AuthenticatedApp extends Component {
             {
                 label: 'Finance', icon: 'fa fa-file',
                 items: [
-                    { label: 'Receivables', icon: 'fa fa-file-archive-o', to: ROUTES.FINANCE__RECEIVE },
-                    { label: 'Payables', icon: 'fa fa-rss', to: ROUTES.FINANCE__PAY },
+                    { label: 'Receivables', icon: 'fa fa-file-archive-o', to: ROUTES.FINANCE_RECEIVE },
+                    { label: 'Payables', icon: 'fa fa-rss', to: ROUTES.FINANCE_PAY },
                 ]
             },
             {
@@ -215,13 +217,17 @@ class AuthenticatedApp extends Component {
                 <div className="layout-main">
                     <Route path={ROUTES.HOME_PAGE} component={HomePage} />
 
-                    <Route path={ROUTES.APPOINTMENT_ADD} render={() => <Appointments authUser={this.props.authUser} />} />
                     <Route path={ROUTES.APPOINTMENT_LIST} render={() => <ListAppointments authUser={this.props.authUser} />} />
 
                     <Route path={ROUTES.TRANSLATOR_LIST} render={() => <TranslatorList authUser={this.props.authUser} />} />
                     <Route path={ROUTES.INSTITUTION_LIST} render={() => <InstitutiontList authUser={this.props.authUser} />} />
                     <Route path={ROUTES.USER_LIST} render={() => <AppUsers authUser={this.props.authUser} />} />
 
+                    <Route path={ROUTES.TRANSLATOR_INVOICE} render={(props) => <TranslatorInvoice {...props} />} />
+                    <Route path={ROUTES.TRANSLATOR_INVOICE_SPEAKING} render={(props) => <TranslatorInvoiceSpeaking {...props} />} />
+
+                    <Route path={ROUTES.FINANCE_PAY} render={(props) => <ListPayables {...props} authUser={this.props.authUser} />} />
+                    {/* <Route path={ROUTES.FINANCE_RECEIVE} render={() => <TranslatorInvoiceSpeaking />} /> */}
 
                 </div>
 

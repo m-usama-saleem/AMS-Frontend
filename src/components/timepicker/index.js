@@ -1,24 +1,24 @@
-import React, { Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {getColorStyles, style as commonStyles} from './style';
+import { getColorStyles, style as commonStyles } from './style';
 import { appendZero, getFormat12, format12to24, format24to12, isMousePressed } from './utils';
 
 export default class TimePicker extends Component {
   static propTypes = {
-    time        : PropTypes.string,
-    theme       : PropTypes.string,
-    color1      : PropTypes.string,
-    headerColor : PropTypes.string,
-    placeholder : PropTypes.string.isRequired,
-    disabled    : PropTypes.bool,
-    className   : PropTypes.string,
-    onSet       : PropTypes.func.isRequired,
-    style       : PropTypes.object
+    time: PropTypes.string,
+    theme: PropTypes.string,
+    color1: PropTypes.string,
+    headerColor: PropTypes.string,
+    placeholder: PropTypes.string.isRequired,
+    disabled: PropTypes.bool,
+    className: PropTypes.string,
+    onSet: PropTypes.func.isRequired,
+    style: PropTypes.object
   };
 
-/*  static defaultProps = {
-    keyName : 'react-theme-style'
-  };*/
+  /*  static defaultProps = {
+      keyName : 'react-theme-style'
+    };*/
 
   constructor(props) {
     super(props);
@@ -28,10 +28,10 @@ export default class TimePicker extends Component {
       format12 = format24to12(Number(time[0]), Number(time[1]));
     }
     this.state = {
-      toShow : false,
-      time   : {
-        format12 : format12,
-        format24 : ''
+      toShow: false,
+      time: {
+        format12: format12,
+        format24: ''
       }
     };
   }
@@ -52,7 +52,7 @@ export default class TimePicker extends Component {
     }
 
     this.setState({
-      time : {
+      time: {
         format12,
         format24
       }
@@ -62,7 +62,7 @@ export default class TimePicker extends Component {
   addStyles() {
     const commonSelector = 'react-timepicker-common-style';
     const themeSelector = this.getThemeSelector(this.props.theme, this.props.color1);
-    const {theme, color1, headerColor} = this.props;
+    const { theme, color1, headerColor } = this.props;
     let head = document.head || document.getElementsByTagName('head')[0];
 
     if (!document.getElementById(commonSelector)) {
@@ -113,33 +113,33 @@ export default class TimePicker extends Component {
 
   handleKeyPress = (e) => {
     switch (e.which) {
-    case 13 : {
-      if (e.target !== this.closeButton) {
-        this.handleSet();
+      case 13: {
+        if (e.target !== this.closeButton) {
+          this.handleSet();
+        }
       }
-    }
-      break;
+        break;
 
-    case 27 : {
-      this.toggleToShow(false);
-    }
-      break;
+      case 27: {
+        this.toggleToShow(false);
+      }
+        break;
 
-    case 38 : { // up
-      this.state.toShowHourContainer ?
-        this.setHour(((this.state.degree + 30) % 360) || 360)
-        :
-        this.setMinute(((this.state.degree + 6) % 360) || 360);
-    }
-      break;
+      case 38: { // up
+        this.state.toShowHourContainer ?
+          this.setHour(((this.state.degree + 30) % 360) || 360)
+          :
+          this.setMinute(((this.state.degree + 6) % 360) || 360);
+      }
+        break;
 
-    case 40 : { // down
-      this.state.toShowHourContainer ?
-        this.setHour(((this.state.degree - 30) % 360) || 360)
-        :
-        this.setMinute(((this.state.degree - 6) % 360) || 360);
-    }
-      break;
+      case 40: { // down
+        this.state.toShowHourContainer ?
+          this.setHour(((this.state.degree - 30) % 360) || 360)
+          :
+          this.setMinute(((this.state.degree - 6) % 360) || 360);
+      }
+        break;
     }
   };
 
@@ -154,7 +154,7 @@ export default class TimePicker extends Component {
     event.preventDefault();
     this.changeClock(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
   };
-  
+
   handleTouchUp = (event) => {
     if (event.target === this.mask) return;
     this.changeClock(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
@@ -186,17 +186,17 @@ export default class TimePicker extends Component {
     });
   }
 
-  handleFocus = (e)=> {
+  handleFocus = (e) => {
     e.preventDefault();
     let format24 = this.props.time;
-    let {hour, minute, degree, selectedIndexDegree, isAmSelected} = this.getInitialConfig(format24);
+    let { hour, minute, degree, selectedIndexDegree, isAmSelected } = this.getInitialConfig(format24);
     // hour = appendZero(Math.round(degree / 30) || '12'); //not sure why i added this
     this.toggleToShow();
     this.setState({
       degree,
       hour,
       minute,
-      toShowHourContainer : true,
+      toShowHourContainer: true,
       selectedIndexDegree,
       isAmSelected
     }, () => {
@@ -215,7 +215,7 @@ export default class TimePicker extends Component {
   handleSet = () => {
     let allFormat = this.getTime(Number(this.state.hour), Number(this.state.minute), this.state.isAmSelected);
     this.setState({
-      time : allFormat
+      time: allFormat
     });
 
     this.toggleToShow(false);
@@ -226,18 +226,18 @@ export default class TimePicker extends Component {
   // functionality
   init() {
     this.center = {
-      x : 130,
-      y : 130
+      x: 130,
+      y: 130
     };
 
     const maskPosition = this.mask.getBoundingClientRect();
     this.containerPos = {
-      y : maskPosition.top,
-      x : maskPosition.left
+      y: maskPosition.top,
+      x: maskPosition.left
     };
     this.basePoint = {
-      x : 130,
-      y : 0
+      x: 130,
+      y: 0
     };
   }
 
@@ -275,21 +275,21 @@ export default class TimePicker extends Component {
     const temp = time.split(':');
     const hour24 = Number(temp[0]);
     const minute24 = Number(temp[1]);
-    const {degree, selectedIndexDegree} = this.getSelectedIndexDegreeAndDegreeForHour(hour24);
+    const { degree, selectedIndexDegree } = this.getSelectedIndexDegreeAndDegreeForHour(hour24);
 
     return {
-      hour         : this.getHour(hour24),
-      minute       : this.getMinute(minute24),
+      hour: this.getHour(hour24),
+      minute: this.getMinute(minute24),
       degree,
       selectedIndexDegree,
-      isAmSelected : Number(temp[0]) <= 12
+      isAmSelected: Number(temp[0]) <= 12
     };
   }
 
   getSelectedIndexDegreeAndDegreeForHour(val) {
     const degree = (val * 30) % 360;
     return {
-      selectedIndexDegree : this.getSelectedIndexDegree(degree),
+      selectedIndexDegree: this.getSelectedIndexDegree(degree),
       degree
     };
   }
@@ -305,7 +305,7 @@ export default class TimePicker extends Component {
     const degree = (val * 6) % 360; // why?
     // const i = (degree / 6) % 5;
     return {
-      selectedIndexDegree : this.getSelectedIndexDegree(degree),
+      selectedIndexDegree: this.getSelectedIndexDegree(degree),
       degree
     };
   }
@@ -439,7 +439,7 @@ export default class TimePicker extends Component {
           <main className="timepicker-main">
             <div
               className="hours-container"
-              ref={(ref) => {this.mask = ref;}}
+              ref={(ref) => { this.mask = ref; }}
               onTouchMove={this.handleTouchMove}
               onTouchEnd={this.handleTouchUp}
               onMouseMove={this.handleMove}
@@ -448,8 +448,8 @@ export default class TimePicker extends Component {
               <div
                 className={`${primaryColorBackgroundClassName} hand`}
                 style={{
-                  transform       : `rotate(${this.state.degree - 90}deg)`,
-                  WebkitTransform : `rotate(${this.state.degree - 90}deg)`
+                  transform: `rotate(${this.state.degree - 90}deg)`,
+                  WebkitTransform: `rotate(${this.state.degree - 90}deg)`
                 }}
               >
                 &nbsp;
@@ -462,7 +462,7 @@ export default class TimePicker extends Component {
               type="button"
               className={`${primaryColorColorClassName} timepicker-button close`}
               onClick={this.toggleToShow.bind(this, false)}
-              ref={(ref) => {this.closeButton = ref;}}
+              ref={(ref) => { this.closeButton = ref; }}
             >
               Close
             </button>
@@ -489,9 +489,9 @@ export default class TimePicker extends Component {
           className={this.props.className}
           value={this.state.time.format12}
           onFocus={this.handleFocus}
-          ref={(ref) => {this.inputField = ref;}}
+          ref={(ref) => { this.inputField = ref; }}
           style={this.props.style}
-          disabled = {this.props.disabled}
+          disabled={this.props.disabled}
         />
         {this.getBody()}
       </div>

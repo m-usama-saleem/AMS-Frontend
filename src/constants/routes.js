@@ -23,5 +23,8 @@ export const APPOINTMENT_ADD = '/appointment/add';
 export const APPOINTMENT_LIST = '/appointment/list';
 
 export const DASHBOARD = '/dashboard';
-export const FINANCE__RECEIVE = '/finance/receiveable';
-export const FINANCE__PAY = '/finance/payable';
+export const FINANCE_RECEIVE = '/finance/receiveable';
+export const FINANCE_PAY = '/finance/payable';
+
+export const TRANSLATOR_INVOICE = '/translator/invoice';
+export const TRANSLATOR_INVOICE_SPEAKING = '/translator/invoice_speak';
