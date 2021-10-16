@@ -485,7 +485,7 @@ export default class TimePicker extends Component {
         <input
           readOnly
           type="text"
-          placeholder={this.props.placeholder}
+          placeholderText={this.props.placeholder}
           className={this.props.className}
           value={this.state.time.format12}
           onFocus={this.handleFocus}

@@ -36,6 +36,23 @@ export default class TranslatorInvoice extends Component {
     }
     componentDidMount() {
         if (this.props && this.props.location && this.props.location.Invoice) {
+            // const { totalHours, tax, rideCost, ticketCost, dailyAllowance } = this.props.location.Invoice;
+
+            // var totalHoursCost = parseFloat(totalHours) * 85.00;
+            // var totalRideCost = parseFloat(rideCost) * 0.42;
+            // var TotalDailyAllowance = parseFloat(dailyAllowance) * 14;
+
+            // var SubTotal = totalHoursCost + totalRideCost + TotalDailyAllowance;
+            // var TotalTax = SubTotal * (tax / 100);
+            // var NetPayment = SubTotal + TotalTax + parseFloat(ticketCost)
+
+            // this.props.location.Invoice.totalHoursCost = totalHoursCost.toFixed(2);
+            // this.props.location.Invoice.totalRideCost = totalRideCost.toFixed(2);
+            // this.props.location.Invoice.totalDailyAllowance = TotalDailyAllowance.toFixed(2);
+            // this.props.location.Invoice.subTotal = SubTotal.toFixed(2);
+            // this.props.location.Invoice.totalTax = TotalTax.toFixed(2);
+            // this.props.location.Invoice.netPayment = NetPayment.toFixed(2);
+
             this.setState({ Invoice: this.props.location.Invoice })
         }
         this.setState({ ready: true })
@@ -43,7 +60,6 @@ export default class TranslatorInvoice extends Component {
 
     render() {
         const { Invoice } = this.state;
-
         const PDF_File = <View style={{ paddingRight: 50, paddingLeft: 50 }}>
             <View style={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: 10 }}>
                 <Image
@@ -97,7 +113,7 @@ export default class TranslatorInvoice extends Component {
             }}>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>Zeilen</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>1 Zeilen x</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>{Invoice.totalHours} Zeilen x</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>1,95 €</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>1,95 €</Text>
                 </View>

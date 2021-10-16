@@ -56,10 +56,14 @@ const INITIAL_STATE = {
     disableApproveButton: true,
     displayCreateDialog: false,
 
-    isAppointmentIdValid: true,
+    ValidAppointmentId: false,
+    ValidInstitute: false,
+    ValidLanguage: false,
+    ValidTranslator: false,
+
     isAppointmentDateValid: true,
     isTypeValid: true,
-
+    CheckFields: false,
     AllAppointments: [],
     AllInstitutions: [],
     AllTranslators: []
@@ -90,7 +94,7 @@ class ListAppointments extends Component {
     }
 
     getAppointmentList() {
-        this.service.GetAll().then(data => {
+        this.service.GetAllIncomplete().then(data => {
             if (data && data !== "" && data.length > 0) {
                 data.forEach(x => x.appointmentDate = new Date(x.appointmentDate).toLocaleDateString())
                 this.setState({ AllAppointments: data })
@@ -101,31 +105,44 @@ class ListAppointments extends Component {
             })
     }
 
-    validateForm = () => {
-        let error = "";
-        if (!this.state.SelectedAppointmentDate || (this.state.SelectedAppointmentDate && this.state.SelectedAppointmentDate.toString().trim() === '')) {
-            this.setState({ isAppointmentDateValid: false });
-            error += "Appointment Date cannot be empty \n";
-        } else { this.setState({ isAppointmentDateValid: true }); }
+    validateForm() {
+        return new Promise((resolve, reject) => {
 
-        if (this.state.Type.trim() === '') {
-            this.setState({ isTypeValid: false });
-            error += "Type cannot be empty \n";
-        } else { this.setState({ isTypeValid: true }); }
+            let error = "";
+            // if (!this.state.SelectedAppointmentDate || (this.state.SelectedAppointmentDate && this.state.SelectedAppointmentDate.toString().trim() === '')) {
+            //     this.setState({ isAppointmentDateValid: false });
+            //     error += "Appointment Date cannot be empty \n";
+            // } else { this.setState({ isAppointmentDateValid: true }); }
 
-        if (!this.state.SelectedInstituteName || this.state.SelectedInstituteName == undefined) {
-            this.setState({ isInstituteValid: false });
-            error += "Institute cannot be empty \n";
-        } else { this.setState({ isInstituteValid: true }); }
+            // if (this.state.Type.trim() === '') {
+            //     this.setState({ isTypeValid: false });
+            //     error += "Type cannot be empty \n";
+            // } else { this.setState({ isTypeValid: true }); }
 
-        if (error !== "") {
-            this.setState({ error: true });
-            return false;
-        }
-        else {
-            this.setState({ error: false });
-            return true;
-        }
+            // if (!this.state.SelectedInstituteName || this.state.SelectedInstituteName == undefined) {
+            //     this.setState({ isInstituteValid: false });
+            //     error += "Institute cannot be empty \n";
+            // } else { this.setState({ isInstituteValid: true }); }
+
+            // if (error !== "") {
+            //     this.setState({ error: true });
+            //     return false;
+            // }
+            // else {
+            //     this.setState({ error: false });
+            //     return true;
+            // }
+
+            const { ValidAppointmentId, ValidInstitute, ValidTranslator, ValidLanguage } = this.state
+            this.setState({ CheckFields: true },
+                () => {
+                    if (ValidAppointmentId == true && ValidInstitute == true &&
+                        ValidTranslator == true && ValidLanguage == true) {
+                        resolve(true);
+                    }
+                    resolve(false);
+                });
+        })
     }
 
     resetForm = () => {
@@ -143,8 +160,11 @@ class ListAppointments extends Component {
             Attachments: '',
             files: [],
 
-            isAppointmentDateValid: true,
-            isAppointmentIdValid: true,
+            ValidAppointmentId: false,
+            ValidInstitute: false,
+            ValidLanguage: false,
+            ValidTranslator: false,
+
             isTypeValid: true,
 
             disableFields: false,
@@ -152,7 +172,7 @@ class ListAppointments extends Component {
             displayApproveDialog: false,
             disableDeleteButton: true,
             disableApproveButton: true,
-            displayCreateDialog: false
+            displayCreateDialog: false,
         }, () => {
             // this.getLists();
         })
@@ -164,13 +184,14 @@ class ListAppointments extends Component {
 
     onSaveAppointment() {
         this.setState({ isLoading: true });
-        let result = this.validateForm();
-        if (result !== false) {
-            this.SaveAppointment();
-        }
-        else {
-            this.setState({ isLoading: false });
-        }
+        this.validateForm().then(result => {
+            if (result !== false) {
+                this.SaveAppointment();
+            }
+            else {
+                this.setState({ isLoading: false });
+            }
+        });
     }
 
     SaveAppointment() {
@@ -255,10 +276,11 @@ class ListAppointments extends Component {
 
     onEditAppointment() {
         this.setState({ isLoading: true });
-        let result = this.validateForm();
-        if (result !== false) {
-            this.EditAppointment();
-        }
+        this.validateForm().then(result => {
+            if (result !== false) {
+                this.EditAppointment();
+            }
+        })
     }
 
     EditAppointment() {
@@ -288,7 +310,6 @@ class ListAppointments extends Component {
                     var editedAppointment = data.appointment;
                     editedAppointment.translatorName = app.TranslatorName;
                     editedAppointment.institutionName = app.InstitutionName;
-                    debugger
                     editedAppointment.appointmentDate = new Date(app.AppointmentDate).toLocaleDateString();
 
                     var AllAppointments = this.state.AllAppointments;
@@ -309,10 +330,6 @@ class ListAppointments extends Component {
             })
     }
 
-    onInstitutionSelected(obj) {
-        this.setState({ SelectedInstituteName: obj })
-    }
-
     onTranslatorSelected(obj) {
         var LanguageSelection = [];
         const translator_languages = obj.languages.split(',');
@@ -326,10 +343,6 @@ class ListAppointments extends Component {
             SelectedTranslatorName: obj,
             langList: LanguageSelection
         })
-    }
-
-    onLanguageSelected(obj) {
-        this.setState({ SelectedLanguageName: obj })
     }
 
     setAppointmentDate(date) {
@@ -495,6 +508,8 @@ class ListAppointments extends Component {
                                         <AMSInputField Label="Appointment ID" Type="text" IsRequired={true}
                                             Value={this.state.AppointmentId} PlaceholderText="Unique Appointment ID"
                                             onChange={(val) => this.setState({ AppointmentId: val })}
+                                            ChangeIsValid={(val) => this.setState({ ValidAppointmentId: val })}
+                                            CheckField={this.state.CheckFields}
                                         />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
@@ -511,6 +526,8 @@ class ListAppointments extends Component {
                                             Value={this.state.SelectedInstituteName} PlaceholderText="Select Institution"
                                             ItemsList={this.state.AllInstitutions}
                                             onChange={(val) => this.setState({ SelectedInstituteName: val })}
+                                            CheckField={this.state.CheckFields}
+                                            ChangeIsValid={(val) => this.setState({ ValidInstitute: val })}
                                         />
                                     </div>
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
@@ -525,26 +542,22 @@ class ListAppointments extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <span className="ui-float-label">
-                                            <label htmlFor="float-input">Translator Name<span style={{ color: 'red' }}>*</span></label>
-                                            <Select
-                                                value={this.state.SelectedTranslatorName}
-                                                onChange={(e) => this.onTranslatorSelected(e)}
-                                                options={this.state.AllTranslators}
-                                                maxMenuHeight={150}
-                                            />
-                                        </span>
+                                        <AMSInputField Label="Translator Name" Type="ddl_select" IsRequired={true}
+                                            Value={this.state.SelectedTranslatorName} PlaceholderText="Select Translator"
+                                            ItemsList={this.state.AllTranslators}
+                                            onChange={(val) => this.onTranslatorSelected(val)}
+                                            CheckField={this.state.CheckFields}
+                                            ChangeIsValid={(val) => this.setState({ ValidTranslator: val })}
+                                        />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <span className="ui-float-label">
-                                            <label htmlFor="float-input">Language<span style={{ color: 'red' }}>*</span></label>
-                                            <Select
-                                                value={this.state.SelectedLanguageName}
-                                                onChange={(e) => this.onLanguageSelected(e)}
-                                                options={langList}
-                                                maxMenuHeight={150}
-                                            />
-                                        </span>
+                                        <AMSInputField Label="Language" Type="ddl_select" IsRequired={true}
+                                            Value={this.state.SelectedLanguageName} PlaceholderText="Select Language"
+                                            ItemsList={langList}
+                                            onChange={(val) => this.setState({ SelectedLanguageName: val })}
+                                            CheckField={this.state.CheckFields}
+                                            ChangeIsValid={(val) => this.setState({ ValidLanguage: val })}
+                                        />
                                     </div>
                                 </div>
                                 <div className="row">
@@ -616,7 +629,10 @@ class ListAppointments extends Component {
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Appointment ID" Type="text" IsRequired={true}
                                             Value={this.state.AppointmentId} PlaceholderText="Unique Appointment ID"
-                                            onChange={(val) => this.setState({ AppointmentId: val })} />
+                                            onChange={(val) => this.setState({ AppointmentId: val })}
+                                            CheckField={this.state.CheckFields}
+                                            ChangeIsValid={(val) => this.setState({ ValidAppointmentId: val })}
+                                        />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
@@ -627,12 +643,12 @@ class ListAppointments extends Component {
                                 </div>
                                 <div className="row">
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <label htmlFor="float-input">Institution Name<span style={{ color: 'red' }}>*</span></label>
-                                        <Select
-                                            value={this.state.SelectedInstituteName}
-                                            onChange={(e) => this.onInstitutionSelected(e)}
-                                            options={this.state.AllInstitutions}
-                                            maxMenuHeight={150}
+                                        <AMSInputField Label="Institution Name" Type="ddl_select" IsRequired={true}
+                                            Value={this.state.SelectedInstituteName} PlaceholderText="Select Institution"
+                                            ItemsList={this.state.AllInstitutions}
+                                            onChange={(val) => this.setState({ SelectedInstituteName: val })}
+                                            CheckField={this.state.CheckFields}
+                                            ChangeIsValid={(val) => this.setState({ ValidInstitute: val })}
                                         />
                                     </div>
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
@@ -647,26 +663,22 @@ class ListAppointments extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <span className="ui-float-label">
-                                            <label htmlFor="float-input">Translator Name<span style={{ color: 'red' }}>*</span></label>
-                                            <Select
-                                                value={this.state.SelectedTranslatorName}
-                                                onChange={(e) => this.onTranslatorSelected(e)}
-                                                options={this.state.AllTranslators}
-                                                maxMenuHeight={150}
-                                            />
-                                        </span>
+                                        <AMSInputField Label="Translator Name" Type="ddl_select" IsRequired={true}
+                                            Value={this.state.SelectedTranslatorName} PlaceholderText="Select Translator"
+                                            ItemsList={this.state.AllTranslators}
+                                            onChange={(val) => this.onTranslatorSelected(val)}
+                                            CheckField={this.state.CheckFields}
+                                            ChangeIsValid={(val) => this.setState({ ValidTranslator: val })}
+                                        />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <span className="ui-float-label">
-                                            <label htmlFor="float-input">Language<span style={{ color: 'red' }}>*</span></label>
-                                            <Select
-                                                value={this.state.SelectedLanguageName}
-                                                onChange={(e) => this.onLanguageSelected(e)}
-                                                options={langList}
-                                                maxMenuHeight={150}
-                                            />
-                                        </span>
+                                        <AMSInputField Label="Language" Type="ddl_select" IsRequired={true}
+                                            Value={this.state.SelectedLanguageName} PlaceholderText="Select Language"
+                                            ItemsList={langList}
+                                            onChange={(val) => this.setState({ SelectedLanguageName: val })}
+                                            CheckField={this.state.CheckFields}
+                                            ChangeIsValid={(val) => this.setState({ ValidLanguage: val })}
+                                        />
                                     </div>
                                 </div>
                                 <div className="row">

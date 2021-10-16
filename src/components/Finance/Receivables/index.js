@@ -16,7 +16,7 @@ import { RadioButton } from 'primereact/radiobutton';
 import Select from 'react-select'
 
 import "react-datepicker/dist/react-datepicker.css";
-import PayableService from '../../../api/finance/payableService';
+import ReceivableService from '../../../api/finance/receivableService';
 import * as ROLES from '../../../constants/roles';
 import * as ROUTES from '../../../constants/routes';
 import AMSInputField from '../../Common/AMSInputField';
@@ -43,30 +43,30 @@ const INITIAL_STATE = {
     disableApproveButton: true,
     displayCreateDialog: false,
 
-    AllPayables: [],
+    AllReceivables: [],
 }
 
-class ListPayables extends Component {
+class ListReceivables extends Component {
 
     constructor(props) {
         super(props);
         this.state = INITIAL_STATE;
-        this.service = new PayableService();
+        this.service = new ReceivableService();
         this.actionBodyTemplate = this.actionBodyTemplate.bind(this);
     }
 
     getLists() {
-        this.getPayableList();
+        this.getReceivableList();
     }
 
     componentDidMount() {
         this.getLists();
     }
 
-    getPayableList() {
+    getReceivableList() {
         this.service.GetAll().then(data => {
             if (data && data !== "" && data.length > 0) {
-                this.setState({ AllPayables: data })
+                this.setState({ AllReceivables: data })
             }
         })
             .catch(err => {
@@ -104,25 +104,25 @@ class ListPayables extends Component {
         })
     }
 
-    dblClickPayable = (e) => {
+    dblClickReceivable = (e) => {
         this.editMode(e.data)
     }
 
-    onEditPayable() {
+    onEditReceivable() {
         this.setState({ isLoading: true });
         let result = this.validateForm();
         if (result !== false) {
-            this.EditPayable();
+            this.EditReceivable();
         }
     }
 
-    EditPayable() {
-        const { selectedPayableId, AppointmentId_Fk, WordCount, Rate, Hours, Discount,
+    EditReceivable() {
+        const { selectedReceivableId, AppointmentId_Fk, WordCount, Rate, Hours, Discount,
             NetPayment, RideCost, DailyAllowance, TicketCost, Type, Tax, StartOfTheTrip,
             AppointmentStart, EndOfTheAppointment, EndOfTheTrip, TotalHours } = this.state
 
         let app = {
-            Id: selectedPayableId,
+            Id: selectedReceivableId,
             AppointmentId_Fk,
             Status: 'Pending',
             Type,
@@ -146,17 +146,17 @@ class ListPayables extends Component {
         this.service.Edit(app)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Payable Updated' });
-                    var editedPayable = data.appointment;
-                    editedPayable.translatorName = app.TranslatorName;
-                    editedPayable.institutionName = app.InstitutionName;
+                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Receivable Updated' });
+                    var editedReceivable = data.appointment;
+                    editedReceivable.translatorName = app.TranslatorName;
+                    editedReceivable.institutionName = app.InstitutionName;
 
-                    var AllPayables = this.state.AllPayables;
-                    var ind = AllPayables.findIndex(x => x.id == editedPayable.id);
-                    AllPayables[ind] = editedPayable;
+                    var AllReceivables = this.state.AllReceivables;
+                    var ind = AllReceivables.findIndex(x => x.id == editedReceivable.id);
+                    AllReceivables[ind] = editedReceivable;
 
                     this.setState({
-                        AllPayables: AllPayables,
+                        AllReceivables: AllReceivables,
                         isLoading: false,
                         displayEditDialog: false
                     });
@@ -164,7 +164,7 @@ class ListPayables extends Component {
                 }
             })
             .catch((error) => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating payable' });
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Receivable' });
                 this.setState({ isLoading: false });
             })
     }
@@ -184,35 +184,35 @@ class ListPayables extends Component {
         this.setState({ SelectedTranslatorName: obj })
     }
 
-    editMode(payable) {
-        if (payable) {
+    editMode(receivable) {
+        if (receivable) {
             this.setState({
-                selectedPayableId: payable.id,
+                selectedReceivableId: receivable.id,
 
-                Id: payable.id,
-                AppointmentId_Fk: payable.appointmentId_Fk,
-                AppointmentId: payable.appointmentId,
-                AppointmentType: payable.appointmentType,
-                AppointmentDate: payable.appointmentDate,
-                AppointmentInstitute: payable.appointmentInstitute,
-                AppointmentTranslator: payable.appointmentTranslator,
+                Id: receivable.id,
+                AppointmentId_Fk: receivable.appointmentId_Fk,
+                AppointmentId: receivable.appointmentId,
+                AppointmentType: receivable.appointmentType,
+                AppointmentDate: receivable.appointmentDate,
+                AppointmentInstitute: receivable.appointmentInstitute,
+                AppointmentTranslator: receivable.appointmentTranslator,
 
-                Status: payable.status,
-                Type: payable.type,
-                StartOfTheTrip: payable.startOfTheTrip,
-                AppointmentStart: payable.appointmentStart,
-                EndOfTheAppointment: payable.endOfTheAppointment,
-                EndOfTheTrip: payable.endOfTheTrip,
-                TotalHours: payable.totalHours,
-                WordCount: payable.WordCount,
-                Rate: payable.rate,
-                Hours: payable.hours,
-                Discount: payable.discount,
-                RideCost: payable.rideCost,
-                DailyAllowance: payable.dailyAllowance,
-                Tax: payable.tax,
-                TicketCost: payable.ticketCost,
-                NetPayment: payable.netPayment,
+                Status: receivable.status,
+                Type: receivable.type,
+                StartOfTheTrip: receivable.startOfTheTrip,
+                AppointmentStart: receivable.appointmentStart,
+                EndOfTheAppointment: receivable.endOfTheAppointment,
+                EndOfTheTrip: receivable.endOfTheTrip,
+                TotalHours: receivable.totalHours,
+                WordCount: receivable.WordCount,
+                Rate: receivable.rate,
+                Hours: receivable.hours,
+                Discount: receivable.discount,
+                RideCost: receivable.rideCost,
+                DailyAllowance: receivable.dailyAllowance,
+                Tax: receivable.tax,
+                TicketCost: receivable.ticketCost,
+                NetPayment: receivable.netPayment,
 
                 displayEditDialog: true,
             }, () => {
@@ -221,27 +221,27 @@ class ListPayables extends Component {
         }
     }
 
-    confirmPayable(payable) {
-        if (payable != undefined && payable != null) {
+    confirmReceivable(receivable) {
+        if (receivable != undefined && receivable != null) {
             this.setState({
                 displayApproveDialog: true,
-                selectedPayableId: payable.id
+                selectedReceivableId: receivable.id
             })
         }
     }
 
-    onApprovePayable() {
-        var id = this.state.selectedPayableId;
+    onApproveReceivable() {
+        var id = this.state.selectedReceivableId;
         this.setState({ loadingModel: true });
         if (id != undefined && id != null && id != 0) {
             this.service.Approve(id).then(() => {
-                var AllPayables = this.state.AllPayables;
-                var ind = AllPayables.findIndex(x => x.id == id);
-                AllPayables[ind].status = "Approved";
+                var AllReceivables = this.state.AllReceivables;
+                var ind = AllReceivables.findIndex(x => x.id == id);
+                AllReceivables[ind].status = "Approved";
 
                 this.growl.show({ severity: 'success', summary: 'Success', detail: 'Paybale Paid Successfully' });
                 this.setState({
-                    AllPayables,
+                    AllReceivables,
                     displayApproveDialog: false,
                     loadingModel: false,
                     error: ''
@@ -249,23 +249,23 @@ class ListPayables extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayApproveDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error Paying Payable' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error Paying Receivable' });
                 });
         }
     }
 
-    viewInvoice(payable) {
-        if (payable) {
-            if (payable.appointmentType === "SPRACHEN") {
+    viewInvoice(receivable) {
+        if (receivable) {
+            if (receivable.appointmentType === "SPRACHEN") {
                 this.props.history.push({
                     pathname: ROUTES.TRANSLATOR_INVOICE_SPEAKING,
-                    Invoice: payable
+                    Invoice: receivable
                 })
             }
-            else if (payable.appointmentType === "SCHREIBEN") {
+            else if (receivable.appointmentType === "SCHREIBEN") {
                 this.props.history.push({
                     pathname: ROUTES.TRANSLATOR_INVOICE,
-                    Invoice: payable
+                    Invoice: receivable
                 })
             }
         }
@@ -280,7 +280,7 @@ class ListPayables extends Component {
                 onClick={() => this.editMode(rowData)} title="Edit" />
 
             PaidButton = <Button icon="pi pi-check" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-info p-mr-2"
-                onClick={() => this.confirmPayable(rowData)} title="Paid" />
+                onClick={() => this.confirmReceivable(rowData)} title="Paid" />
         }
 
         return (
@@ -471,15 +471,15 @@ class ListPayables extends Component {
                 <Growl ref={(el) => this.growl = el}></Growl>
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
-                        <h1>Payables List</h1>
+                        <h1>Receivables List</h1>
                         <div className="p-grid" style={{ marginTop: '8px' }} ></div>
                         <div className="content-section implementation">
                             <DataTable ref={(el) => this.dt = el}
-                                header={header} value={this.state.AllPayables}
+                                header={header} value={this.state.AllReceivables}
                                 // paginator={this.state.isLoading === false} rows={15}
-                                onRowDoubleClick={this.dblClickPayable} responsive={true}
-                                selection={this.state.selectedPayable}
-                                onSelectionChange={e => this.setState({ selectedPayable: e.value })}
+                                onRowDoubleClick={this.dblClickReceivable} responsive={true}
+                                selection={this.state.selectedReceivable}
+                                onSelectionChange={e => this.setState({ selectedReceivable: e.value })}
                                 resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/
                                 globalFilter={this.state.globalFilter}
                                 sortField="appointmentDate" sortOrder={1}
@@ -490,7 +490,7 @@ class ListPayables extends Component {
                                 <Column field="appointmentType" header="Type" sortable={true} />
                                 <Column field="appointmentInstitute" header="Institute" sortable={true} />
                                 <Column field="appointmentTranslator" header="Translator" sortable={true} />
-                                <Column field="netPayment" header="Net Payable" sortable={true} />
+                                <Column field="netPayment" header="Net Receivable" sortable={true} />
                                 <Column field="status" header="Status" sortable={true} />
                                 <Column header="Action" body={this.actionBodyTemplate}></Column>
                             </DataTable>
@@ -509,7 +509,7 @@ class ListPayables extends Component {
                                 modal={true} onHide={() => this.setState({ displayApproveDialog: false })}>
                                 {
                                     <div className="ui-dialog-buttonpane p-clearfix">
-                                        <Button label="Yes" style={{ width: 100 }} className="p-button-success" onClick={() => this.onApprovePayable()} />
+                                        <Button label="Yes" style={{ width: 100 }} className="p-button-success" onClick={() => this.onApproveReceivable()} />
                                         <Button label="No" style={{ width: 100, marginLeft: 5 }} className="p-button-primary" onClick={() => this.setState({ displayApproveDialog: false })} />
                                     </div>
                                 }
@@ -586,7 +586,7 @@ class ListPayables extends Component {
                                                 </div>
                                                 <div className="sm-4 md-2 lg-2">
                                                     <span className="ui-float-label" style={{ float: 'right' }}>
-                                                        <Button label="Update Payable" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditPayable()} />
+                                                        <Button label="Update Receivable" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditReceivable()} />
                                                     </span>
                                                 </div>
                                             </div>
@@ -602,4 +602,4 @@ class ListPayables extends Component {
     }
 
 }
-export default ListPayables;
+export default ListReceivables;

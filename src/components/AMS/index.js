@@ -28,6 +28,7 @@ import AppUsers from '../AppUsers';
 import TranslatorInvoice from '../Forms/invoices/TranslatorInvoice';
 import TranslatorInvoiceSpeaking from '../Forms/invoices/TranslatorInvoiceSpeaking';
 import ListPayables from '../Finance/Payables';
+import ListReceivables from '../Finance/Receivables';
 
 const App = (props) => (
     <div>
@@ -227,6 +228,8 @@ class AuthenticatedApp extends Component {
                     <Route path={ROUTES.TRANSLATOR_INVOICE_SPEAKING} render={(props) => <TranslatorInvoiceSpeaking {...props} />} />
 
                     <Route path={ROUTES.FINANCE_PAY} render={(props) => <ListPayables {...props} authUser={this.props.authUser} />} />
+                    <Route path={ROUTES.FINANCE_RECEIVE} render={(props) => <ListReceivables {...props} authUser={this.props.authUser} />} />
+
                     {/* <Route path={ROUTES.FINANCE_RECEIVE} render={() => <TranslatorInvoiceSpeaking />} /> */}
 
                 </div>

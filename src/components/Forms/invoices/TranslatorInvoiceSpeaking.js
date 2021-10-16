@@ -36,11 +36,32 @@ export default class TranslatorInvoiceSpeaking extends Component {
     }
     componentDidMount() {
         if (this.props && this.props.location && this.props.location.Invoice) {
+
+            const { totalHours, tax, rideCost, ticketCost, dailyAllowance } = this.props.location.Invoice;
+
+            var totalHoursCost = parseFloat(totalHours) * 85.00;
+            var totalRideCost = parseFloat(rideCost) * 0.42;
+            var TotalDailyAllowance = parseFloat(dailyAllowance) * 14;
+
+            var SubTotal = totalHoursCost + totalRideCost + TotalDailyAllowance;
+            var TotalTax = SubTotal * (tax / 100);
+            var NetPayment = SubTotal + TotalTax + parseFloat(ticketCost)
+
+            this.props.location.Invoice.totalHoursCost = totalHoursCost.toFixed(2);
+            this.props.location.Invoice.totalRideCost = totalRideCost.toFixed(2);
+            this.props.location.Invoice.totalDailyAllowance = TotalDailyAllowance.toFixed(2);
+            this.props.location.Invoice.subTotal = SubTotal.toFixed(2);
+            this.props.location.Invoice.totalTax = TotalTax.toFixed(2);
+            this.props.location.Invoice.netPayment = NetPayment.toFixed(2);
+
             this.setState({ Invoice: this.props.location.Invoice })
         }
         this.setState({ ready: true })
     }
+
     render() {
+        const { Invoice } = this.state;
+
         const PDF_File = <View style={{ paddingRight: 50, paddingLeft: 50 }}>
             <View style={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: 10 }}>
                 <Image
@@ -65,16 +86,16 @@ export default class TranslatorInvoiceSpeaking extends Component {
             </View>
             <View style={{ display: 'flex', flex: 1, flexDirection: 'row', marginTop: 10, fontSize: 10 }}>
                 <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-                    <Text>Amtsgericht Hannover </Text>
+                    <Text>Ihr Zeichen / Ihre Nachricht  </Text>
                     <Text>ID</Text>
                 </View>
                 <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-                    <Text>Amtsgericht Hannover</Text>
-                    <Text>ID</Text>
+                    <Text>Rechnungsnummer</Text>
+                    <Text>{Invoice.appointmentId}</Text>
                 </View>
                 <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-                    <Text>Amtsgericht Hannover</Text>
-                    <Text>ID</Text>
+                    <Text>Datum</Text>
+                    <Text>{Invoice.appointmentDate}</Text>
                 </View>
             </View>
             <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10 }}>
@@ -87,30 +108,30 @@ export default class TranslatorInvoiceSpeaking extends Component {
                     fontWeight: 'heavy', fontSize: 12,
                     borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomStyle: 'solid'
                 }}>Kostenrechnung:</Text>
-                <Text style={{ marginTop: 10 }}>Sprache: Urdu</Text>
+                <Text style={{ marginTop: 10 }}>Sprache: {Invoice.appointmentLanguage}</Text>
             </View>
             <View style={{
                 display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10
             }}>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>Termin am:</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>06.10.2021</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.appointmentDate} Uhr</Text>
                 </View>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>Antritt der Reise:</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>11:00 Uhr</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.startOfTheTrip} Uhr</Text>
                 </View>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>Terminbeginn:</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>11:15 Uhr</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.appointmentStart} Uhr</Text>
                 </View>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>Ende des Termins:</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>11:30 Uhr</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.endOfTheAppointment} Uhr</Text>
                 </View>
                 <View style={[tableRow, { borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomStyle: 'solid' }]}>
                     <Text style={{ display: 'flex', flex: 1 }}>Ende der Reise: </Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>11:45 Uhr</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.endOfTheTrip} Uhr</Text>
                 </View>
             </View>
             <View style={{
@@ -118,39 +139,45 @@ export default class TranslatorInvoiceSpeaking extends Component {
             }}>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>Gesamtstunden: </Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>1,0 Std.   x</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>85,00 €</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>85,00 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalHours} Std.   x</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>85,00 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalHoursCost} €</Text>
                 </View>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>Fahrtkosten:</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>1 km    x</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>0,42 € </Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>0,42 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.rideCost}  km    x</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>0,42 € </Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalRideCost} €</Text>
                 </View>
                 <View style={[tableRow, { borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomStyle: 'solid' }]}>
                     <Text style={{ display: 'flex', flex: 1 }}>Tagegeld:</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>Tage    x</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>14,00 €</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>0,00 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.dailyAllowance}   x</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>14,00 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalDailyAllowance} €</Text>
                 </View>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>Zwischensumme: </Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>85,42 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.subTotal} €</Text>
+                </View>
+                <View style={tableRow}>
+                    <Text style={{ display: 'flex', flex: 1 }}>zzgl. MwSt. ({Invoice.tax}%):</Text>
+                    <Text style={{ display: 'flex', flex: 1 }}></Text>
+                    <Text style={{ display: 'flex', flex: 1 }}></Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalTax} €</Text>
                 </View>
                 <View style={[tableRow, { borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomStyle: 'solid' }]}>
-                    <Text style={{ display: 'flex', flex: 1 }}>zzgl. MwSt. (19%):</Text>
+                    <Text style={{ display: 'flex', flex: 1 }}>Bahn/Parktickets::</Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>16,23 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.ticketCost} €</Text>
                 </View>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1, fontWeight: 'bold', fontSize: 12 }}>Rechnungsbetrag</Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
-                    <Text style={{ display: 'flex', flex: 1, fontWeight: 'bold', fontSize: 12, justifyContent: 'flex-end' }}>101,65 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, fontWeight: 'bold', fontSize: 12, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.netPayment} €</Text>
                 </View>
             </View>
             <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 20 }}>

@@ -235,7 +235,9 @@ class InstitutionList extends Component {
             </React.Fragment>
         );
     }
-
+    dblClickAppointment = (e) => {
+        this.EditMode(e.data)
+    }
     render() {
         const { users, loading } = this.state;
         const header = <div className="row">
@@ -257,6 +259,9 @@ class InstitutionList extends Component {
                         <h1>Instituition List</h1>
                         <div className="content-section implementation">
                             <DataTable header={header} value={users} globalFilter={this.state.globalFilter}
+                                onRowDoubleClick={this.dblClickAppointment} responsive={true}
+                                selection={this.state.selectedUser}
+                                onSelectionChange={e => this.setState({ selectedUser: e.value })}
                             >
                                 <Column field="name" header="Name" sortable={true} />
                                 <Column field="email" header="Email" sortable={true} />

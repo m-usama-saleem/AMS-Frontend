@@ -236,6 +236,9 @@ class AppUsers extends Component {
             this.setState({ displayCreateDialog: true })
         });
     }
+    dblClickAppointment = (e) => {
+        this.EditMode(e.data)
+    }
 
     render() {
         const { users, loading } = this.state;
@@ -258,6 +261,9 @@ class AppUsers extends Component {
                         <h1>User List</h1>
                         <div className="content-section implementation">
                             <DataTable header={header} value={users} globalFilter={this.state.globalFilter}
+                                onRowDoubleClick={this.dblClickAppointment} responsive={true}
+                                selection={this.state.selectedUser}
+                                onSelectionChange={e => this.setState({ selectedUser: e.value })}
                             >
                                 <Column field="name" header="Name" sortable={true} />
                                 <Column field="email" header="Email" sortable={true} />
@@ -304,19 +310,25 @@ class AppUsers extends Component {
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Name" Type="text" IsRequired={true}
                                                             Value={this.state.name}
-                                                            onChange={(val) => this.setState({ name: val })} />
+                                                            onChange={(val) => this.setState({ name: val })}
+                                                        // CheckField={this.state.CheckFields}
+                                                        />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Email" Type="email" IsRequired={true}
                                                             Value={this.state.email}
-                                                            onChange={(val) => this.setState({ email: val })} />
+                                                            onChange={(val) => this.setState({ email: val })}
+                                                        // CheckField={this.state.CheckFields}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <AMSInputField Label="Password" Type="password" IsRequired={true}
                                                             Value={this.state.password}
-                                                            onChange={(val) => this.setState({ password: val })} />
+                                                            onChange={(val) => this.setState({ password: val })}
+                                                        // CheckField={this.state.CheckFields}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">
@@ -354,19 +366,25 @@ class AppUsers extends Component {
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Name" Type="text" IsRequired={true}
                                                             Value={this.state.name}
-                                                            onChange={(val) => this.setState({ name: val })} />
+                                                            onChange={(val) => this.setState({ name: val })}
+                                                        // CheckField={this.state.CheckFields}
+                                                        />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Email" Type="email" IsRequired={true}
                                                             Value={this.state.email} ReadOnly={true}
-                                                            onChange={(val) => this.setState({ email: val })} />
+                                                            onChange={(val) => this.setState({ email: val })}
+                                                        // CheckField={this.state.CheckFields}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <AMSInputField Label="Password" Type="password" IsRequired={true}
                                                             Value={this.state.password}
-                                                            onChange={(val) => this.setState({ password: val })} />
+                                                            onChange={(val) => this.setState({ password: val })}
+                                                        // CheckField={this.state.CheckFields}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">

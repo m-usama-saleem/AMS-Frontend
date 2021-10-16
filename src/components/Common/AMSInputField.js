@@ -14,7 +14,10 @@ const errorBox = {
 const normalBox = {
     border: '1px solid #a6a6a6'
 };
-const errorBoxForCheckBox = {
+const normalBoxForDDL = {
+    border: '1px solid white', borderRadius: '3px'
+};
+const errorBoxForDDL = {
     border: '1px solid red', borderRadius: '3px'
 };
 
@@ -24,7 +27,22 @@ export default class AMSInputField extends Component {
         super(props);
         this.state = {
             val: '',
-            isValid: true
+            isValid: true,
+            CheckField: false
+        }
+    }
+
+    componentDidUpdate() {
+        if (this.props.CheckField && this.props.CheckField != undefined && this.state.CheckField != this.props.CheckField) {
+            this.checkForValidation();
+            this.setState({
+                CheckField: this.props.CheckField
+            })
+        }
+        if (this.props.Value && this.props.Value != undefined && this.state.val != this.props.Value) {
+            this.setState({
+                val: this.props.Value
+            })
         }
     }
 
@@ -45,20 +63,35 @@ export default class AMSInputField extends Component {
                 return true;
             }
         }
+
         return true;
     }
 
     checkForValidation() {
         const isRequired = this.props.IsRequired;
+        const type = this.props.Type;
         const checkType = this.ValidateType();
+        var valid_result = this.state.isValid;
 
         if (checkType) {
             if (isRequired == true) {
-                if (this.state.val.trim() == "" || this.state.val == undefined || this.state.val == null) {
-                    this.setState({ isValid: false })
-                } else {
-                    this.setState({ isValid: true })
+                if (type == "ddl_select") {
+                    if (!this.state.val || this.state.val == undefined) {
+                        valid_result = false;
+                    } else {
+                        valid_result = true;
+                    }
                 }
+                else {
+                    if (this.state.val.trim() == "" || this.state.val == undefined || this.state.val == null) {
+                        valid_result = false;
+                    } else {
+                        valid_result = true;
+                    }
+                }
+
+                this.setState({ isValid: valid_result })
+                this.props.ChangeIsValid(valid_result)
             }
             else {
                 this.setState({ isValid: true })
@@ -73,7 +106,6 @@ export default class AMSInputField extends Component {
     onChangeSelection(obj) {
         this.setState({ val: obj })
         this.props.onChange(obj);
-
     }
 
     getInputField() {
@@ -83,8 +115,11 @@ export default class AMSInputField extends Component {
 
         switch (Type) {
             case "text":
+            case "email":
+            case "password":
+            case "number":
                 return (
-                    <span key={id} className="ui-float-label">
+                    <span className="ui-float-label">
                         <label htmlFor="float-input">{Label} {required} </label>
                         <InputText id={id} value={Value != null ? Value : this.state.val} type={Type}
                             style={this.state.isValid === false ? errorBox : normalBox}
@@ -95,13 +130,14 @@ export default class AMSInputField extends Component {
                 );
             case "ddl_select":
                 return (
-                    <div key={id} >
+                    <div style={this.state.isValid === false ? errorBoxForDDL : normalBoxForDDL}>
                         <label htmlFor="float-input">{Label} {required}</label>
                         <Select
                             value={Value != null ? Value : this.state.val}
                             onChange={(e) => this.onChangeSelection(e)}
                             options={ItemsList}
                             maxMenuHeight={150}
+                            onBlur={() => this.checkForValidation()}
                         />
                     </div>
                 );

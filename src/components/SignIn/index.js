@@ -45,27 +45,27 @@ class SignInFormBase extends Component {
     const { userid, password, error } = this.state;
     const isInvalid = password === '' || userid === '';
     return (
-      <div id="login" class="login-form-container">
+      <div id="login" className="login-form-container">
         <header>LOGIN - SIGN UP</header>
         <form onSubmit={this.onSubmit}>
           <fieldset>
-            <div class="input-wrapper">
+            <div className="input-wrapper">
               <input
                 name="userid"
                 value={userid}
                 onChange={this.onChange}
                 type="text"
-                placeholder="User or Email"
+                placeholderText="User or Email"
                 autocomplete="off"
               />
             </div>
-            <div class="input-wrapper">
+            <div className="input-wrapper">
               <input
                 name="password"
                 value={password}
                 onChange={this.onChange}
                 type="password"
-                placeholder="Password"
+                placeholderText="Password"
                 autoComplete="off"
               />
             </div>

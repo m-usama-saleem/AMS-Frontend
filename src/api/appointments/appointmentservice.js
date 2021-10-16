@@ -83,9 +83,9 @@ class AppointmentService {
         });
     }
 
-    GetAll() {
+    GetAllIncomplete() {
         return new Promise((resolve, reject) => {
-            http.get("/appointmentService/getall",
+            http.get("/appointmentService/GetAllIncomplete",
                 {
                     headers: {
 

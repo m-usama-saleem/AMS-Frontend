@@ -8,7 +8,7 @@ import { AuthUserContext } from '../Session';
 const Navigation = () => (
   <div>
     <AuthUserContext.Consumer>
-      {authUser => 
+      {authUser =>
         authUser ? (
           <NavigationAuth authUser={authUser} />
         ) : (<NavigationNonAuth />)
@@ -17,10 +17,10 @@ const Navigation = () => (
   </div>
 );
 
-const NavigationAuth = ({authUser}) => (
-  <aside class="left-sidebar">
-    <div class="scroll-sidebar">
-      <nav class="sidebar-nav">
+const NavigationAuth = ({ authUser }) => (
+  <aside className="left-sidebar">
+    <div className="scroll-sidebar">
+      <nav className="sidebar-nav">
         <ul>
           <li>
             <Link to={ROUTES.LANDING}>Landing</Link>
@@ -35,21 +35,21 @@ const NavigationAuth = ({authUser}) => (
             <li>
               <Link to={ROUTES.ADMIN}>Admin</Link>
             </li>
-            
+
           )}
           <li>
-              <Link to={ROUTES.EXAM_LIST}>Exams</Link>
-            </li>
+            <Link to={ROUTES.EXAM_LIST}>Exams</Link>
+          </li>
           <li>
             <SignOutButton />
           </li>
         </ul>
       </nav>
     </div>
-    <div class="sidebar-footer">
-      <a href="" class="link" data-toggle="tooltip" title="Settings"><i class="ti-settings"></i></a>
-      <a href="" class="link" data-toggle="tooltip" title="Email"><i class="mdi mdi-gmail"></i></a>
-      <a href="" class="link" data-toggle="tooltip" title="Logout"><i class="mdi mdi-power"></i></a>
+    <div className="sidebar-footer">
+      <a href="" className="link" data-toggle="tooltip" title="Settings"><i className="ti-settings"></i></a>
+      <a href="" className="link" data-toggle="tooltip" title="Email"><i className="mdi mdi-gmail"></i></a>
+      <a href="" className="link" data-toggle="tooltip" title="Logout"><i className="mdi mdi-power"></i></a>
     </div>
   </aside>
 )

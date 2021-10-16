@@ -56,7 +56,7 @@ export class AppTopbar extends Component {
                 </button>
                 <div className="layout-topbar-icons">
                     {/* <span className="layout-topbar-search">
-                        <InputText type="text" placeholder="Search" />
+                        <InputText type="text" placeholderText="Search" />
                         <span className="layout-topbar-search-icon pi pi-search"/>
                     </span>
                     <button className="p-link">
@@ -74,11 +74,11 @@ export class AppTopbar extends Component {
                         <span className="layout-topbar-item-text">User</span>
                         <span className="layout-topbar-icon pi pi-user" />
                     </button> */}
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" onClick={() => this.toggleMenu()}>
+                    <div className="dropdown">
+                        <button className="btn btn-secondary dropdown-toggle" onClick={() => this.toggleMenu()}>
                             {this.props.authUser.name}
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{ display: this.state.showMenu }}
+                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{ display: this.state.showMenu }}
                             onClick={() => this.signOut()} >
                             <button className="p-link layout-menu-button" >
                                 <span style={{ fontSize: 16, color: 'black' }}>Logout</span>

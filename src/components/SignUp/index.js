@@ -21,12 +21,12 @@ const INITIAL_STATE = {
 };
 
 const UserRoles = [
-  {label: 'Administrator', value: '1'},
-  {label: 'Employee', value: '2'},
-  {label: 'Client', value: '3'},
+  { label: 'Administrator', value: '1' },
+  { label: 'Employee', value: '2' },
+  { label: 'Client', value: '3' },
 ];
 
-var userRoles= ["Admin","Employee","Client"]
+var userRoles = ["Admin", "Employee", "Client"]
 
 class SignUpFormBase extends Component {
   constructor(props) {
@@ -41,7 +41,7 @@ class SignUpFormBase extends Component {
 
   onSubmit = event => {
     const { username, email, passwordOne, role } = this.state;
-    const roles =[];
+    const roles = [];
     // this.props.firebase
     //   .doCreateUserWithEmailAndPassword(email, passwordOne)
     //   .then(authUser => {
@@ -95,32 +95,32 @@ class SignUpFormBase extends Component {
           value={username}
           onChange={this.onChange}
           type="text"
-          placeholder="Full Name"
+          placeholderText="Full Name"
         />
         <input
           name="email"
           value={email}
           onChange={this.onChange}
           type="text"
-          placeholder="Email Address"
+          placeholderText="Email Address"
         />
         <input
           name="passwordOne"
           value={passwordOne}
           onChange={this.onChange}
           type="password"
-          placeholder="Password"
+          placeholderText="Password"
         />
         <input
           name="passwordTwo"
           value={passwordTwo}
           onChange={this.onChange}
           type="password"
-          placeholder="Confirm Password"
+          placeholderText="Confirm Password"
         />
         <label>
           Admin:
-          <Dropdown optionLabel="Select Role" value={this.state.role} options={UserRoles} onChange={(e) => {this.setState({role: e.value})}} placeholder="Select a City"/>
+          <Dropdown optionLabel="Select Role" value={this.state.role} options={UserRoles} onChange={(e) => { this.setState({ role: e.value }) }} placeholder="Select a City" />
           <input
             name="role"
             type="dropdown"
