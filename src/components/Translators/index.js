@@ -177,14 +177,14 @@ class TranslatorList extends Component {
                         id: user.Id,
                         email: user.Email,
                         type: user.Type,
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        contact: user.contact,
-                        address: user.address,
-                        city: user.city,
-                        postCode: user.postCode,
-                        country: user.country,
-                        gender: user.gender,
+                        firstName: user.FirstName,
+                        lastName: user.LastName,
+                        contact: user.Contact,
+                        address: user.Address,
+                        city: user.City,
+                        postCode: user.PostCode,
+                        country: user.Country,
+                        gender: user.Gender,
                         language: user.Language,
                     };
 
@@ -371,21 +371,27 @@ class TranslatorList extends Component {
                                             <div className="p-grid ">
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Fist Name" Type="text" IsRequired={true}
+                                                        <AMSInputField Label="First Name" Type="text" IsRequired={true}
                                                             Value={this.state.firstName}
-                                                            onChange={(val) => this.setState({ firstName: val })} />
+                                                            onChange={(val) => this.setState({ firstName: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidFirstName: val })}
+                                                        />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Last Name" Type="text" IsRequired={true}
                                                             Value={this.state.lastName}
-                                                            onChange={(val) => this.setState({ lastName: val })} />
+                                                            onChange={(val) => this.setState({ lastName: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidLastName: val })}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Email" Type="email" IsRequired={true}
                                                             Value={this.state.email}
-                                                            onChange={(val) => this.setState({ email: val })} />
+                                                            onChange={(val) => this.setState({ email: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
@@ -431,31 +437,41 @@ class TranslatorList extends Component {
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Contact" Type="text"
                                                             Value={this.state.contact}
-                                                            onChange={(val) => this.setState({ contact: val })} />
+                                                            onChange={(val) => this.setState({ contact: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidContact: val })}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Address" Type="text"
                                                             Value={this.state.address}
-                                                            onChange={(val) => this.setState({ address: val })} />
+                                                            onChange={(val) => this.setState({ address: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidAddress: val })}
+                                                        />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Postcode" Type="text"
                                                             Value={this.state.postCode}
-                                                            onChange={(val) => this.setState({ postCode: val })} />
+                                                            onChange={(val) => this.setState({ postCode: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidPostcode: val })}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="City" Type="text"
                                                             Value={this.state.city}
-                                                            onChange={(val) => this.setState({ city: val })} />
+                                                            onChange={(val) => this.setState({ city: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidCity: val })}
+                                                        />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Country" Type="text"
                                                             Value={this.state.country}
-                                                            onChange={(val) => this.setState({ country: val })} />
+                                                            onChange={(val) => this.setState({ country: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidCountry: val })}
+                                                        />
                                                     </div>
                                                 </div>
 
@@ -492,21 +508,27 @@ class TranslatorList extends Component {
                                             <div className="p-grid ">
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Fist Name" Type="text" IsRequired={true}
+                                                        <AMSInputField Label="First Name" Type="text" IsRequired={true}
                                                             Value={this.state.firstName}
-                                                            onChange={(val) => this.setState({ firstName: val })} />
+                                                            onChange={(val) => this.setState({ firstName: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidFirstName: val })}
+                                                        />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Last Name" Type="text" IsRequired={true}
                                                             Value={this.state.lastName}
-                                                            onChange={(val) => this.setState({ lastName: val })} />
+                                                            onChange={(val) => this.setState({ lastName: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidLastName: val })}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Email" Type="email" IsRequired={true}
                                                             Value={this.state.email}
-                                                            onChange={(val) => this.setState({ email: val })} />
+                                                            onChange={(val) => this.setState({ email: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidName: val })}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
@@ -552,31 +574,41 @@ class TranslatorList extends Component {
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Contact" Type="text"
                                                             Value={this.state.contact}
-                                                            onChange={(val) => this.setState({ contact: val })} />
+                                                            onChange={(val) => this.setState({ contact: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidContact: val })}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Address" Type="text"
                                                             Value={this.state.address}
-                                                            onChange={(val) => this.setState({ address: val })} />
+                                                            onChange={(val) => this.setState({ address: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidAddress: val })}
+                                                        />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Postcode" Type="text"
                                                             Value={this.state.postCode}
-                                                            onChange={(val) => this.setState({ postCode: val })} />
+                                                            onChange={(val) => this.setState({ postCode: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidPostcode: val })}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="City" Type="text"
                                                             Value={this.state.city}
-                                                            onChange={(val) => this.setState({ city: val })} />
+                                                            onChange={(val) => this.setState({ city: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidCity: val })}
+                                                        />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Country" Type="text"
                                                             Value={this.state.country}
-                                                            onChange={(val) => this.setState({ country: val })} />
+                                                            onChange={(val) => this.setState({ country: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidCountry: val })}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="col-sm-12 col-md-12 col-lg-12">

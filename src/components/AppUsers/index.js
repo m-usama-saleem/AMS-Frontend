@@ -311,6 +311,7 @@ class AppUsers extends Component {
                                                         <AMSInputField Label="Name" Type="text" IsRequired={true}
                                                             Value={this.state.name}
                                                             onChange={(val) => this.setState({ name: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidName: val })}
                                                         // CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
@@ -318,6 +319,7 @@ class AppUsers extends Component {
                                                         <AMSInputField Label="Email" Type="email" IsRequired={true}
                                                             Value={this.state.email}
                                                             onChange={(val) => this.setState({ email: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
                                                         // CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
@@ -327,6 +329,7 @@ class AppUsers extends Component {
                                                         <AMSInputField Label="Password" Type="password" IsRequired={true}
                                                             Value={this.state.password}
                                                             onChange={(val) => this.setState({ password: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidPassword: val })}
                                                         // CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
@@ -367,6 +370,7 @@ class AppUsers extends Component {
                                                         <AMSInputField Label="Name" Type="text" IsRequired={true}
                                                             Value={this.state.name}
                                                             onChange={(val) => this.setState({ name: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidName: val })}
                                                         // CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
@@ -374,6 +378,7 @@ class AppUsers extends Component {
                                                         <AMSInputField Label="Email" Type="email" IsRequired={true}
                                                             Value={this.state.email} ReadOnly={true}
                                                             onChange={(val) => this.setState({ email: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
                                                         // CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
@@ -383,6 +388,7 @@ class AppUsers extends Component {
                                                         <AMSInputField Label="Password" Type="password" IsRequired={true}
                                                             Value={this.state.password}
                                                             onChange={(val) => this.setState({ password: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidPassword: val })}
                                                         // CheckField={this.state.CheckFields}
                                                         />
                                                     </div>

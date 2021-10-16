@@ -29,6 +29,7 @@ import TranslatorInvoice from '../Forms/invoices/TranslatorInvoice';
 import TranslatorInvoiceSpeaking from '../Forms/invoices/TranslatorInvoiceSpeaking';
 import ListPayables from '../Finance/Payables';
 import ListReceivables from '../Finance/Receivables';
+import '../SignIn/SignIn.scss';
 
 const App = (props) => (
     <div>
@@ -36,7 +37,7 @@ const App = (props) => (
             {authUser =>
                 authUser ? (
                     <AuthenticatedApp authUser={authUser} />
-                ) : (<SignInPage />)
+                ) : (<div className="login_page_background"><SignInPage /></div>)
             }
         </AuthUserContext.Consumer>
     </div>

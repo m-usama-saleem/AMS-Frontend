@@ -280,7 +280,7 @@ class ListPayables extends Component {
                 onClick={() => this.editMode(rowData)} title="Edit" />
 
             PaidButton = <Button icon="pi pi-check" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-info p-mr-2"
-                onClick={() => this.confirmPayable(rowData)} title="Paid" />
+                onClick={() => this.confirmPayable(rowData)} title="Pay" />
         }
 
         return (

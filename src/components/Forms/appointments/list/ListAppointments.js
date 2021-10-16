@@ -752,12 +752,12 @@ class ListAppointments extends Component {
                                 onSelectionChange={e => this.setState({ selectedAppointment: e.value })}
                                 resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/
                                 globalFilter={this.state.globalFilter}
-                                sortField="appointmentDate" sortOrder={1}
+                                sortField="appointmentDate" sortOrder={-1}
                                 paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                                 dataKey="id"
                             >
                                 <Column field="appointmentId" header="Appointment ID" sortable={true} />
-                                <Column field="appointmentDate" header="Appointment Date" sortable={true} />
+                                <Column field="appointmentDate" header="Appointment Date" sortable={true} style={{ textAlign: 'center' }} />
                                 <Column field="translatorName" header="Translator" sortable={true} />
                                 <Column field="institutionName" header="Institution" sortable={true} />
                                 <Column field="type" header="Type" sortable={true} />

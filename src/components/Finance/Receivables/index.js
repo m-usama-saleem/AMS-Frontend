@@ -239,7 +239,7 @@ class ListReceivables extends Component {
                 var ind = AllReceivables.findIndex(x => x.id == id);
                 AllReceivables[ind].status = "Approved";
 
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Paybale Paid Successfully' });
+                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Received Successfully' });
                 this.setState({
                     AllReceivables,
                     displayApproveDialog: false,
@@ -249,25 +249,8 @@ class ListReceivables extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayApproveDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error Paying Receivable' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error Receiving' });
                 });
-        }
-    }
-
-    viewInvoice(receivable) {
-        if (receivable) {
-            if (receivable.appointmentType === "SPRACHEN") {
-                this.props.history.push({
-                    pathname: ROUTES.TRANSLATOR_INVOICE_SPEAKING,
-                    Invoice: receivable
-                })
-            }
-            else if (receivable.appointmentType === "SCHREIBEN") {
-                this.props.history.push({
-                    pathname: ROUTES.TRANSLATOR_INVOICE,
-                    Invoice: receivable
-                })
-            }
         }
     }
 
@@ -280,171 +263,31 @@ class ListReceivables extends Component {
                 onClick={() => this.editMode(rowData)} title="Edit" />
 
             PaidButton = <Button icon="pi pi-check" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-info p-mr-2"
-                onClick={() => this.confirmReceivable(rowData)} title="Paid" />
+                onClick={() => this.confirmReceivable(rowData)} title="Receive" />
         }
 
         return (
             <React.Fragment>
-                <Button icon="pi pi-file" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-secondary p-mr-2"
-                    onClick={() => this.viewInvoice(rowData)} title="View Invoice" />
                 {PaidButton}
                 {EditButton}
-
             </React.Fragment>
         );
     }
 
-    ChangeAppointmentStart(val) {
-        this.setState({ AppointmentStart: val }, () => { this.calculateHours() })
-    }
-    ChangeStartOfTheTrip(val) {
-        this.setState({ StartOfTheTrip: val })
-    }
-    ChangeEndOfTheAppointment(val) {
-        this.setState({ EndOfTheAppointment: val })
-    }
-    ChangeEndOfTheTrip(val) {
-        this.setState({ EndOfTheTrip: val }, () => { this.calculateHours() })
-    }
-    calculateHours() {
-        const { StartOfTheTrip, EndOfTheTrip } = this.state;
-        if (StartOfTheTrip && EndOfTheTrip) {
-            //create date format          
-            var timeStart = new Date("01/01/2021 " + StartOfTheTrip);
-            var timeEnd = new Date("01/01/2021 " + EndOfTheTrip);
-
-            var hourDiff = timeEnd.getHours() - timeStart.getHours();
-            // var hourDiff = timeEnd.getMinutes() - timeStart.getMinutes();
-
-            this.setState({ TotalHours: hourDiff }, this.calculateTotal())
-        }
-    }
     calculateTotal() {
-        var { AppointmentType } = this.state
+        const { SubTotal, Tax } = this.state;
 
-        if (AppointmentType === "SPRACHEN") {
-            const { TotalHours, Tax, RideCost, TicketCost, DailyAllowance } = this.state;
-            var totalHoursCost = parseFloat(TotalHours) * 85.00;
-            var totalRideCost = parseFloat(RideCost) * 0.42;
-            var TotalDailyAllowance = parseFloat(DailyAllowance) * 14;
+        var TotalTax = SubTotal * (Tax / 100);
+        var NetPayment = SubTotal + TotalTax;
 
-            var SubTotal = totalHoursCost + totalRideCost + TotalDailyAllowance;
-            var TotalTax = SubTotal * (Tax / 100);
-            var NetPayment = SubTotal + TotalTax + parseFloat(TicketCost)
-
-            this.setState({
-                SubTotal: SubTotal.toFixed(2),
-                NetPayment: NetPayment.toFixed(2),
-                TotalDailyAllowance: TotalDailyAllowance.toFixed(2),
-                TotalTax: TotalTax.toFixed(2)
-            })
-        }
-        if (AppointmentType === "SCHREIBEN") {
-            // const { WordCount, Tax, Rate } = this.state;
-            // var Lines = WordCount / 55 * Rate;
-
-            // var SubTotal = totalHoursCost + totalRideCost + TotalDailyAllowance;
-            // var TotalTax = SubTotal * (Tax / 100);
-            // var NetPayment = SubTotal + TotalTax + parseFloat(TicketCost)
-
-            // this.setState({
-            //     SubTotal: SubTotal.toFixed(2),
-            //     NetPayment: NetPayment.toFixed(2),
-            //     TotalDailyAllowance: TotalDailyAllowance.toFixed(2),
-            //     TotalTax: TotalTax.toFixed(2)
-            // })
-        }
-
+        this.setState({
+            SubTotal: SubTotal.toFixed(2),
+            NetPayment: NetPayment.toFixed(2),
+            TotalTax: TotalTax.toFixed(2)
+        })
     }
 
-    getSpeakingFields() {
-        return (
-            <div>
-                <h3 style={{ borderBottomStyle: 'solid', borderBottomWidth: 2, borderColor: 'black' }}>Trip Details</h3>
-                <div className="row">
-                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <span className="ui-float-label">
-                            <label htmlFor="float-input">Start Of The Trip</label>
-                            <TimePicker className="form-control" time={this.state.StartOfTheTrip} theme="Ash" placeholder="Start Of The Trip"
-                                onSet={(val) => this.ChangeStartOfTheTrip(val.format24)} />
-                        </span>
-                    </div>
-                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <span className="ui-float-label">
-                            <label htmlFor="float-input">Appointment start</label>
-                            <TimePicker className="form-control" time={this.state.AppointmentStart} theme="Ash" placeholder="Appointment start time"
-                                onSet={(val) => this.ChangeAppointmentStart(val.format24)} />
-                        </span>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <span className="ui-float-label">
-                            <label htmlFor="float-input">End of the appointment</label>
-                            <TimePicker className="form-control" time={this.state.EndOfTheAppointment} theme="Ash" placeholder="End of the appointment time"
-                                onSet={(val) => this.ChangeEndOfTheAppointment(val.format24)} />
-                        </span>
-                    </div>
-                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <span className="ui-float-label">
-                            <label htmlFor="float-input">End of the trip</label>
-                            <TimePicker className="form-control" time={this.state.EndOfTheTrip} theme="Ash" placeholder="End of the trip time"
-                                onSet={(val) => this.ChangeEndOfTheTrip(val.format24)} />
-                        </span>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Total hours" PlaceholderText="Total hours" Type="text"
-                            Value={this.state.TotalHours} onChange={(val) => this.setState({ TotalHours: val }, () => this.calculateTotal())}
-                            ChangeIsValid={(val) => this.setState({ ValidTotalHours: val })}
-                        />
-                    </div>
-                    <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Ride Cost" PlaceholderText="Ride Cost" Type="number"
-                            Value={this.state.RideCost} onChange={(val) => this.setState({ RideCost: val }, () => this.calculateTotal())}
-                            ChangeIsValid={(val) => this.setState({ ValidRideCost: val })}
-                        />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
-                        <AMSInputField Label="Daily Allowance" PlaceholderText="Daily Allowance" Type="number"
-                            Value={this.state.DailyAllowance} onChange={(val) => this.setState({ DailyAllowance: val }, () => this.calculateTotal())}
-                            ChangeIsValid={(val) => this.setState({ ValidDailyAllowance: val })}
-                        />
-                    </div>
-                    <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Ticket Cost" PlaceholderText="Ticket Cost" Type="number"
-                            Value={this.state.TicketCost} onChange={(val) => this.setState({ TicketCost: val }, () => this.calculateTotal())}
-                            ChangeIsValid={(val) => this.setState({ ValidTicketCost: val })}
-                        />
-                    </div>
-                </div>
-            </div>
-        )
-    }
-    getWritingFields() {
-        return (
-            <div>
-                <h3 style={{ borderBottomStyle: 'solid', borderBottomWidth: 2, borderColor: 'black' }}>Calculations</h3>
-                <div className="row">
-                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Word Count" PlaceholderText="Word Count" Type="number"
-                            Value={this.state.WordCount} onChange={(val) => this.setState({ WordCount: val })}
-                            ChangeIsValid={(val) => this.setState({ ValidWordCount: val })}
-                        />
-                    </div>
-                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Rate" PlaceholderText="Rate" Type="number"
-                            Value={this.state.Rate} onChange={(val) => this.setState({ Rate: val })}
-                            ChangeIsValid={(val) => this.setState({ ValidRate: val })}
-                        />
-                    </div>
-                </div>
-            </div>
-        )
-    }
+
     render() {
         var { disableFields, disableApproveButton, AppointmentType } = this.state
         var header, FormFields;
@@ -458,13 +301,6 @@ class ListReceivables extends Component {
                     onClick={(e) => this.setState({ displayCreateDialog: true })} />
             </div> */}
         </div>
-
-        if (AppointmentType === "SPRACHEN") {
-            FormFields = this.getSpeakingFields()
-        }
-        if (AppointmentType === "SCHREIBEN") {
-            FormFields = this.getWritingFields()
-        }
 
         return (
             <div>
@@ -552,15 +388,12 @@ class ListReceivables extends Component {
                                                     </div>
                                                 </div>
 
-                                                {
-                                                    FormFields
-                                                }
-
                                                 <hr style={{ lineHeight: 5, borderColor: 'black' }}></hr>
                                                 <div className="row">
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <AMSInputField Label="Sub Total" PlaceholderText="Sub Total" Type="number"
-                                                            Value={this.state.SubTotal} ReadOnly={true}
+                                                            Value={this.state.SubTotal} onChange={(val) => this.setState({ Tax: val }, () => this.calculateTotal())}
+                                                            ChangeIsValid={(val) => this.setState({ SubTotal: val })}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>

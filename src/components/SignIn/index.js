@@ -46,7 +46,7 @@ class SignInFormBase extends Component {
     const isInvalid = password === '' || userid === '';
     return (
       <div id="login" className="login-form-container">
-        <header>LOGIN - SIGN UP</header>
+        <header style={{ fontSize: 40 }}>Login</header>
         <form onSubmit={this.onSubmit}>
           <fieldset>
             <div className="input-wrapper">
@@ -55,7 +55,7 @@ class SignInFormBase extends Component {
                 value={userid}
                 onChange={this.onChange}
                 type="text"
-                placeholderText="User or Email"
+                placeholder="Username"
                 autocomplete="off"
               />
             </div>
@@ -65,7 +65,7 @@ class SignInFormBase extends Component {
                 value={password}
                 onChange={this.onChange}
                 type="password"
-                placeholderText="Password"
+                placeholder="Password"
                 autoComplete="off"
               />
             </div>
