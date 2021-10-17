@@ -1,6 +1,6 @@
 import http, { handleResponseError } from "../../common/http-common";
 
-class PayableService {
+class ReceivableService {
 
     constructor() {
         this.currentUserSubject = JSON.parse(localStorage.getItem('currentUser'))
@@ -44,6 +44,25 @@ class PayableService {
         });
     }
 
+    ApproveMultipleReceivables = (list) => {
+        return new Promise((resolve, reject) => {
+            http.post("/FinanceService/MultipleApprove", list,
+                {
+                    headers: {
+                        // 'Authorization': 'Bearer ' + this.currentUserSubject.token,
+                    }
+                })
+                .then(response => {
+                    if (response.data !== null && response.data !== undefined) {
+                        resolve(response.data);
+                    }
+                })
+                .catch((error) => {
+                    reject(handleResponseError(error));
+                });
+        });
+    }
+
     GetAll() {
         return new Promise((resolve, reject) => {
             http.get("/FinanceService/GetAllReceivables",
@@ -63,4 +82,4 @@ class PayableService {
 
 }
 
-export default PayableService;
+export default ReceivableService;

@@ -39,9 +39,9 @@ const INITIAL_STATE = {
     Tax: 19,
 
     displayApproveDialog: false,
+    displayMultiApproveDialog: false,
     disableFields: false,
     disableApproveButton: true,
-    displayCreateDialog: false,
 
     AllPayables: [],
 }
@@ -90,15 +90,13 @@ class ListPayables extends Component {
     resetForm = () => {
         this.setState({
             isUploading: '',
-
             Id: 0,
             AppointmentId: '',
             Tax: 19,
-
             disableFields: false,
             displayApproveDialog: false,
+            displayMultiApproveDialog: false,
             disableApproveButton: true,
-            displayCreateDialog: false
         }, () => {
             // this.getLists();
         })
@@ -147,13 +145,24 @@ class ListPayables extends Component {
             .then((data) => {
                 if (data.success == true) {
                     this.growl.show({ severity: 'success', summary: 'Success', detail: 'Payable Updated' });
-                    var editedPayable = data.appointment;
-                    editedPayable.translatorName = app.TranslatorName;
-                    editedPayable.institutionName = app.InstitutionName;
-
+                    var editedPayable = data.finance;
                     var AllPayables = this.state.AllPayables;
                     var ind = AllPayables.findIndex(x => x.id == editedPayable.id);
-                    AllPayables[ind] = editedPayable;
+
+                    AllPayables[ind].WordCount = app.wordCount;
+                    AllPayables[ind].Rate = app.rate;
+                    AllPayables[ind].Hours = app.hours;
+                    AllPayables[ind].Discount = app.discount;
+                    AllPayables[ind].RideCost = app.rideCost;
+                    AllPayables[ind].DailyAllowance = app.dailyAllowance;
+                    AllPayables[ind].Tax = app.tax;
+                    AllPayables[ind].TicketCost = app.ticketCost;
+                    AllPayables[ind].NetPayment = app.netPayment;
+                    AllPayables[ind].StartOfTheTrip = app.startOfTheTrip;
+                    AllPayables[ind].AppointmentStart = app.appointmentStart;
+                    AllPayables[ind].EndOfTheAppointment = app.endOfTheAppointment;
+                    AllPayables[ind].EndOfTheTrip = app.endOfTheTrip;
+                    AllPayables[ind].TotalHours = app.totalHours;
 
                     this.setState({
                         AllPayables: AllPayables,
@@ -250,6 +259,41 @@ class ListPayables extends Component {
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayApproveDialog: false, })
                     this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error Paying Payable' });
+                });
+        }
+    }
+
+    onMultiApprovePayable() {
+        var objs = this.state.selectedPayable
+        var lists = [];
+        var AllPayables = this.state.AllPayables;
+
+        if (objs && objs.length > 0) {
+            objs.forEach(payable => {
+                var id = payable.id;
+                this.setState({ loadingModel: true });
+                if (id != undefined && id != null && id != 0) {
+                    lists.push({ id })
+                }
+            });
+
+            this.service.ApproveMultiplePayables(lists).then(() => {
+                lists.forEach(model => {
+                    var ind = AllPayables.findIndex(x => x.id == model.id);
+                    AllPayables[ind].status = "Approved";
+                });
+
+                this.growl.show({ severity: 'success', summary: 'Success', detail: 'All Paybales Paid Successfully' });
+                this.setState({
+                    AllPayables,
+                    displayMultiApproveDialog: false,
+                    loadingModel: false,
+                    error: ''
+                })
+            })
+                .catch(error => {
+                    this.setState({ loading: false, error: error, displayMultiApproveDialog: false, })
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error Paying Payables' });
                 });
         }
     }
@@ -446,18 +490,28 @@ class ListPayables extends Component {
         )
     }
     render() {
-        var { disableFields, disableApproveButton, AppointmentType } = this.state
-        var header, FormFields;
 
+        var { disableFields, disableApproveButton, AppointmentType, Status } = this.state
+        var header, FormFields, PayAllButton, UpdatePayableButton;
+
+        if (this.state.selectedPayable && this.state.selectedPayable.length > 1) {
+            PayAllButton = <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
+                <Button className="p-button-info" icon="pi pi-tick" iconPos="left" label="Pay All"
+                    onClick={(e) => this.setState({ displayMultiApproveDialog: true })} />
+            </div>
+        }
         header = <div className="row">
             <div className="col-sm-6 col-md-4 col-lg-4">
                 <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Search" size="20" />
             </div>
-            {/* <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
-                <Button className="p-button-info" icon="pi pi-plus" iconPos="left" label="Add"
-                    onClick={(e) => this.setState({ displayCreateDialog: true })} />
-            </div> */}
+            {PayAllButton}
         </div>
+
+        if (Status == "Pending") {
+            UpdatePayableButton = <span className="ui-float-label" style={{ float: 'right' }}>
+                <Button label="Update Payable" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditPayable()} />
+            </span>
+        }
 
         if (AppointmentType === "SPRACHEN") {
             FormFields = this.getSpeakingFields()
@@ -479,6 +533,7 @@ class ListPayables extends Component {
                                 // paginator={this.state.isLoading === false} rows={15}
                                 onRowDoubleClick={this.dblClickPayable} responsive={true}
                                 selection={this.state.selectedPayable}
+                                selectionMode="multiple" metaKeySelection={false}
                                 onSelectionChange={e => this.setState({ selectedPayable: e.value })}
                                 resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/
                                 globalFilter={this.state.globalFilter}
@@ -504,6 +559,16 @@ class ListPayables extends Component {
                                     : null
                                 }
                             </div>
+
+                            <Dialog visible={this.state.displayMultiApproveDialog} width="300px" header="You sure to mark all these Invoices Paid?"
+                                modal={true} onHide={() => this.setState({ displayMultiApproveDialog: false })}>
+                                {
+                                    <div className="ui-dialog-buttonpane p-clearfix">
+                                        <Button label="Yes" style={{ width: 100 }} className="p-button-success" onClick={() => this.onMultiApprovePayable()} />
+                                        <Button label="No" style={{ width: 100, marginLeft: 5 }} className="p-button-primary" onClick={() => this.setState({ displayMultiApproveDialog: false })} />
+                                    </div>
+                                }
+                            </Dialog>
 
                             <Dialog visible={this.state.displayApproveDialog} width="300px" header="You sure to mark this Invoice Paid?"
                                 modal={true} onHide={() => this.setState({ displayApproveDialog: false })}>
@@ -585,9 +650,7 @@ class ListPayables extends Component {
                                                     {this.state.error === true ? "Please fill all the required(red marked) fields" : null}
                                                 </div>
                                                 <div className="sm-4 md-2 lg-2">
-                                                    <span className="ui-float-label" style={{ float: 'right' }}>
-                                                        <Button label="Update Payable" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditPayable()} />
-                                                    </span>
+                                                    {UpdatePayableButton}
                                                 </div>
                                             </div>
                                         </div>

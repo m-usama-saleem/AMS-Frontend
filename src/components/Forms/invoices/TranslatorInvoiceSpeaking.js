@@ -72,7 +72,7 @@ export default class TranslatorInvoiceSpeaking extends Component {
                 <Text style={{ fontSize: 10, textAlign: 'center', color: 'red' }}>41 JAHRE DOLMETSCHER- UND ÜBERSETZERMANAGEMENT FÜR DIE JUSTIZ</Text>
                 <Text style={{ fontSize: 10, textAlign: 'center' }}>Alle afrikanischen, asiatischen, west – und osteuropäischen Sprachen</Text>
             </View>
-            <View style={{ marginTop: 30, maxWidth: 200 }}>
+            <View style={{ marginTop: 30, maxWidth: 180 }}>
                 <Text style={{
                     fontSize: 10, borderBottomWidth: 2, borderBottomColor: '#112131',
                     borderBottomStyle: 'solid', borderBottomColor: 'blue'
@@ -103,7 +103,7 @@ export default class TranslatorInvoiceSpeaking extends Component {
                 <Text style={{ marginTop: 30 }}>Für die Wahrnehmung des folgenden Termins gestatte ich mir, nach dem Justizvergütungs- und
                     Entschädigungsgesetz –JVEG, wie folgt zu berechnen:</Text>
             </View>
-            <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, maxWidth: 100 }}>
+            <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, maxWidth: 95 }}>
                 <Text style={{
                     fontWeight: 'heavy', fontSize: 12,
                     borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomStyle: 'solid'
@@ -151,7 +151,7 @@ export default class TranslatorInvoiceSpeaking extends Component {
                 </View>
                 <View style={[tableRow, { borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomStyle: 'solid' }]}>
                     <Text style={{ display: 'flex', flex: 1 }}>Tagegeld:</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.dailyAllowance}   x</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.dailyAllowance} Tage   x</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>14,00 €</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalDailyAllowance} €</Text>
                 </View>
@@ -183,6 +183,8 @@ export default class TranslatorInvoiceSpeaking extends Component {
             <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 20 }}>
                 <Text>Ich bitte um Überweisung des Rechnungsbetrages, <Text style={{ color: 'red' }}>unter Angabe der Rechnungsnummer</Text>, auf das
                     u.a. Konto und verbleibe</Text>
+            </View>
+            <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 10 }}>
                 <Text>mit freundlichen Grüßen</Text>
             </View>
             <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, borderBottomWidth: 2, borderBottomColor: 'blue', borderBottomStyle: 'solid', marginBottom: 10 }}>

@@ -39,6 +39,7 @@ const INITIAL_STATE = {
     Tax: 19,
 
     displayApproveDialog: false,
+    displayMultiApproveDialog: false,
     disableFields: false,
     disableApproveButton: true,
     displayCreateDialog: false,
@@ -97,6 +98,7 @@ class ListReceivables extends Component {
 
             disableFields: false,
             displayApproveDialog: false,
+            displayMultiApproveDialog: false,
             disableApproveButton: true,
             displayCreateDialog: false
         }, () => {
@@ -147,7 +149,7 @@ class ListReceivables extends Component {
             .then((data) => {
                 if (data.success == true) {
                     this.growl.show({ severity: 'success', summary: 'Success', detail: 'Receivable Updated' });
-                    var editedReceivable = data.appointment;
+                    var editedReceivable = data.finance;
                     editedReceivable.translatorName = app.TranslatorName;
                     editedReceivable.institutionName = app.InstitutionName;
 
@@ -254,6 +256,42 @@ class ListReceivables extends Component {
         }
     }
 
+
+    onMultiApproveReceivable() {
+        var objs = this.state.selectedReceivable
+        var lists = [];
+        var AllReceivables = this.state.AllReceivables;
+
+        if (objs && objs.length > 0) {
+            objs.forEach(rec => {
+                var id = rec.id;
+                this.setState({ loadingModel: true });
+                if (id != undefined && id != null && id != 0) {
+                    lists.push({ id })
+                }
+            });
+
+            this.service.ApproveMultipleReceivables(lists).then(() => {
+                lists.forEach(model => {
+                    var ind = AllReceivables.findIndex(x => x.id == model.id);
+                    AllReceivables[ind].status = "Approved";
+                });
+
+                this.growl.show({ severity: 'success', summary: 'Success', detail: 'All Received Successfully' });
+                this.setState({
+                    AllReceivables,
+                    displayMultiApproveDialog: false,
+                    loadingModel: false,
+                    error: ''
+                })
+            })
+                .catch(error => {
+                    this.setState({ loading: false, error: error, displayMultiApproveDialog: false, })
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error Receiving' });
+                });
+        }
+    }
+
     actionBodyTemplate(rowData) {
         var EditButton;
         var PaidButton;
@@ -275,7 +313,15 @@ class ListReceivables extends Component {
     }
 
     calculateTotal() {
-        const { SubTotal, Tax } = this.state;
+        var { SubTotal, Tax } = this.state;
+        if (!SubTotal || SubTotal == undefined) {
+            SubTotal = 0.0;
+        }
+        if (!Tax || Tax == undefined) {
+            Tax = 0.0;
+        }
+        SubTotal = parseFloat(SubTotal);
+        Tax = parseFloat(Tax);
 
         var TotalTax = SubTotal * (Tax / 100);
         var NetPayment = SubTotal + TotalTax;
@@ -289,17 +335,27 @@ class ListReceivables extends Component {
 
 
     render() {
-        var { disableFields, disableApproveButton, AppointmentType } = this.state
-        var header, FormFields;
+        var { disableFields, disableApproveButton, AppointmentType, Status } = this.state
+        var header, FormFields, UpdateReceivableButton, ReceiveAllButton;
+
+        if (this.state.selectedReceivable && this.state.selectedReceivable.length > 1) {
+            ReceiveAllButton = <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
+                <Button className="p-button-info" icon="pi pi-tick" iconPos="left" label="Receive All"
+                    onClick={(e) => this.setState({ displayMultiApproveDialog: true })} />
+            </div>
+        }
+
+        if (Status == "Pending") {
+            UpdateReceivableButton = <span className="ui-float-label" style={{ float: 'right' }}>
+                <Button label="Update Receivable" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditReceivable()} />
+            </span>
+        }
 
         header = <div className="row">
             <div className="col-sm-6 col-md-4 col-lg-4">
                 <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Search" size="20" />
             </div>
-            {/* <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
-                <Button className="p-button-info" icon="pi pi-plus" iconPos="left" label="Add"
-                    onClick={(e) => this.setState({ displayCreateDialog: true })} />
-            </div> */}
+            {ReceiveAllButton}
         </div>
 
         return (
@@ -315,6 +371,7 @@ class ListReceivables extends Component {
                                 // paginator={this.state.isLoading === false} rows={15}
                                 onRowDoubleClick={this.dblClickReceivable} responsive={true}
                                 selection={this.state.selectedReceivable}
+                                selectionMode="multiple" metaKeySelection={false}
                                 onSelectionChange={e => this.setState({ selectedReceivable: e.value })}
                                 resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/
                                 globalFilter={this.state.globalFilter}
@@ -341,12 +398,22 @@ class ListReceivables extends Component {
                                 }
                             </div>
 
-                            <Dialog visible={this.state.displayApproveDialog} width="300px" header="You sure to mark this Invoice Paid?"
+                            <Dialog visible={this.state.displayApproveDialog} width="300px" header="You sure to mark this Invoice Received?"
                                 modal={true} onHide={() => this.setState({ displayApproveDialog: false })}>
                                 {
                                     <div className="ui-dialog-buttonpane p-clearfix">
                                         <Button label="Yes" style={{ width: 100 }} className="p-button-success" onClick={() => this.onApproveReceivable()} />
                                         <Button label="No" style={{ width: 100, marginLeft: 5 }} className="p-button-primary" onClick={() => this.setState({ displayApproveDialog: false })} />
+                                    </div>
+                                }
+                            </Dialog>
+
+                            <Dialog visible={this.state.displayMultiApproveDialog} width="300px" header="You sure to mark all these Invoices Received?"
+                                modal={true} onHide={() => this.setState({ displayMultiApproveDialog: false })}>
+                                {
+                                    <div className="ui-dialog-buttonpane p-clearfix">
+                                        <Button label="Yes" style={{ width: 100 }} className="p-button-success" onClick={() => this.onMultiApproveReceivable()} />
+                                        <Button label="No" style={{ width: 100, marginLeft: 5 }} className="p-button-primary" onClick={() => this.setState({ displayMultiApproveDialog: false })} />
                                     </div>
                                 }
                             </Dialog>
@@ -392,7 +459,7 @@ class ListReceivables extends Component {
                                                 <div className="row">
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <AMSInputField Label="Sub Total" PlaceholderText="Sub Total" Type="number"
-                                                            Value={this.state.SubTotal} onChange={(val) => this.setState({ Tax: val }, () => this.calculateTotal())}
+                                                            Value={this.state.SubTotal} onChange={(val) => this.setState({ SubTotal: val }, () => this.calculateTotal())}
                                                             ChangeIsValid={(val) => this.setState({ SubTotal: val })}
                                                         />
                                                     </div>
@@ -418,9 +485,7 @@ class ListReceivables extends Component {
                                                     {this.state.error === true ? "Please fill all the required(red marked) fields" : null}
                                                 </div>
                                                 <div className="sm-4 md-2 lg-2">
-                                                    <span className="ui-float-label" style={{ float: 'right' }}>
-                                                        <Button label="Update Receivable" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditReceivable()} />
-                                                    </span>
+                                                    {UpdateReceivableButton}
                                                 </div>
                                             </div>
                                         </div>
