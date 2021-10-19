@@ -26,6 +26,13 @@ const normalBox = {
 const errorBoxForCheckBox = {
     border: '1px solid red', borderRadius: '3px'
 };
+const normalBoxForDDL = {
+    border: '1px solid white', borderRadius: '3px'
+};
+const errorBoxForDDL = {
+    border: '1px solid red', borderRadius: '3px'
+};
+
 
 class TranslatorList extends Component {
     constructor(props) {
@@ -41,6 +48,7 @@ class TranslatorList extends Component {
             displayEditDialog: false,
             isTypeValid: true,
             error: '',
+            CheckFields: false
         };
         this.userSerivce = new UserService();
 
@@ -122,7 +130,7 @@ class TranslatorList extends Component {
             City: this.state.city,
             PostCode: this.state.postCode,
             Country: this.state.country,
-            Gender: this.state.SelectedGender.value,
+            Gender: this.state.SelectedGender && this.state.SelectedGender.value ? this.state.SelectedGender.value : "",
 
             CreatedBy: this.props.authUser.id
         }
@@ -163,7 +171,7 @@ class TranslatorList extends Component {
             City: this.state.city,
             PostCode: this.state.postCode,
             Country: this.state.country,
-            Gender: this.state.SelectedGender.value,
+            Gender: this.state.SelectedGender && this.state.SelectedGender.value ? this.state.SelectedGender.value : "",
             CreatedBy: this.props.authUser.id
         }
         this.userSerivce
@@ -202,40 +210,67 @@ class TranslatorList extends Component {
             })
     }
 
-    validateForm = () => {
-        let error = "";
+    validateForm() {
+        return new Promise((resolve, reject) => {
+            this.setState({ CheckFields: true },
+                () => {
+                    this.setState({ abc: 0 }, () => {
+                        const { ValidFirstName, ValidLastName, ValidEmail } = this.state
+                        let error = "";
+                        if (!this.state.SelectedLanguageName || this.state.SelectedLanguageName === "" || this.state.SelectedLanguageName == undefined || this.state.SelectedLanguageName.length <= 0) {
+                            this.setState({ ValidLanguage: false });
+                            error += "Language cannot be empty \n";
+                        } else { this.setState({ ValidLanguage: true }); }
 
-        if (error !== '') {
-            this.setState({ isValidForm: false, error: error })
-            return false;
-        }
-        else {
-            this.setState({ isValidForm: true, error: null })
-            return true;
-        }
+                        if (this.state.type.trim() === '') {
+                            this.setState({ isTypeValid: false });
+                            error += "Type cannot be empty \n";
+                        } else { this.setState({ isTypeValid: true }); }
+
+                        if (ValidFirstName == true && ValidLastName == true && ValidEmail == true && error == "") {
+                            resolve(true);
+                        }
+                        resolve(false);
+                    });
+                });
+        })
     }
 
     onAddUser = (e) => {
         this.setState({ isLoading: true });
-        let result = this.validateForm();
-        if (result !== false) {
-            this.saveUser();
-        }
+        this.validateForm().then(result => {
+            if (result !== false) {
+                this.saveUser();
+            }
+            else {
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Translator' });
+                this.setState({ isLoading: false });
+            }
+        });
     }
+
     onEditUser = (e) => {
         this.setState({ isLoading: true });
-        let result = this.validateForm();
-        if (result !== false) {
-            this.editUser();
-        }
+        this.validateForm().then(result => {
+            if (result !== false) {
+                this.editUser();
+            }
+            else {
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Translator' });
+                this.setState({ isLoading: false });
+            }
+        });
     }
 
     onReset() {
         this.setState({
-            email: '', type: '', SelectedLanguageName: '', SelectedGender: '',
+            email: '', type: '', SelectedLanguageName: [], SelectedGender: '',
             firstName: '', lastName: '', contact: '',
             address: '', city: '', postCode: '', country: '',
-            gender: '', isTypeValid: true
+            gender: '',
+            isTypeValid: true,
+            ValidLanguage: true,
+            CheckFields: false
         });
     }
     onLanguageSelected(obj) {
@@ -287,10 +322,10 @@ class TranslatorList extends Component {
     }
     AddNew() {
         this.setState({
-            name: '', email: '', type: '', SelectedLanguageName: '', SelectedGender: '',
+            name: '', email: '', type: '', SelectedLanguageName: [], SelectedGender: '',
             firstName: '', lastName: '', contact: '',
             address: '', city: '', postCode: '', country: '',
-            gender: '', isTypeValid: true
+            gender: '', isTypeValid: true, CheckFields: false
         }, () => {
             this.setState({ displayCreateDialog: true })
         });
@@ -363,7 +398,7 @@ class TranslatorList extends Component {
                             </Dialog>
 
                             <Dialog style={{ width: '50vw' }} visible={this.state.displayCreateDialog} header="Create New Translator"
-                                modal={true} onHide={() => this.setState({ displayCreateDialog: false })}
+                                modal={true} onHide={() => this.setState({ displayCreateDialog: false }, () => this.onReset())}
                                 contentStyle={{ minHeight: "350px", maxHeight: "550px", overflow: "auto" }}>
                                 {
                                     <div className="p-grid p-fluid" >
@@ -375,6 +410,7 @@ class TranslatorList extends Component {
                                                             Value={this.state.firstName}
                                                             onChange={(val) => this.setState({ firstName: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidFirstName: val })}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
@@ -382,6 +418,7 @@ class TranslatorList extends Component {
                                                             Value={this.state.lastName}
                                                             onChange={(val) => this.setState({ lastName: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidLastName: val })}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                 </div>
@@ -391,6 +428,7 @@ class TranslatorList extends Component {
                                                             Value={this.state.email}
                                                             onChange={(val) => this.setState({ email: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                 </div>
@@ -410,8 +448,8 @@ class TranslatorList extends Component {
                                                             </div>
                                                         </span>
                                                     </div>
-                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <span className="ui-float-label">
+                                                    <div className="col-sm-12 col-md-6 col-lg-6" style={this.state.ValidLanguage === false ? errorBoxForDDL : normalBoxForDDL}>
+                                                        <span className="ui-float-label" >
                                                             <label htmlFor="float-input">Language<span style={{ color: 'red' }}>*</span></label>
                                                             <Select isMulti={true}
                                                                 value={this.state.SelectedLanguageName}
@@ -438,7 +476,6 @@ class TranslatorList extends Component {
                                                         <AMSInputField Label="Contact" Type="text"
                                                             Value={this.state.contact}
                                                             onChange={(val) => this.setState({ contact: val })}
-                                                            ChangeIsValid={(val) => this.setState({ ValidContact: val })}
                                                         />
                                                     </div>
                                                 </div>
@@ -447,14 +484,12 @@ class TranslatorList extends Component {
                                                         <AMSInputField Label="Address" Type="text"
                                                             Value={this.state.address}
                                                             onChange={(val) => this.setState({ address: val })}
-                                                            ChangeIsValid={(val) => this.setState({ ValidAddress: val })}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Postcode" Type="text"
                                                             Value={this.state.postCode}
                                                             onChange={(val) => this.setState({ postCode: val })}
-                                                            ChangeIsValid={(val) => this.setState({ ValidPostcode: val })}
                                                         />
                                                     </div>
                                                 </div>
@@ -463,14 +498,12 @@ class TranslatorList extends Component {
                                                         <AMSInputField Label="City" Type="text"
                                                             Value={this.state.city}
                                                             onChange={(val) => this.setState({ city: val })}
-                                                            ChangeIsValid={(val) => this.setState({ ValidCity: val })}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Country" Type="text"
                                                             Value={this.state.country}
                                                             onChange={(val) => this.setState({ country: val })}
-                                                            ChangeIsValid={(val) => this.setState({ ValidCountry: val })}
                                                         />
                                                     </div>
                                                 </div>
@@ -500,7 +533,7 @@ class TranslatorList extends Component {
                             </Dialog>
 
                             <Dialog style={{ width: '50vw' }} visible={this.state.displayEditDialog} header="Edit Translator"
-                                modal={true} onHide={() => this.setState({ displayEditDialog: false })}
+                                modal={true} onHide={() => this.setState({ displayEditDialog: false }, () => this.onReset())}
                                 contentStyle={{ minHeight: "350px", maxHeight: "550px", overflow: "auto" }}>
                                 {
                                     <div className="p-grid p-fluid" >
@@ -512,6 +545,7 @@ class TranslatorList extends Component {
                                                             Value={this.state.firstName}
                                                             onChange={(val) => this.setState({ firstName: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidFirstName: val })}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
@@ -519,6 +553,7 @@ class TranslatorList extends Component {
                                                             Value={this.state.lastName}
                                                             onChange={(val) => this.setState({ lastName: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidLastName: val })}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                 </div>
@@ -527,7 +562,8 @@ class TranslatorList extends Component {
                                                         <AMSInputField Label="Email" Type="email" IsRequired={true}
                                                             Value={this.state.email}
                                                             onChange={(val) => this.setState({ email: val })}
-                                                            ChangeIsValid={(val) => this.setState({ ValidName: val })}
+                                                            ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                 </div>
@@ -575,7 +611,6 @@ class TranslatorList extends Component {
                                                         <AMSInputField Label="Contact" Type="text"
                                                             Value={this.state.contact}
                                                             onChange={(val) => this.setState({ contact: val })}
-                                                            ChangeIsValid={(val) => this.setState({ ValidContact: val })}
                                                         />
                                                     </div>
                                                 </div>
@@ -584,14 +619,12 @@ class TranslatorList extends Component {
                                                         <AMSInputField Label="Address" Type="text"
                                                             Value={this.state.address}
                                                             onChange={(val) => this.setState({ address: val })}
-                                                            ChangeIsValid={(val) => this.setState({ ValidAddress: val })}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Postcode" Type="text"
                                                             Value={this.state.postCode}
                                                             onChange={(val) => this.setState({ postCode: val })}
-                                                            ChangeIsValid={(val) => this.setState({ ValidPostcode: val })}
                                                         />
                                                     </div>
                                                 </div>
@@ -600,14 +633,12 @@ class TranslatorList extends Component {
                                                         <AMSInputField Label="City" Type="text"
                                                             Value={this.state.city}
                                                             onChange={(val) => this.setState({ city: val })}
-                                                            ChangeIsValid={(val) => this.setState({ ValidCity: val })}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="Country" Type="text"
                                                             Value={this.state.country}
                                                             onChange={(val) => this.setState({ country: val })}
-                                                            ChangeIsValid={(val) => this.setState({ ValidCountry: val })}
                                                         />
                                                     </div>
                                                 </div>

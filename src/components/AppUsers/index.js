@@ -16,16 +16,6 @@ import Select from 'react-select'
 import { InputText } from 'primereact/inputtext';
 import AMSInputField from '../Common/AMSInputField';
 
-const errorBox = {
-    borderRadius: '3px', borderColor: 'rgba(242, 38, 19, 1)'
-};
-const normalBox = {
-    border: '1px solid #a6a6a6'
-};
-const errorBoxForCheckBox = {
-    border: '1px solid red', borderRadius: '3px'
-};
-
 class AppUsers extends Component {
     constructor(props) {
         super(props);
@@ -38,7 +28,11 @@ class AppUsers extends Component {
             displayDeleteDialog: false,
             displayCreateDialog: false,
             displayEditDialog: false,
+            ValidPassword: false,
+            ValidName: false,
+            ValidEmail: false,
             error: '',
+            CheckFields: false
         };
         this.userSerivce = new UserService();
 
@@ -93,14 +87,6 @@ class AppUsers extends Component {
                     this.setState({ loading: false, error: error, displayDeleteDialog: false, })
                     this.growl.show({ severity: 'error', summary: 'Error', detail: error });
                 });
-        }
-    }
-    showDeleteModal = (e) => {
-        if (this.state.selectedUser != undefined && this.state.selectedUser != null) {
-            this.setState({
-                displayDeleteDialog: true,
-                selectedUserId: e.data.id
-            })
         }
     }
 
@@ -175,36 +161,53 @@ class AppUsers extends Component {
             })
     }
 
-    validateForm = () => {
-        let error = "";
-
-        if (error !== '') {
-            this.setState({ isValidForm: false, error: error })
-            return false;
-        }
-        else {
-            this.setState({ isValidForm: true, error: null })
-            return true;
-        }
+    validateForm() {
+        return new Promise((resolve, reject) => {
+            this.setState({ CheckFields: true },
+                () => {
+                    this.setState({ abc: 0 }, () => {
+                        const { ValidEmail, ValidName, ValidPassword } = this.state
+                        if (ValidEmail == true && ValidName == true && ValidPassword == true) {
+                            resolve(true);
+                        }
+                        resolve(false);
+                    })
+                });
+        })
     }
 
     onAddUser = (e) => {
         this.setState({ isLoading: true });
-        let result = this.validateForm();
-        if (result !== false) {
-            this.saveUser();
-        }
+        this.validateForm().then(result => {
+            if (result !== false) {
+                this.saveUser();
+            }
+            else {
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating User' });
+                this.setState({ isLoading: false });
+            }
+        });
     }
     onEditUser = (e) => {
         this.setState({ isLoading: true });
-        let result = this.validateForm();
-        if (result !== false) {
-            this.editUser();
-        }
+        this.validateForm().then(result => {
+            if (result !== false) {
+                this.editUser();
+            }
+            else {
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating User' });
+                this.setState({ isLoading: false });
+            }
+        });
     }
 
     onReset() {
-        this.setState({ name: '', email: '', type: '', password: '' });
+        this.setState({
+            name: '', email: '', type: '', password: '', CheckFields: false,
+            ValidPassword: false,
+            ValidName: false,
+            ValidEmail: false,
+        });
     }
 
     EditMode(user) {
@@ -232,10 +235,9 @@ class AppUsers extends Component {
     }
 
     AddNew() {
-        this.setState({ name: '', email: '', type: '', address: '', isTypeValid: true }, () => {
-            this.setState({ displayCreateDialog: true })
-        });
+        this.setState({ displayCreateDialog: true }, () => this.onReset())
     }
+
     dblClickAppointment = (e) => {
         this.EditMode(e.data)
     }
@@ -300,7 +302,7 @@ class AppUsers extends Component {
                             </Dialog>
 
                             <Dialog style={{ width: '50vw' }} visible={this.state.displayCreateDialog} header="Create New User"
-                                modal={true} onHide={() => this.setState({ displayCreateDialog: false })}
+                                modal={true} onHide={() => this.setState({ displayCreateDialog: false }, () => this.onReset())}
                                 contentStyle={{ minHeight: "350px", maxHeight: "550px", overflow: "auto" }}>
                                 {
                                     <div className="p-grid p-fluid" >
@@ -312,7 +314,7 @@ class AppUsers extends Component {
                                                             Value={this.state.name}
                                                             onChange={(val) => this.setState({ name: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidName: val })}
-                                                        // CheckField={this.state.CheckFields}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
@@ -320,7 +322,7 @@ class AppUsers extends Component {
                                                             Value={this.state.email}
                                                             onChange={(val) => this.setState({ email: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
-                                                        // CheckField={this.state.CheckFields}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                 </div>
@@ -330,7 +332,7 @@ class AppUsers extends Component {
                                                             Value={this.state.password}
                                                             onChange={(val) => this.setState({ password: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidPassword: val })}
-                                                        // CheckField={this.state.CheckFields}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                 </div>
@@ -359,7 +361,7 @@ class AppUsers extends Component {
                             </Dialog>
 
                             <Dialog style={{ width: '50vw' }} visible={this.state.displayEditDialog} header="Edit User"
-                                modal={true} onHide={() => this.setState({ displayEditDialog: false })}
+                                modal={true} onHide={() => this.setState({ displayEditDialog: false }, () => this.onReset())}
                                 contentStyle={{ minHeight: "350px", maxHeight: "550px", overflow: "auto" }}>
                                 {
                                     <div className="p-grid p-fluid" >
@@ -371,7 +373,7 @@ class AppUsers extends Component {
                                                             Value={this.state.name}
                                                             onChange={(val) => this.setState({ name: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidName: val })}
-                                                        // CheckField={this.state.CheckFields}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
@@ -379,7 +381,7 @@ class AppUsers extends Component {
                                                             Value={this.state.email} ReadOnly={true}
                                                             onChange={(val) => this.setState({ email: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
-                                                        // CheckField={this.state.CheckFields}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                 </div>
@@ -389,7 +391,7 @@ class AppUsers extends Component {
                                                             Value={this.state.password}
                                                             onChange={(val) => this.setState({ password: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidPassword: val })}
-                                                        // CheckField={this.state.CheckFields}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                 </div>

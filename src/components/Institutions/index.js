@@ -39,6 +39,7 @@ class InstitutionList extends Component {
             displayCreateDialog: false,
             displayEditDialog: false,
             error: '',
+            CheckFields: false
         };
         this.userSerivce = new UserService();
 
@@ -174,36 +175,52 @@ class InstitutionList extends Component {
             })
     }
 
-    validateForm = () => {
-        let error = "";
-
-        if (error !== '') {
-            this.setState({ isValidForm: false, error: error })
-            return false;
-        }
-        else {
-            this.setState({ isValidForm: true, error: null })
-            return true;
-        }
+    validateForm() {
+        return new Promise((resolve, reject) => {
+            this.setState({ CheckFields: true },
+                () => {
+                    this.setState({ abc: 0 }, () => {
+                        const { ValidEmail, ValidName, ValidAddress } = this.state
+                        if (ValidEmail == true && ValidName == true && ValidAddress == true) {
+                            resolve(true);
+                        }
+                        resolve(false);
+                    });
+                });
+        })
     }
+
 
     onAddUser = (e) => {
         this.setState({ isLoading: true });
-        let result = this.validateForm();
-        if (result !== false) {
-            this.saveUser();
-        }
+        this.validateForm().then(result => {
+            if (result !== false) {
+                this.saveUser();
+            }
+            else {
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Institution' });
+                this.setState({ isLoading: false });
+            }
+        });
     }
     onEditUser = (e) => {
         this.setState({ isLoading: true });
-        let result = this.validateForm();
-        if (result !== false) {
-            this.editUser();
-        }
+        this.validateForm().then(result => {
+            if (result !== false) {
+                this.editUser();
+            }
+            else {
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Institution' });
+                this.setState({ isLoading: false });
+            }
+        });
     }
 
     onReset() {
-        this.setState({ name: '', email: '', address: '', city: '', postcode: '' });
+        this.setState({
+            name: '', email: '', address: '', city: '', postcode: '', CheckFields: false,
+            ValidEmail: false, ValidName: false, ValidAddress: false
+        });
     }
 
     EditMode(user) {
@@ -220,9 +237,7 @@ class InstitutionList extends Component {
         }
     }
     AddNew() {
-        this.setState({ name: '', email: '', address: '', city: '', postcode: '' }, () => {
-            this.setState({ displayCreateDialog: true })
-        });
+        this.setState({ displayCreateDialog: true }, () => this.onReset())
     }
 
     actionBodyTemplate(rowData) {
@@ -284,7 +299,7 @@ class InstitutionList extends Component {
 
                             </div>
                             <Dialog visible={this.state.displayDeleteDialog} width="400px" header="You sure to delete this Instituition?"
-                                modal={true} onHide={() => this.setState({ displayDeleteDialog: false })}>
+                                modal={true} onHide={() => this.setState({ displayDeleteDialog: false }, () => this.onReset())}>
                                 {
                                     <div className="ui-dialog-buttonpane p-clearfix">
                                         <Button label="Yes" style={{ width: 100 }} className="p-button-danger" onClick={() => this.onDeleteUser()} />
@@ -300,7 +315,7 @@ class InstitutionList extends Component {
                             </Dialog>
 
                             <Dialog style={{ width: '50vw' }} visible={this.state.displayCreateDialog} header="Create New Instituition"
-                                modal={true} onHide={() => this.setState({ displayCreateDialog: false })}
+                                modal={true} onHide={() => this.setState({ displayCreateDialog: false }, () => this.onReset())}
                                 contentStyle={{ minHeight: "350px", maxHeight: "550px", overflow: "auto" }}>
                                 {
                                     <div className="p-grid p-fluid" >
@@ -312,6 +327,7 @@ class InstitutionList extends Component {
                                                             Value={this.state.name}
                                                             onChange={(val) => this.setState({ name: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidName: val })}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
@@ -319,6 +335,7 @@ class InstitutionList extends Component {
                                                             Value={this.state.email}
                                                             onChange={(val) => this.setState({ email: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                 </div>
@@ -328,6 +345,7 @@ class InstitutionList extends Component {
                                                             Value={this.state.address}
                                                             onChange={(val) => this.setState({ address: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidAddress: val })}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                 </div>
@@ -372,7 +390,7 @@ class InstitutionList extends Component {
                             </Dialog>
 
                             <Dialog style={{ width: '50vw' }} visible={this.state.displayEditDialog} header="Edit Instituition"
-                                modal={true} onHide={() => this.setState({ displayEditDialog: false })}
+                                modal={true} onHide={() => this.setState({ displayEditDialog: false }, () => this.onReset())}
                                 contentStyle={{ minHeight: "350px", maxHeight: "550px", overflow: "auto" }}>
                                 {
                                     <div className="p-grid p-fluid" >
@@ -384,6 +402,7 @@ class InstitutionList extends Component {
                                                             Value={this.state.name}
                                                             onChange={(val) => this.setState({ name: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidName: val })}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
@@ -391,6 +410,7 @@ class InstitutionList extends Component {
                                                             Value={this.state.email} ReadOnly={true}
                                                             onChange={(val) => this.setState({ email: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                 </div>
@@ -400,6 +420,7 @@ class InstitutionList extends Component {
                                                             Value={this.state.address}
                                                             onChange={(val) => this.setState({ address: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidAddress: val })}
+                                                            CheckField={this.state.CheckFields}
                                                         />
                                                     </div>
                                                 </div>

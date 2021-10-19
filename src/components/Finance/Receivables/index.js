@@ -119,29 +119,16 @@ class ListReceivables extends Component {
     }
 
     EditReceivable() {
-        const { selectedReceivableId, AppointmentId_Fk, WordCount, Rate, Hours, Discount,
-            NetPayment, RideCost, DailyAllowance, TicketCost, Type, Tax, StartOfTheTrip,
-            AppointmentStart, EndOfTheAppointment, EndOfTheTrip, TotalHours } = this.state
+        const { selectedReceivableId, AppointmentId_Fk, SubTotal, NetPayment, Type, Tax, } = this.state
 
         let app = {
             Id: selectedReceivableId,
             AppointmentId_Fk,
             Status: 'Pending',
             Type,
-            WordCount,
-            Rate,
-            Hours,
-            Discount,
-            RideCost,
-            DailyAllowance,
+            Rate: SubTotal,
             Tax,
-            TicketCost,
             NetPayment,
-            StartOfTheTrip,
-            AppointmentStart,
-            EndOfTheAppointment,
-            EndOfTheTrip,
-            TotalHours,
             CreatedBy: this.props.authUser.id,
         }
 
@@ -149,20 +136,22 @@ class ListReceivables extends Component {
             .then((data) => {
                 if (data.success == true) {
                     this.growl.show({ severity: 'success', summary: 'Success', detail: 'Receivable Updated' });
-                    var editedReceivable = data.finance;
-                    editedReceivable.translatorName = app.TranslatorName;
-                    editedReceivable.institutionName = app.InstitutionName;
-
                     var AllReceivables = this.state.AllReceivables;
+                    var editedReceivable = data.finance;
                     var ind = AllReceivables.findIndex(x => x.id == editedReceivable.id);
-                    AllReceivables[ind] = editedReceivable;
+
+                    AllReceivables[ind].tax = app.Tax;
+                    AllReceivables[ind].subTotal = app.Rate;
+                    AllReceivables[ind].rate = app.Rate;
+                    AllReceivables[ind].netPayment = app.NetPayment;
 
                     this.setState({
                         AllReceivables: AllReceivables,
                         isLoading: false,
                         displayEditDialog: false
+                    }, () => {
+                        this.resetForm();
                     });
-                    this.resetForm();
                 }
             })
             .catch((error) => {
@@ -201,19 +190,8 @@ class ListReceivables extends Component {
 
                 Status: receivable.status,
                 Type: receivable.type,
-                StartOfTheTrip: receivable.startOfTheTrip,
-                AppointmentStart: receivable.appointmentStart,
-                EndOfTheAppointment: receivable.endOfTheAppointment,
-                EndOfTheTrip: receivable.endOfTheTrip,
-                TotalHours: receivable.totalHours,
-                WordCount: receivable.WordCount,
-                Rate: receivable.rate,
-                Hours: receivable.hours,
-                Discount: receivable.discount,
-                RideCost: receivable.rideCost,
-                DailyAllowance: receivable.dailyAllowance,
+                SubTotal: receivable.rate,
                 Tax: receivable.tax,
-                TicketCost: receivable.ticketCost,
                 NetPayment: receivable.netPayment,
 
                 displayEditDialog: true,

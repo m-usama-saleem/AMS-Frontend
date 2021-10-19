@@ -97,6 +97,7 @@ class ListPayables extends Component {
             displayApproveDialog: false,
             displayMultiApproveDialog: false,
             disableApproveButton: true,
+
         }, () => {
             // this.getLists();
         })
@@ -149,20 +150,20 @@ class ListPayables extends Component {
                     var AllPayables = this.state.AllPayables;
                     var ind = AllPayables.findIndex(x => x.id == editedPayable.id);
 
-                    AllPayables[ind].WordCount = app.wordCount;
-                    AllPayables[ind].Rate = app.rate;
-                    AllPayables[ind].Hours = app.hours;
-                    AllPayables[ind].Discount = app.discount;
-                    AllPayables[ind].RideCost = app.rideCost;
-                    AllPayables[ind].DailyAllowance = app.dailyAllowance;
-                    AllPayables[ind].Tax = app.tax;
-                    AllPayables[ind].TicketCost = app.ticketCost;
-                    AllPayables[ind].NetPayment = app.netPayment;
-                    AllPayables[ind].StartOfTheTrip = app.startOfTheTrip;
-                    AllPayables[ind].AppointmentStart = app.appointmentStart;
-                    AllPayables[ind].EndOfTheAppointment = app.endOfTheAppointment;
-                    AllPayables[ind].EndOfTheTrip = app.endOfTheTrip;
-                    AllPayables[ind].TotalHours = app.totalHours;
+                    AllPayables[ind].wordCount = app.WordCount;
+                    AllPayables[ind].rate = app.Rate;
+                    AllPayables[ind].hours = app.Hours;
+                    AllPayables[ind].discount = app.Discount;
+                    AllPayables[ind].rideCost = app.RideCost;
+                    AllPayables[ind].dailyAllowance = app.DailyAllowance;
+                    AllPayables[ind].tax = app.Tax;
+                    AllPayables[ind].ticketCost = app.TicketCost;
+                    AllPayables[ind].netPayment = app.NetPayment;
+                    AllPayables[ind].startOfTheTrip = app.StartOfTheTrip;
+                    AllPayables[ind].appointmentStart = app.AppointmentStart;
+                    AllPayables[ind].endOfTheAppointment = app.EndOfTheAppointment;
+                    AllPayables[ind].endOfTheTrip = app.EndOfTheTrip;
+                    AllPayables[ind].totalHours = app.TotalHours;
 
                     this.setState({
                         AllPayables: AllPayables,
@@ -338,11 +339,11 @@ class ListPayables extends Component {
         );
     }
 
-    ChangeAppointmentStart(val) {
-        this.setState({ AppointmentStart: val }, () => { this.calculateHours() })
-    }
     ChangeStartOfTheTrip(val) {
-        this.setState({ StartOfTheTrip: val })
+        this.setState({ StartOfTheTrip: val }, () => { this.calculateHours() })
+    }
+    ChangeAppointmentStart(val) {
+        this.setState({ AppointmentStart: val })
     }
     ChangeEndOfTheAppointment(val) {
         this.setState({ EndOfTheAppointment: val })
@@ -353,16 +354,27 @@ class ListPayables extends Component {
     calculateHours() {
         const { StartOfTheTrip, EndOfTheTrip } = this.state;
         if (StartOfTheTrip && EndOfTheTrip) {
+            debugger
             //create date format          
             var timeStart = new Date("01/01/2021 " + StartOfTheTrip);
             var timeEnd = new Date("01/01/2021 " + EndOfTheTrip);
 
-            var hourDiff = timeEnd.getHours() - timeStart.getHours();
+            var diff_in_minutes = this.Diff_minutes(timeEnd, timeStart);
+            var ceil_diff_in_half_hours = Math.ceil(diff_in_minutes / 30) * 30;
             // var hourDiff = timeEnd.getMinutes() - timeStart.getMinutes();
 
-            this.setState({ TotalHours: hourDiff }, this.calculateTotal())
+
+            this.setState({ TotalHours: ceil_diff_in_half_hours / 60 }, this.calculateTotal())
+
         }
     }
+
+    Diff_minutes(dt2, dt1) {
+        var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+        diff /= 60;
+        return Math.abs(Math.round(diff));
+    }
+
     calculateTotal() {
         var { AppointmentType } = this.state
 

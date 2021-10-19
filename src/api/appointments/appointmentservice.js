@@ -132,7 +132,7 @@ class AppointmentService {
                     var list = [];
                     if (response.data.length > 0) {
                         response.data.forEach(x => {
-                            list.push({ label: x.firstName, value: x.id, languages: x.language })
+                            list.push({ label: x.firstName + " " + x.lastName, value: x.id, languages: x.language })
                         })
                     }
                     resolve(list);
@@ -171,7 +171,7 @@ class AppointmentService {
 
             }).then(response => {
                 if (response.data != null) {
-                    FileDownload(response.data, data);
+                    FileDownload(response.data, data.split('_')[1]);
                 }
             }).catch(ex => {
             })

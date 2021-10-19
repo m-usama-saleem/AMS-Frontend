@@ -33,7 +33,6 @@ const errorBoxForCheckBox = {
 };
 
 const INITIAL_STATE = {
-    isUploading: '',
     Id: 0,
     AppointmentId: '',
     TranslatorNames: [],
@@ -45,7 +44,6 @@ const INITIAL_STATE = {
     EntryDate: new Date(),
     AppointmentDate: '',
     Type: '',
-    SelectedTypeName: '',
     Attachments: '',
     files: [],
 
@@ -107,63 +105,49 @@ class ListAppointments extends Component {
 
     validateForm() {
         return new Promise((resolve, reject) => {
-
-            let error = "";
-            // if (!this.state.SelectedAppointmentDate || (this.state.SelectedAppointmentDate && this.state.SelectedAppointmentDate.toString().trim() === '')) {
-            //     this.setState({ isAppointmentDateValid: false });
-            //     error += "Appointment Date cannot be empty \n";
-            // } else { this.setState({ isAppointmentDateValid: true }); }
-
-            // if (this.state.Type.trim() === '') {
-            //     this.setState({ isTypeValid: false });
-            //     error += "Type cannot be empty \n";
-            // } else { this.setState({ isTypeValid: true }); }
-
-            // if (!this.state.SelectedInstituteName || this.state.SelectedInstituteName == undefined) {
-            //     this.setState({ isInstituteValid: false });
-            //     error += "Institute cannot be empty \n";
-            // } else { this.setState({ isInstituteValid: true }); }
-
-            // if (error !== "") {
-            //     this.setState({ error: true });
-            //     return false;
-            // }
-            // else {
-            //     this.setState({ error: false });
-            //     return true;
-            // }
-
-            const { ValidAppointmentId, ValidInstitute, ValidTranslator, ValidLanguage } = this.state
             this.setState({ CheckFields: true },
                 () => {
-                    if (ValidAppointmentId == true && ValidInstitute == true &&
-                        ValidTranslator == true && ValidLanguage == true) {
-                        resolve(true);
-                    }
-                    resolve(false);
+                    this.setState({ abc: 0 }, () => {
+
+                        const { ValidAppointmentId, ValidInstitute, ValidTranslator, ValidLanguage } = this.state
+                        let error = "";
+
+                        if (!this.state.SelectedAppointmentDate || (this.state.SelectedAppointmentDate && this.state.SelectedAppointmentDate.toString().trim() === '')) {
+                            this.setState({ isAppointmentDateValid: false });
+                            error += "Appointment Date cannot be empty \n";
+                        } else { this.setState({ isAppointmentDateValid: true }); }
+
+                        if (this.state.Type.trim() === '') {
+                            this.setState({ isTypeValid: false });
+                            error += "Type cannot be empty \n";
+                        } else { this.setState({ isTypeValid: true }); }
+
+
+                        if (ValidAppointmentId == true && ValidInstitute == true &&
+                            ValidTranslator == true && ValidLanguage == true && error === "") {
+                            resolve(true);
+                        }
+                        resolve(false);
+                    });
                 });
         })
     }
 
     resetForm = () => {
         this.setState({
-            isUploading: '',
-
-            Id: 0,
+            selectedAppointmentId: '',
+            Id: '',
             AppointmentId: '',
             SelectedTranslatorName: '',
             SelectedInstituteName: '',
             SelectedLanguageName: '',
             EntryDate: new Date(),
             AppointmentDate: '',
-            SelectedTypeName: '',
             Attachments: '',
             files: [],
-
-            ValidAppointmentId: false,
-            ValidInstitute: false,
-            ValidLanguage: false,
-            ValidTranslator: false,
+            Type: '',
+            SelectedAppointmentDate: '',
+            AttachmentFiles: '',
 
             isTypeValid: true,
 
@@ -173,6 +157,7 @@ class ListAppointments extends Component {
             disableDeleteButton: true,
             disableApproveButton: true,
             displayCreateDialog: false,
+
         }, () => {
             // this.getLists();
         })
@@ -189,6 +174,7 @@ class ListAppointments extends Component {
                 this.SaveAppointment();
             }
             else {
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Appointment' });
                 this.setState({ isLoading: false });
             }
         });
@@ -231,14 +217,15 @@ class ListAppointments extends Component {
                             savedAppointment.translatorName = app.TranslatorName;
                             savedAppointment.institutionName = app.InstitutionName;
 
+                            this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Created' });
                             this.setState({
                                 AllAppointments: [...this.state.AllAppointments, savedAppointment],
                                 isLoading: false,
                                 displayCreateDialog: false
+                            }, () => {
+                                this.resetForm();
                             });
 
-                            this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Created' });
-                            this.resetForm();
                         }
                     })
                     .catch((error) => {
@@ -256,14 +243,14 @@ class ListAppointments extends Component {
                         savedAppointment.institutionName = app.InstitutionName;
                         savedAppointment.appointmentDate = new Date(app.AppointmentDate).toLocaleDateString();
 
+                        this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Created' });
                         this.setState({
                             AllAppointments: [...this.state.AllAppointments, savedAppointment],
                             isLoading: false,
                             displayCreateDialog: false
+                        }, () => {
+                            this.resetForm();
                         });
-
-                        this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Created' });
-                        this.resetForm();
                     }
                 })
                 .catch((error) => {
@@ -279,6 +266,10 @@ class ListAppointments extends Component {
         this.validateForm().then(result => {
             if (result !== false) {
                 this.EditAppointment();
+            }
+            else {
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while editing Appointment' });
+                this.setState({ isLoading: false });
             }
         })
     }
@@ -302,32 +293,77 @@ class ListAppointments extends Component {
             CreatedBy: this.props.authUser.id,
             Attachments: AttachmentFiles
         }
+        var filesArray = this.state.files;
 
-        this.service.Edit(app)
-            .then((data) => {
-                if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Updated' });
-                    var editedAppointment = data.appointment;
-                    editedAppointment.translatorName = app.TranslatorName;
-                    editedAppointment.institutionName = app.InstitutionName;
-                    editedAppointment.appointmentDate = new Date(app.AppointmentDate).toLocaleDateString();
+        if (filesArray && filesArray.length > 0) {
 
-                    var AllAppointments = this.state.AllAppointments;
-                    var ind = AllAppointments.findIndex(x => x.id == editedAppointment.id);
-                    AllAppointments[ind] = editedAppointment;
+            let f = new FormData();
+            f = new FormData();
+            filesArray.forEach(element => {
+                f.append("File[]", element)
+            });
 
-                    this.setState({
-                        AllAppointments: AllAppointments,
-                        isLoading: false,
-                        displayEditDialog: false
-                    });
-                    this.resetForm();
-                }
-            })
-            .catch((error) => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Appointment' });
-                this.setState({ isLoading: false });
-            })
+            this.service.UploadFile(f).then((fileName) => {
+                app.Attachments = fileName;
+
+                this.service.Edit(app)
+                    .then((data) => {
+                        if (data.success == true) {
+                            this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Updated' });
+
+                            var editedAppointment = data.appointment;
+                            editedAppointment.translatorName = app.TranslatorName;
+                            editedAppointment.institutionName = app.InstitutionName;
+                            editedAppointment.appointmentDate = new Date(app.AppointmentDate).toLocaleDateString();
+
+                            var AllAppointments = this.state.AllAppointments;
+                            var ind = AllAppointments.findIndex(x => x.id == editedAppointment.id);
+                            AllAppointments[ind] = editedAppointment;
+
+                            this.setState({
+                                AllAppointments: AllAppointments,
+                                isLoading: false,
+                                displayEditDialog: false
+                            }, () => {
+                                this.resetForm();
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Appointment' });
+                        this.setState({ isLoading: false });
+                    })
+            });
+        }
+        else {
+            this.service.Edit(app)
+                .then((data) => {
+                    if (data.success == true) {
+                        this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Updated' });
+
+                        var editedAppointment = data.appointment;
+                        editedAppointment.translatorName = app.TranslatorName;
+                        editedAppointment.institutionName = app.InstitutionName;
+                        editedAppointment.appointmentDate = new Date(app.AppointmentDate).toLocaleDateString();
+
+                        var AllAppointments = this.state.AllAppointments;
+                        var ind = AllAppointments.findIndex(x => x.id == editedAppointment.id);
+                        AllAppointments[ind] = editedAppointment;
+
+                        this.setState({
+                            AllAppointments: AllAppointments,
+                            isLoading: false,
+                            displayEditDialog: false
+                        }, () => {
+                            this.resetForm();
+                        });
+                    }
+                })
+                .catch((error) => {
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Appointment' });
+                    this.setState({ isLoading: false });
+                })
+        }
     }
 
     onTranslatorSelected(obj) {
@@ -496,7 +532,7 @@ class ListAppointments extends Component {
 
         return (
             <Dialog visible={this.state.displayEditDialog} style={{ width: '60vw' }} header="Appointment Information"
-                modal={true} onHide={() => this.setState({ displayEditDialog: false })}
+                modal={true} onHide={() => this.setState({ displayEditDialog: false }, () => this.resetForm())}
                 contentStyle={{ maxHeight: "550px", overflow: "auto" }}>
                 {
                     <div className="p-grid p-fluid">
@@ -719,6 +755,20 @@ class ListAppointments extends Component {
             </Dialog>
         )
     }
+    onResetFields() {
+        this.setState({
+            selectedAppointmentId: '',
+            Id: '',
+            AppointmentId: '',
+            SelectedInstituteName: '',
+            SelectedTranslatorName: '',
+            SelectedLanguageName: '',
+            Type: '',
+            EntryDate: '',
+            SelectedAppointmentDate: '',
+            AttachmentFiles: ''
+        })
+    }
     render() {
         var { disableFields, disableDeleteButton, disableApproveButton } = this.state
         var header;
@@ -755,6 +805,7 @@ class ListAppointments extends Component {
                                 sortField="appointmentDate" sortOrder={-1}
                                 paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                                 dataKey="id"
+
                             >
                                 <Column field="appointmentId" header="Appointment ID" sortable={true} />
                                 <Column field="appointmentDate" header="Appointment Date" sortable={true} style={{ textAlign: 'center' }} />

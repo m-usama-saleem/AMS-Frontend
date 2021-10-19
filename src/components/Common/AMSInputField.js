@@ -33,13 +33,16 @@ export default class AMSInputField extends Component {
     }
 
     componentDidUpdate() {
-        if (this.props.CheckField && this.props.CheckField != undefined && this.state.CheckField != this.props.CheckField) {
-            this.checkForValidation();
-            this.setState({
-                CheckField: this.props.CheckField
-            })
+        if (this.props.CheckField != null && this.props.CheckField != undefined && this.state.CheckField != this.props.CheckField) {
+            if (this.props.CheckField == true) {
+                this.checkForValidation();
+            }
+            else { this.setState({ isValid: true }) }
+
+            this.setState({ CheckField: this.props.CheckField })
         }
-        if (this.props.Value && this.props.Value != undefined && this.state.val != this.props.Value) {
+
+        if (this.props.Value != null && this.props.Value != undefined && this.state.val != this.props.Value) {
             this.setState({
                 val: this.props.Value
             })
@@ -63,7 +66,6 @@ export default class AMSInputField extends Component {
                 return true;
             }
         }
-
         return true;
     }
 
@@ -72,7 +74,6 @@ export default class AMSInputField extends Component {
         const type = this.props.Type;
         const checkType = this.ValidateType();
         var valid_result = this.state.isValid;
-
         if (checkType) {
             if (isRequired == true) {
                 if (type == "ddl_select") {
