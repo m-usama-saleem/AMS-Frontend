@@ -14,7 +14,7 @@ import { RadioButton } from 'primereact/radiobutton';
 import Select from 'react-select'
 
 import { InputText } from 'primereact/inputtext';
-import { Genders, Languages } from '../../constants/languages';
+import { Genders, Languages } from '../../constants/staticValues';
 import AMSInputField from '../Common/AMSInputField';
 
 const errorBox = {

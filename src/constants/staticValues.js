@@ -52,3 +52,9 @@ export const Genders = [
         value: "f"
     },
 ]
+
+export const CommonValues = {
+    RideCost: 0.42,
+    HoursCost: 85.00,
+    DailyAllowance: 14.00
+}

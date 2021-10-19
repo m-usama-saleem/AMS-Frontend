@@ -20,7 +20,7 @@ import ReceivableService from '../../../api/finance/receivableService';
 import * as ROLES from '../../../constants/roles';
 import * as ROUTES from '../../../constants/routes';
 import AMSInputField from '../../Common/AMSInputField';
-import { ListAppointmentType } from '../../../constants/languages';
+import { ListAppointmentType } from '../../../constants/staticValues';
 
 const errorBox = {
     borderRadius: '3px', borderColor: 'rgba(242, 38, 19, 1)'

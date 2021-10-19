@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { PDFViewer, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import companyLogo from '../../../assets/head_image.png'
+import { CommonValues } from '../../../constants/staticValues';
 
 // Create styles
 const styles = StyleSheet.create({
@@ -39,9 +40,9 @@ export default class TranslatorInvoiceSpeaking extends Component {
 
             const { totalHours, tax, rideCost, ticketCost, dailyAllowance } = this.props.location.Invoice;
 
-            var totalHoursCost = parseFloat(totalHours) * 85.00;
-            var totalRideCost = parseFloat(rideCost) * 0.42;
-            var TotalDailyAllowance = parseFloat(dailyAllowance) * 14;
+            var totalHoursCost = parseFloat(totalHours) * CommonValues.HoursCost;
+            var totalRideCost = parseFloat(rideCost) * CommonValues.RideCost;
+            var TotalDailyAllowance = parseFloat(dailyAllowance) * CommonValues.DailyAllowance;
 
             var SubTotal = totalHoursCost + totalRideCost + TotalDailyAllowance;
             var TotalTax = SubTotal * (tax / 100);

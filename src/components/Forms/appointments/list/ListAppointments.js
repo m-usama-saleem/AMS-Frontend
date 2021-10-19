@@ -20,7 +20,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import AppointmentService from '../../../../api/appointments/appointmentservice';
 import * as ROLES from '../../../../constants/roles';
 import AMSInputField from '../../../Common/AMSInputField';
-import { Languages, ListAppointmentType } from '../../../../constants/languages';
+import { Languages, ListAppointmentType } from '../../../../constants/staticValues';
 
 const errorBox = {
     borderRadius: '3px', borderColor: 'rgba(242, 38, 19, 1)'

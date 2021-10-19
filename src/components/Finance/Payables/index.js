@@ -20,7 +20,7 @@ import PayableService from '../../../api/finance/payableService';
 import * as ROLES from '../../../constants/roles';
 import * as ROUTES from '../../../constants/routes';
 import AMSInputField from '../../Common/AMSInputField';
-import { ListAppointmentType } from '../../../constants/languages';
+import { CommonValues, ListAppointmentType } from '../../../constants/staticValues';
 
 const errorBox = {
     borderRadius: '3px', borderColor: 'rgba(242, 38, 19, 1)'
@@ -413,6 +413,12 @@ class ListPayables extends Component {
 
     }
 
+    calculateRideCost() {
+        var { RideDistance, RideCost } = this.state;
+        RideCost = RideDistance * CommonValues.RideCost;
+        this.setState({ RideCost: RideCost.toFixed(2) }, () => this.calculateTotal())
+    }
+
     getSpeakingFields() {
         return (
             <div>
@@ -456,8 +462,16 @@ class ListPayables extends Component {
                             ChangeIsValid={(val) => this.setState({ ValidTotalHours: val })}
                         />
                     </div>
+                </div>
+                <div className="row">
                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Ride Cost" PlaceholderText="Ride Cost" Type="number"
+                        <AMSInputField Label="Ride Distance (KM)" PlaceholderText="Ride Distance (KM)" Type="number"
+                            Value={this.state.RideDistance} onChange={(val) => this.setState({ RideDistance: val }, () => this.calculateRideCost())}
+                            ChangeIsValid={(val) => this.setState({ ValidRideDistance: val })}
+                        />
+                    </div>
+                    <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                        <AMSInputField Label="Ride Cost" PlaceholderText="Ride Cost" Type="number" /* ReadOnly={true} */
                             Value={this.state.RideCost} onChange={(val) => this.setState({ RideCost: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => this.setState({ ValidRideCost: val })}
                         />
