@@ -142,8 +142,8 @@ class AuthenticatedApp extends Component {
             {
                 label: 'Finance', icon: 'fa fa-file',
                 items: [
-                    { label: 'Receivables', icon: 'fa fa-file-archive-o', to: ROUTES.FINANCE_RECEIVE },
                     { label: 'Payables', icon: 'fa fa-rss', to: ROUTES.FINANCE_PAY },
+                    { label: 'Receivables', icon: 'fa fa-file-archive-o', to: ROUTES.FINANCE_RECEIVE },
                 ]
             },
             {

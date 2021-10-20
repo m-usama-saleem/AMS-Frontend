@@ -305,7 +305,6 @@ class ListReceivables extends Component {
         var NetPayment = SubTotal + TotalTax;
 
         this.setState({
-            SubTotal: SubTotal.toFixed(2),
             NetPayment: NetPayment.toFixed(2),
             TotalTax: TotalTax.toFixed(2)
         })
@@ -379,7 +378,7 @@ class ListReceivables extends Component {
                             <Dialog visible={this.state.displayApproveDialog} width="300px" header="You sure to mark this Invoice Received?"
                                 modal={true} onHide={() => this.setState({ displayApproveDialog: false })}>
                                 {
-                                    <div className="ui-dialog-buttonpane p-clearfix">
+                                    <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>
                                         <Button label="Yes" style={{ width: 100 }} className="p-button-success" onClick={() => this.onApproveReceivable()} />
                                         <Button label="No" style={{ width: 100, marginLeft: 5 }} className="p-button-primary" onClick={() => this.setState({ displayApproveDialog: false })} />
                                     </div>
@@ -389,7 +388,7 @@ class ListReceivables extends Component {
                             <Dialog visible={this.state.displayMultiApproveDialog} width="300px" header="You sure to mark all these Invoices Received?"
                                 modal={true} onHide={() => this.setState({ displayMultiApproveDialog: false })}>
                                 {
-                                    <div className="ui-dialog-buttonpane p-clearfix">
+                                    <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>
                                         <Button label="Yes" style={{ width: 100 }} className="p-button-success" onClick={() => this.onMultiApproveReceivable()} />
                                         <Button label="No" style={{ width: 100, marginLeft: 5 }} className="p-button-primary" onClick={() => this.setState({ displayMultiApproveDialog: false })} />
                                     </div>
@@ -402,7 +401,7 @@ class ListReceivables extends Component {
                                 {
                                     <div className="p-grid p-fluid">
                                         <div className="card card-w-title">
-                                            <h1>Edit Payment Information</h1>
+                                            <h1>Payment Information</h1>
                                             <div className="p-grid" >
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>

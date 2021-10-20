@@ -116,7 +116,7 @@ export default class TranslatorInvoiceSpeaking extends Component {
             }}>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>Termin am:</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.appointmentDate} Uhr</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.appointmentDate}</Text>
                 </View>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>Antritt der Reise:</Text>

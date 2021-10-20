@@ -829,7 +829,7 @@ class ListAppointments extends Component {
                             <Dialog visible={this.state.displayDeleteDialog} width="300px" header="You sure to delete this Appointment?"
                                 modal={true} onHide={() => this.setState({ displayDeleteDialog: false })}>
                                 {
-                                    <div className="ui-dialog-buttonpane p-clearfix">
+                                    <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>
                                         <Button label="Yes" style={{ width: 100 }} className="p-button-danger" onClick={() => this.onDeleteAppointment()} />
                                         <Button label="No" style={{ width: 100, marginLeft: 5 }} className="p-button-primary" onClick={() => this.setState({ displayDeleteDialog: false })} />
                                     </div>
@@ -839,7 +839,7 @@ class ListAppointments extends Component {
                             <Dialog visible={this.state.displayApproveDialog} width="300px" header="You sure to Approve this Appointment?"
                                 modal={true} onHide={() => this.setState({ displayApproveDialog: false })}>
                                 {
-                                    <div className="ui-dialog-buttonpane p-clearfix">
+                                    <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>
                                         <Button label="Yes" style={{ width: 100 }} className="p-button-success" onClick={() => this.onApproveAppointment()} />
                                         <Button label="No" style={{ width: 100, marginLeft: 5 }} className="p-button-primary" onClick={() => this.setState({ displayApproveDialog: false })} />
                                     </div>

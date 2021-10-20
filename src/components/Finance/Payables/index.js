@@ -117,7 +117,7 @@ class ListPayables extends Component {
 
     EditPayable() {
         const { selectedPayableId, AppointmentId_Fk, WordCount, Rate, Hours, Discount,
-            NetPayment, RideCost, DailyAllowance, TicketCost, Type, Tax, StartOfTheTrip,
+            NetPayment, RideDistance, DailyAllowance, TicketCost, Type, Tax, StartOfTheTrip,
             AppointmentStart, EndOfTheAppointment, EndOfTheTrip, TotalHours } = this.state
 
         let app = {
@@ -129,7 +129,7 @@ class ListPayables extends Component {
             Rate,
             Hours,
             Discount,
-            RideCost,
+            RideCost: RideDistance,
             DailyAllowance,
             Tax,
             TicketCost,
@@ -154,6 +154,7 @@ class ListPayables extends Component {
                     AllPayables[ind].rate = app.Rate;
                     AllPayables[ind].hours = app.Hours;
                     AllPayables[ind].discount = app.Discount;
+                    AllPayables[ind].rideDistance = app.RideCost;
                     AllPayables[ind].rideCost = app.RideCost;
                     AllPayables[ind].dailyAllowance = app.DailyAllowance;
                     AllPayables[ind].tax = app.Tax;
@@ -218,7 +219,7 @@ class ListPayables extends Component {
                 Rate: payable.rate,
                 Hours: payable.hours,
                 Discount: payable.discount,
-                RideCost: payable.rideCost,
+                RideDistance: payable.rideCost,
                 DailyAllowance: payable.dailyAllowance,
                 Tax: payable.tax,
                 TicketCost: payable.ticketCost,
@@ -379,9 +380,9 @@ class ListPayables extends Component {
         var { AppointmentType } = this.state
 
         if (AppointmentType === "SPRACHEN") {
-            const { TotalHours, Tax, RideCost, TicketCost, DailyAllowance } = this.state;
+            const { TotalHours, Tax, RideDistance, TicketCost, DailyAllowance } = this.state;
             var totalHoursCost = parseFloat(TotalHours) * 85.00;
-            var totalRideCost = parseFloat(RideCost) * 0.42;
+            var totalRideCost = parseFloat(RideDistance) * 0.42;
             var TotalDailyAllowance = parseFloat(DailyAllowance) * 14;
 
             var SubTotal = totalHoursCost + totalRideCost + TotalDailyAllowance;
@@ -389,9 +390,10 @@ class ListPayables extends Component {
             var NetPayment = SubTotal + TotalTax + parseFloat(TicketCost)
 
             this.setState({
+                RideCost: totalRideCost.toFixed(2),
+                TotalDailyAllowance: TotalDailyAllowance.toFixed(2),
                 SubTotal: SubTotal.toFixed(2),
                 NetPayment: NetPayment.toFixed(2),
-                TotalDailyAllowance: TotalDailyAllowance.toFixed(2),
                 TotalTax: TotalTax.toFixed(2)
             })
         }
@@ -589,7 +591,7 @@ class ListPayables extends Component {
                             <Dialog visible={this.state.displayMultiApproveDialog} width="300px" header="You sure to mark all these Invoices Paid?"
                                 modal={true} onHide={() => this.setState({ displayMultiApproveDialog: false })}>
                                 {
-                                    <div className="ui-dialog-buttonpane p-clearfix">
+                                    <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>
                                         <Button label="Yes" style={{ width: 100 }} className="p-button-success" onClick={() => this.onMultiApprovePayable()} />
                                         <Button label="No" style={{ width: 100, marginLeft: 5 }} className="p-button-primary" onClick={() => this.setState({ displayMultiApproveDialog: false })} />
                                     </div>
@@ -599,7 +601,7 @@ class ListPayables extends Component {
                             <Dialog visible={this.state.displayApproveDialog} width="300px" header="You sure to mark this Invoice Paid?"
                                 modal={true} onHide={() => this.setState({ displayApproveDialog: false })}>
                                 {
-                                    <div className="ui-dialog-buttonpane p-clearfix">
+                                    <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>
                                         <Button label="Yes" style={{ width: 100 }} className="p-button-success" onClick={() => this.onApprovePayable()} />
                                         <Button label="No" style={{ width: 100, marginLeft: 5 }} className="p-button-primary" onClick={() => this.setState({ displayApproveDialog: false })} />
                                     </div>
@@ -612,7 +614,7 @@ class ListPayables extends Component {
                                 {
                                     <div className="p-grid p-fluid">
                                         <div className="card card-w-title">
-                                            <h1>Edit Payment Information</h1>
+                                            <h1>Payment Information</h1>
                                             <div className="p-grid" >
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>

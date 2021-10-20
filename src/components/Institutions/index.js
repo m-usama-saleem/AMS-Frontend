@@ -301,7 +301,7 @@ class InstitutionList extends Component {
                             <Dialog visible={this.state.displayDeleteDialog} width="400px" header="You sure to delete this Instituition?"
                                 modal={true} onHide={() => this.setState({ displayDeleteDialog: false }, () => this.onReset())}>
                                 {
-                                    <div className="ui-dialog-buttonpane p-clearfix">
+                                    <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>
                                         <Button label="Yes" style={{ width: 100 }} className="p-button-danger" onClick={() => this.onDeleteUser()} />
                                         <Button label="No" style={{ width: 100, marginLeft: 5 }} className="p-button-primary" onClick={() => this.setState({ displayDeleteDialog: false })} />
                                         {this.state.loadingModel === true ?
