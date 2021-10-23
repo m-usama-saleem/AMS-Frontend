@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { PDFViewer, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import companyLogo from '../../../assets/head_image.png'
+import { CommonValues } from '../../../constants/staticValues';
 
 // Create styles
 const styles = StyleSheet.create({
@@ -36,22 +37,23 @@ export default class TranslatorInvoice extends Component {
     }
     componentDidMount() {
         if (this.props && this.props.location && this.props.location.Invoice) {
-            // const { totalHours, tax, rideCost, ticketCost, dailyAllowance } = this.props.location.Invoice;
+            const { wordCount, tax, rate, flatRate, postage, paragraph } = this.props.location.Invoice;
+            var Lines = wordCount / CommonValues.WordsPerLine * rate;
+            var TotalFlatRate = flatRate * CommonValues.FlatRateCost;
+            var TotalPostage = postage * CommonValues.PostageCost;
+            var TotalParagraph = paragraph * CommonValues.ParagraphCost;
 
-            // var totalHoursCost = parseFloat(totalHours) * 85.00;
-            // var totalRideCost = parseFloat(rideCost) * 0.42;
-            // var TotalDailyAllowance = parseFloat(dailyAllowance) * 14;
+            var SubTotal = Lines + TotalFlatRate + TotalPostage + TotalParagraph;
+            var TotalTax = SubTotal * (tax / 100);
+            var NetPayment = SubTotal + TotalTax
 
-            // var SubTotal = totalHoursCost + totalRideCost + TotalDailyAllowance;
-            // var TotalTax = SubTotal * (tax / 100);
-            // var NetPayment = SubTotal + TotalTax + parseFloat(ticketCost)
-
-            // this.props.location.Invoice.totalHoursCost = totalHoursCost.toFixed(2);
-            // this.props.location.Invoice.totalRideCost = totalRideCost.toFixed(2);
-            // this.props.location.Invoice.totalDailyAllowance = TotalDailyAllowance.toFixed(2);
-            // this.props.location.Invoice.subTotal = SubTotal.toFixed(2);
-            // this.props.location.Invoice.totalTax = TotalTax.toFixed(2);
-            // this.props.location.Invoice.netPayment = NetPayment.toFixed(2);
+            this.props.location.Invoice.lines = Lines.toFixed(2);
+            this.props.location.Invoice.totalFlatRate = TotalFlatRate.toFixed(2);
+            this.props.location.Invoice.totalPostage = TotalPostage.toFixed(2);
+            this.props.location.Invoice.totalParagraph = TotalParagraph.toFixed(2);
+            this.props.location.Invoice.subTotal = SubTotal.toFixed(2);
+            this.props.location.Invoice.totalTax = TotalTax.toFixed(2);
+            this.props.location.Invoice.netPayment = NetPayment.toFixed(2);
 
             this.setState({ Invoice: this.props.location.Invoice })
         }
@@ -70,7 +72,7 @@ export default class TranslatorInvoice extends Component {
                 <Text style={{ fontSize: 10, textAlign: 'center', color: 'red' }}>41 JAHRE DOLMETSCHER- UND ÜBERSETZERMANAGEMENT FÜR DIE JUSTIZ</Text>
                 <Text style={{ fontSize: 10, textAlign: 'center' }}>Alle afrikanischen, asiatischen, west – und osteuropäischen Sprachen</Text>
             </View>
-            <View style={{ marginTop: 30, maxWidth: 200 }}>
+            <View style={{ marginTop: 30, maxWidth: 180 }}>
                 <Text style={{
                     fontSize: 10, borderBottomWidth: 2, borderBottomColor: '#112131',
                     borderBottomStyle: 'solid', borderBottomColor: 'blue'
@@ -101,7 +103,7 @@ export default class TranslatorInvoice extends Component {
                 <Text style={{ marginTop: 30 }}>Für die anliegenden Übersetzungen gestatte ich mir, nach dem Justizvergütungs- und
                     Entschädigungsgesetz –JVEG, wie folgt zu berechnen:</Text>
             </View>
-            <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, maxWidth: 100 }}>
+            <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, maxWidth: 95 }}>
                 <Text style={{
                     fontWeight: 'heavy', fontSize: 12,
                     borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomStyle: 'solid'
@@ -113,45 +115,45 @@ export default class TranslatorInvoice extends Component {
             }}>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>Zeilen</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>{Invoice.totalHours} Zeilen x</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>1,95 €</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>1,95 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalHours} Zeilen x</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>1,95 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>1,95 €</Text>
                 </View>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>Pauschale</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>x</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>{Invoice.rate} €</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>0,00 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.flatRate} x</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{CommonValues.FlatRateCost} €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalFlatRate} €</Text>
                 </View>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>§7Abs 2</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>Seiten x</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>0,50 €</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>0,00 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.paragraph} Seiten x</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{CommonValues.ParagraphCost} €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalParagraph} €</Text>
                 </View>
                 <View style={[tableRow, { borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomStyle: 'solid' }]}>
                     <Text style={{ display: 'flex', flex: 1 }}>Porto</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>1       x</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>1,55 €</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>1,55 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.postage}       x</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{CommonValues.PostageCost} €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalPostage} €</Text>
                 </View>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>Zwischensumme: </Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>3,50 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.subTotal} €</Text>
                 </View>
                 <View style={[tableRow, { borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomStyle: 'solid' }]}>
                     <Text style={{ display: 'flex', flex: 1 }}>zzgl. MwSt. ({Invoice.tax}%):</Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>0,67 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalTax} €</Text>
                 </View>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1, fontWeight: 'bold', fontSize: 12 }}>Rechnungsbetrag</Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
-                    <Text style={{ display: 'flex', flex: 1, fontWeight: 'bold', fontSize: 12, justifyContent: 'flex-end' }}>4,17 €</Text>
+                    <Text style={{ display: 'flex', flex: 1, fontWeight: 'bold', fontSize: 12, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.netPayment} €</Text>
                 </View>
             </View>
             <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 20 }}>

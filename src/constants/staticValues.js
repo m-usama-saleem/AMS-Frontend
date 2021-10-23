@@ -56,5 +56,9 @@ export const Genders = [
 export const CommonValues = {
     RideCost: 0.42,
     HoursCost: 85.00,
-    DailyAllowance: 14.00
+    DailyAllowance: 14.00,
+    WordsPerLine: 55.00,
+    FlatRateCost: 20.00,
+    PostageCost: 1.55,
+    ParagraphCost: 0.50,
 }

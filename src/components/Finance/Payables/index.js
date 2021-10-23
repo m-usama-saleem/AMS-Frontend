@@ -42,7 +42,12 @@ const INITIAL_STATE = {
     displayMultiApproveDialog: false,
     disableFields: false,
     disableApproveButton: true,
-
+    TotalHours: 0,
+    FlatRate: 0,
+    Rate: 0,
+    WordCount: 0,
+    Postage: 0,
+    Paragraph: 0,
     AllPayables: [],
 }
 
@@ -116,7 +121,7 @@ class ListPayables extends Component {
     }
 
     EditPayable() {
-        const { selectedPayableId, AppointmentId_Fk, WordCount, Rate, Hours, Discount,
+        const { selectedPayableId, AppointmentId_Fk, WordCount, Rate, Hours, Postage, Paragraph, FlatRate, Discount,
             NetPayment, RideDistance, DailyAllowance, TicketCost, Type, Tax, StartOfTheTrip,
             AppointmentStart, EndOfTheAppointment, EndOfTheTrip, TotalHours } = this.state
 
@@ -125,8 +130,8 @@ class ListPayables extends Component {
             AppointmentId_Fk,
             Status: 'Pending',
             Type,
-            WordCount,
-            Rate,
+            WordCount, Rate,
+            FlatRate, Postage, Paragraph,
             Hours,
             Discount,
             RideCost: RideDistance,
@@ -134,11 +139,7 @@ class ListPayables extends Component {
             Tax,
             TicketCost,
             NetPayment,
-            StartOfTheTrip,
-            AppointmentStart,
-            EndOfTheAppointment,
-            EndOfTheTrip,
-            TotalHours,
+            StartOfTheTrip, AppointmentStart, EndOfTheAppointment, EndOfTheTrip, TotalHours,
             CreatedBy: this.props.authUser.id,
         }
 
@@ -151,6 +152,9 @@ class ListPayables extends Component {
                     var ind = AllPayables.findIndex(x => x.id == editedPayable.id);
 
                     AllPayables[ind].wordCount = app.WordCount;
+                    AllPayables[ind].flatRate = app.FlatRate;
+                    AllPayables[ind].paragraph = app.Paragraph;
+                    AllPayables[ind].postage = app.Postage;
                     AllPayables[ind].rate = app.Rate;
                     AllPayables[ind].hours = app.Hours;
                     AllPayables[ind].discount = app.Discount;
@@ -215,7 +219,10 @@ class ListPayables extends Component {
                 EndOfTheAppointment: payable.endOfTheAppointment,
                 EndOfTheTrip: payable.endOfTheTrip,
                 TotalHours: payable.totalHours,
-                WordCount: payable.WordCount,
+                WordCount: payable.wordCount,
+                Postage: payable.postage,
+                Paragraph: payable.paragraph,
+                FlatRate: payable.flatRate,
                 Rate: payable.rate,
                 Hours: payable.hours,
                 Discount: payable.discount,
@@ -355,7 +362,6 @@ class ListPayables extends Component {
     calculateHours() {
         const { StartOfTheTrip, EndOfTheTrip } = this.state;
         if (StartOfTheTrip && EndOfTheTrip) {
-            debugger
             //create date format          
             var timeStart = new Date("01/01/2021 " + StartOfTheTrip);
             var timeEnd = new Date("01/01/2021 " + EndOfTheTrip);
@@ -381,9 +387,9 @@ class ListPayables extends Component {
 
         if (AppointmentType === "SPRACHEN") {
             const { TotalHours, Tax, RideDistance, TicketCost, DailyAllowance } = this.state;
-            var totalHoursCost = parseFloat(TotalHours) * 85.00;
-            var totalRideCost = parseFloat(RideDistance) * 0.42;
-            var TotalDailyAllowance = parseFloat(DailyAllowance) * 14;
+            var totalHoursCost = parseFloat(TotalHours) * CommonValues.HoursCost;
+            var totalRideCost = parseFloat(RideDistance) * CommonValues.RideCost;
+            var TotalDailyAllowance = parseFloat(DailyAllowance) * CommonValues.DailyAllowance;
 
             var SubTotal = totalHoursCost + totalRideCost + TotalDailyAllowance;
             var TotalTax = SubTotal * (Tax / 100);
@@ -398,19 +404,26 @@ class ListPayables extends Component {
             })
         }
         if (AppointmentType === "SCHREIBEN") {
-            // const { WordCount, Tax, Rate } = this.state;
-            // var Lines = WordCount / 55 * Rate;
+            debugger
+            const { WordCount, Tax, Rate, FlatRate, Postage, Paragraph } = this.state;
+            var Lines = parseFloat(WordCount) / CommonValues.WordsPerLine * parseFloat(Rate);
+            var TotalFlatRate = parseFloat(FlatRate) * CommonValues.FlatRateCost;
+            var TotalPostage = parseFloat(Postage) * CommonValues.PostageCost;
+            var TotalParagraph = parseFloat(Paragraph) * CommonValues.ParagraphCost;
 
-            // var SubTotal = totalHoursCost + totalRideCost + TotalDailyAllowance;
-            // var TotalTax = SubTotal * (Tax / 100);
-            // var NetPayment = SubTotal + TotalTax + parseFloat(TicketCost)
+            var SubTotal = Lines + TotalFlatRate + TotalPostage + TotalParagraph;
+            var TotalTax = SubTotal * (Tax / 100);
+            var NetPayment = SubTotal + TotalTax
 
-            // this.setState({
-            //     SubTotal: SubTotal.toFixed(2),
-            //     NetPayment: NetPayment.toFixed(2),
-            //     TotalDailyAllowance: TotalDailyAllowance.toFixed(2),
-            //     TotalTax: TotalTax.toFixed(2)
-            // })
+            this.setState({
+                Lines: Lines.toFixed(2),
+                TotalFlatRate: TotalFlatRate.toFixed(2),
+                TotalPostage: TotalPostage.toFixed(2),
+                TotalParagraph: TotalParagraph.toFixed(2),
+                SubTotal: SubTotal.toFixed(2),
+                NetPayment: NetPayment.toFixed(2),
+                TotalTax: TotalTax.toFixed(2)
+            })
         }
 
     }
@@ -503,14 +516,36 @@ class ListPayables extends Component {
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <AMSInputField Label="Word Count" PlaceholderText="Word Count" Type="number"
-                            Value={this.state.WordCount} onChange={(val) => this.setState({ WordCount: val })}
+                            Value={this.state.WordCount} onChange={(val) => this.setState({ WordCount: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => this.setState({ ValidWordCount: val })}
                         />
                     </div>
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <AMSInputField Label="Rate" PlaceholderText="Rate" Type="number"
-                            Value={this.state.Rate} onChange={(val) => this.setState({ Rate: val })}
+                            Value={this.state.Rate} onChange={(val) => this.setState({ Rate: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => this.setState({ ValidRate: val })}
+                        />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                        <AMSInputField Label="Flat Rate" PlaceholderText="Flat Rate" Type="number"
+                            Value={this.state.FlatRate} onChange={(val) => this.setState({ FlatRate: val }, () => this.calculateTotal())}
+                            ChangeIsValid={(val) => this.setState({ ValidFlatRate: val })}
+                        />
+                    </div>
+                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                        <AMSInputField Label="Paragraph" PlaceholderText="Paragraph" Type="number"
+                            Value={this.state.Paragraph} onChange={(val) => this.setState({ Paragraph: val }, () => this.calculateTotal())}
+                            ChangeIsValid={(val) => this.setState({ ValidParagraph: val })}
+                        />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                        <AMSInputField Label="Postage" PlaceholderText="Postage" Type="number"
+                            Value={this.state.Postage} onChange={(val) => this.setState({ Postage: val }, () => this.calculateTotal())}
+                            ChangeIsValid={(val) => this.setState({ ValidPostage: val })}
                         />
                     </div>
                 </div>

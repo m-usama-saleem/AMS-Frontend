@@ -26,5 +26,6 @@ export const DASHBOARD = '/dashboard';
 export const FINANCE_RECEIVE = '/finance/receiveable';
 export const FINANCE_PAY = '/finance/payable';
 
+export const TRANSLATOR_INVOICE_SPEAKING = '/translator/speak';
 export const TRANSLATOR_INVOICE = '/translator/invoice';
-export const TRANSLATOR_INVOICE_SPEAKING = '/translator/invoice_speak';
+export const CONTRACT_PDF = '/translator/contract';
