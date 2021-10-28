@@ -411,6 +411,7 @@ class ListAppointments extends Component {
                 SelectedInstituteName: AllInstitutions[instInd],
                 SelectedLanguageName: Languages[langId],
                 Type: appointment.type,
+                Status: appointment.status,
                 EntryDate: new Date(appointment.entryDate).toLocaleDateString(),
                 SelectedAppointmentDate: new Date(appointment.appointmentDate),
                 displayEditDialog: true,
@@ -483,12 +484,21 @@ class ListAppointments extends Component {
     }
 
     actionBodyTemplate(rowData) {
+        var DisableApproveButton = false;
+        var DisableEditButton = false;
+        if (rowData.status === "Approved" || rowData.status === "PartiallyCompleted") {
+            DisableApproveButton = true
+        }
+        if (rowData.status === "PartiallyCompleted") {
+            DisableEditButton = true
+        }
+
         return (
             <React.Fragment>
                 <Button icon="pi pi-check" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-info p-mr-2"
-                    onClick={() => this.confirmApproveAppointment(rowData)} title="Approve" />
+                    onClick={() => this.confirmApproveAppointment(rowData)} title="Approve" disabled={DisableApproveButton} />
                 <Button icon="pi pi-pencil" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-success p-mr-2"
-                    onClick={() => this.editMode(rowData)} title="Edit" />
+                    onClick={() => this.editMode(rowData)} title="Edit" disabled={DisableEditButton} />
                 <Button icon="pi pi-trash" style={{ float: 'right' }} className="p-button-rounded p-button-danger"
                     onClick={() => this.confirmDeleteAppointment(rowData)} title="Delete" />
             </React.Fragment>
@@ -513,7 +523,6 @@ class ListAppointments extends Component {
 
         const { langList, Status } = this.state;
         var EditAppointmentButton;
-
         if (Status !== "PartiallyCompleted") {
             EditAppointmentButton = <span className="ui-float-label" style={{ float: 'right' }}>
                 <Button label="Update Appointment" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditAppointment()} />

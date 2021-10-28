@@ -57,6 +57,7 @@ class RptAppointment extends Component {
             error: '',
             CheckFields: false,
             AllAppointments: [],
+            ListAllAppointments: [],
             filteredData: []
         };
         this.service = new AppointmentService();
@@ -96,7 +97,7 @@ class RptAppointment extends Component {
         this.service.GetAll().then(data => {
             if (data && data !== "" && data.length > 0) {
                 data.forEach(x => x.appointment.appointmentDate = new Date(x.appointment.appointmentDate).toLocaleDateString())
-                this.setState({ AllAppointments: data, filteredData: data })
+                this.setState({ ListAllAppointments: data, AllAppointments: data, filteredData: data })
             }
         })
             .catch(err => {
@@ -617,11 +618,39 @@ class RptAppointment extends Component {
         this.dt.exportCSV({ selectionOnly });
     }
 
+    onChangeFilter(DateFrom, DateTo) {
+        const { ListAllAppointments } = this.state;
+        debugger
+        if (DateFrom && DateTo) {
+            var filteredData = ListAllAppointments.filter(x => new Date(x.appointment.appointmentDate) >= DateFrom
+                && new Date(x.appointment.appointmentDate) <= DateTo)
+
+            this.setState({
+                AllAppointments: filteredData
+            })
+        }
+        this.setState({
+            DateFrom, DateTo,
+        })
+    }
+
     render() {
-        const { users, loading, filteredData } = this.state;
+        const { users, loading, filteredData, AllAppointments } = this.state;
+        var { } = this.state
         const header = <div className="row">
             <div className="col-sm-6 col-md-4 col-lg-4">
                 <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Search" size="20" />
+            </div>
+            <div className="col-sm-6 col-md-5 col-lg-5" style={{ display: 'inline-flex' }}>
+                <div className="col-md-5">
+                    <DatePicker className="form-control " dateFormat="dd/MM/yyyy" placeholderText="Select Date"
+                        selected={this.state.DateFrom} onChange={date => this.onChangeFilter(date, this.state.DateTo)} />
+                </div>
+                <span className="col-md-2" style={{ marginTop: 5 }}> - To - </span>
+                <div className="col-md-5">
+                    <DatePicker className="form-control" dateFormat="dd/MM/yyyy" placeholderText="Select Date"
+                        selected={this.state.DateTo} onChange={date => this.onChangeFilter(this.state.DateFrom, date)} />
+                </div>
             </div>
             <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
                 <Button className="p-button-success" icon="pi pi-file-excel" onClick={() => this.exportCSV(false)} data-pr-tooltip="Excel" label="Export To EXCEL" />
@@ -629,6 +658,7 @@ class RptAppointment extends Component {
         </div>
         var payableTotal = 0;
         var receivableTotal = 0;
+
         filteredData.forEach(x => {
             payableTotal += x.payable.netPayment
             receivableTotal += x.receivable.netPayment
@@ -636,8 +666,8 @@ class RptAppointment extends Component {
         let footerGroup = <ColumnGroup>
             <Row>
                 <Column footer="Totals:" colSpan={6} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={payableTotal} />
-                <Column footer={receivableTotal} />
+                <Column footer={payableTotal.toFixed(2)} />
+                <Column footer={receivableTotal.toFixed(2)} />
             </Row>
         </ColumnGroup>;
 
@@ -645,23 +675,23 @@ class RptAppointment extends Component {
         var PayableDialog = this.getPayableDialog();
         var ReceivableDialog = this.getReceivableDialog();
 
+
         return (
             <div>
                 {/* <Growl ref={(el) => this.growl = el}></Growl> */}
-                <ContextMenu model={this.menuModel} ref={el => this.cm = el} onHide={() => this.setState({ selectedUser: null })} />
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
                         <h1>All Appointments</h1>
                         <div className="content-section implementation">
                             <DataTable ref={(el) => this.dt = el} onValueChange={filteredData => this.setState({ filteredData })}
-                                header={header} value={this.state.AllAppointments}
+                                header={header} value={AllAppointments}
                                 // paginator={this.state.isLoading === false} rows={15}
                                 onRowDoubleClick={this.dblClickAppointment} responsive={true}
                                 selection={this.state.selectedAppointment}
                                 onSelectionChange={e => this.setState({ selectedAppointment: e.value })}
                                 resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/
                                 globalFilter={this.state.globalFilter}
-                                sortField="appointmentDate" sortOrder={-1}
+                                sortField="appointment.appointmentDate" sortOrder={-1}
                                 paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                                 dataKey="id"
                                 footerColumnGroup={footerGroup}

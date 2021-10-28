@@ -115,7 +115,7 @@ export default class TranslatorInvoice extends Component {
             }}>
                 <View style={tableRow}>
                     <Text style={{ display: 'flex', flex: 1 }}>Zeilen</Text>
-                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalHours} Zeilen x</Text>
+                    <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.wordCount / CommonValues.WordsPerLine} Zeilen x</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>1,95 €</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>1,95 €</Text>
                 </View>
