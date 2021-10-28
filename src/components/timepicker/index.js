@@ -31,7 +31,7 @@ export default class TimePicker extends Component {
       toShow: false,
       time: {
         format12: format12,
-        format24: ''
+        format24: this.props.time
       }
     };
   }
@@ -487,7 +487,7 @@ export default class TimePicker extends Component {
           type="text"
           placeholderText={this.props.placeholder}
           className={this.props.className}
-          value={this.state.time.format12}
+          value={this.state.time.format24}
           onFocus={this.handleFocus}
           ref={(ref) => { this.inputField = ref; }}
           style={this.props.style}

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 //import {DataTableCrudDoc} from 'primereact/datatablecruddoc';
-import { Growl } from 'primereact/growl';
+// import { Growl } from 'primereact/growl';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
@@ -33,6 +33,7 @@ const INITIAL_STATE = {
     Postage: 0,
     Paragraph: 0,
     AllPayables: [],
+    filteredData: []
 }
 
 class ListPayables extends Component {
@@ -42,6 +43,18 @@ class ListPayables extends Component {
         this.state = INITIAL_STATE;
         this.service = new PayableService();
         this.actionBodyTemplate = this.actionBodyTemplate.bind(this);
+
+        this.exportPdf = this.exportPdf.bind(this);
+        this.exportCSV = this.exportCSV.bind(this);
+        this.cols = [
+            { field: 'appointmentId', header: 'Appointment ID' },
+            { field: 'appointmentType', header: 'Type' },
+            { field: 'appointmentInstitute', header: 'Institute' },
+            { field: 'appointmentTranslator', header: 'Translator' },
+            { field: 'netPayment', header: 'Net Payable' },
+            { field: 'status', header: 'Status' },
+        ];
+        this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
     }
 
     getLists() {
@@ -55,7 +68,7 @@ class ListPayables extends Component {
     getPayableList() {
         this.service.GetAll().then(data => {
             if (data && data !== "" && data.length > 0) {
-                this.setState({ AllPayables: data })
+                this.setState({ AllPayables: data, filteredData: data })
             }
         })
             .catch(err => {
@@ -536,6 +549,20 @@ class ListPayables extends Component {
             </div>
         )
     }
+    exportPdf() {
+        import('jspdf').then(jsPDF => {
+            import('jspdf-autotable').then(() => {
+                const doc = new jsPDF.default(0, 0);
+                doc.autoTable(this.exportColumns, this.state.filteredData);
+                doc.save('payables.pdf');
+            })
+        })
+    }
+
+    exportCSV(selectionOnly) {
+        this.dt.exportCSV({ selectionOnly });
+    }
+
     render() {
         var { disableFields, disableApproveButton, AppointmentType, Status } = this.state
         var header, FormFields, PayAllButton, UpdatePayableButton;
@@ -549,6 +576,12 @@ class ListPayables extends Component {
         header = <div className="row">
             <div className="col-sm-6 col-md-4 col-lg-4">
                 <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Search" size="20" />
+            </div>
+            <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
+                <Button className="p-button-success" icon="pi pi-file-excel" onClick={() => this.exportCSV(false)} data-pr-tooltip="Excel" label="EXCEL" />
+            </div>
+            <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
+                <Button className="p-button-danger" icon="pi pi-file-pdf" onClick={() => this.exportPdf()} data-pr-tooltip="PDF" label="PDF" />
             </div>
             {PayAllButton}
         </div>
@@ -568,7 +601,7 @@ class ListPayables extends Component {
 
         return (
             <div>
-                <Growl ref={(el) => this.growl = el}></Growl>
+                {/* <Growl ref={(el) => this.growl = el}></Growl> */}
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
                         <h1>Payables List</h1>
@@ -578,7 +611,7 @@ class ListPayables extends Component {
                                 header={header} value={this.state.AllPayables}
                                 // paginator={this.state.isLoading === false} rows={15}
                                 onRowDoubleClick={this.dblClickPayable} responsive={true}
-                                selection={this.state.selectedPayable}
+                                selection={this.state.selectedPayable} onValueChange={filteredData => this.setState({ filteredData })}
                                 selectionMode="multiple" metaKeySelection={false}
                                 onSelectionChange={e => this.setState({ selectedPayable: e.value })}
                                 resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import * as ROLES from '../../constants/roles'
 import { DataTable } from 'primereact/datatable';
-import { Growl } from 'primereact/growl';
+// import { Growl } from 'primereact/growl';
 import { Column } from 'primereact/column';
 import { Row } from 'primereact/row';
 import { ColumnGroup } from 'primereact/columngroup';
 import { ContextMenu } from 'primereact/contextmenu';
-import 'primereact/resources/themes/nova-light/theme.css';
+import 'primereact/resources/themes/nova/theme.css';
 import 'primereact/resources/primereact.min.css';
 import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
@@ -56,12 +56,13 @@ class RptAppointment extends Component {
             isTypeValid: true,
             error: '',
             CheckFields: false,
-            AllAppointments: []
+            AllAppointments: [],
+            filteredData: []
         };
         this.service = new AppointmentService();
 
         this.actionBodyTemplate = this.actionBodyTemplate.bind(this);
-        this.exportPdf = this.exportPdf.bind(this);
+        // this.exportPdf = this.exportPdf.bind(this);
         this.exportCSV = this.exportCSV.bind(this);
 
         this.cols = [
@@ -95,11 +96,11 @@ class RptAppointment extends Component {
         this.service.GetAll().then(data => {
             if (data && data !== "" && data.length > 0) {
                 data.forEach(x => x.appointment.appointmentDate = new Date(x.appointment.appointmentDate).toLocaleDateString())
-                this.setState({ AllAppointments: data })
+                this.setState({ AllAppointments: data, filteredData: data })
             }
         })
             .catch(err => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: err });
+                // this.growl.show({ severity: 'error', summary: 'Error', detail: err });
             })
     }
 
@@ -244,18 +245,6 @@ class RptAppointment extends Component {
                                         <div>{DownloadPhotos}</div>
                                     </span>
                                 </div>
-
-                                <div className="p-col-12 p-sm-12 p-md-12 p-lg-12">
-                                    {this.state.isLoading === true ? <ProgressBar mode="indeterminate" style={{ height: '2px' }} /> : null}
-                                </div>
-                                <div className="p-col-12 p-sm-12 p-md-12 p-lg-12" style={{ color: 'red' }}>
-                                    {this.state.error === true ? "Please fill all the required(red marked) fields" : null}
-                                </div>
-                                <div className="sm-4 md-2 lg-2">
-                                    <span className="ui-float-label" style={{ float: 'right' }}>
-                                        <Button label="Update Appointment" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditAppointment()} />
-                                    </span>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -272,15 +261,15 @@ class RptAppointment extends Component {
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <span className="ui-float-label">
                             <label htmlFor="float-input">Start Of The Trip</label>
-                            <TimePicker className="form-control" time={this.state.StartOfTheTrip} theme="Ash" placeholder="Start Of The Trip"
-                                onSet={(val) => this.ChangeStartOfTheTrip(val.format24)} />
+                            <TimePicker disabled={true} className="form-control" time={this.state.StartOfTheTrip} theme="Ash" placeholder="Start Of The Trip"
+                            />
                         </span>
                     </div>
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <span className="ui-float-label">
                             <label htmlFor="float-input">Appointment start</label>
                             <TimePicker className="form-control" time={this.state.AppointmentStart} theme="Ash" placeholder="Appointment start time"
-                                onSet={(val) => this.ChangeAppointmentStart(val.format24)} />
+                                disabled={true} />
                         </span>
                     </div>
                 </div>
@@ -289,14 +278,14 @@ class RptAppointment extends Component {
                         <span className="ui-float-label">
                             <label htmlFor="float-input">End of the appointment</label>
                             <TimePicker className="form-control" time={this.state.EndOfTheAppointment} theme="Ash" placeholder="End of the appointment time"
-                                onSet={(val) => this.ChangeEndOfTheAppointment(val.format24)} />
+                                disabled={true} />
                         </span>
                     </div>
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <span className="ui-float-label">
                             <label htmlFor="float-input">End of the trip</label>
                             <TimePicker className="form-control" time={this.state.EndOfTheTrip} theme="Ash" placeholder="End of the trip time"
-                                onSet={(val) => this.ChangeEndOfTheTrip(val.format24)} />
+                                disabled={true} />
                         </span>
                     </div>
                 </div>
@@ -304,7 +293,7 @@ class RptAppointment extends Component {
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <AMSInputField Label="Total hours" PlaceholderText="Total hours" Type="text"
                             Value={this.state.TotalHours} onChange={(val) => this.setState({ TotalHours: val }, () => this.calculateTotal())}
-                            ChangeIsValid={(val) => this.setState({ ValidTotalHours: val })}
+                            ChangeIsValid={(val) => { }} ReadOnly={true}
                         />
                     </div>
                 </div>
@@ -312,13 +301,13 @@ class RptAppointment extends Component {
                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <AMSInputField Label="Ride Distance (KM)" PlaceholderText="Ride Distance (KM)" Type="number"
                             Value={this.state.RideDistance} onChange={(val) => this.setState({ RideDistance: val }, () => this.calculateRideCost())}
-                            ChangeIsValid={(val) => this.setState({ ValidRideDistance: val })}
+                            ChangeIsValid={(val) => { }} ReadOnly={true}
                         />
                     </div>
                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <AMSInputField Label="Ride Cost" PlaceholderText="Ride Cost" Type="number" /* ReadOnly={true} */
                             Value={this.state.RideCost} onChange={(val) => this.setState({ RideCost: val }, () => this.calculateTotal())}
-                            ChangeIsValid={(val) => this.setState({ ValidRideCost: val })}
+                            ChangeIsValid={(val) => { }} ReadOnly={true}
                         />
                     </div>
                 </div>
@@ -326,13 +315,13 @@ class RptAppointment extends Component {
                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                         <AMSInputField Label="Daily Allowance" PlaceholderText="Daily Allowance" Type="number"
                             Value={this.state.DailyAllowance} onChange={(val) => this.setState({ DailyAllowance: val }, () => this.calculateTotal())}
-                            ChangeIsValid={(val) => this.setState({ ValidDailyAllowance: val })}
+                            ChangeIsValid={(val) => { }} ReadOnly={true}
                         />
                     </div>
                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <AMSInputField Label="Ticket Cost" PlaceholderText="Ticket Cost" Type="number"
                             Value={this.state.TicketCost} onChange={(val) => this.setState({ TicketCost: val }, () => this.calculateTotal())}
-                            ChangeIsValid={(val) => this.setState({ ValidTicketCost: val })}
+                            ChangeIsValid={(val) => { }} ReadOnly={true}
                         />
                     </div>
                 </div>
@@ -347,13 +336,13 @@ class RptAppointment extends Component {
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <AMSInputField Label="Word Count" PlaceholderText="Word Count" Type="number"
                             Value={this.state.WordCount} onChange={(val) => this.setState({ WordCount: val }, () => this.calculateTotal())}
-                            ChangeIsValid={(val) => this.setState({ ValidWordCount: val })}
+                            ChangeIsValid={(val) => { }} ReadOnly={true}
                         />
                     </div>
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <AMSInputField Label="Rate" PlaceholderText="Rate" Type="number"
                             Value={this.state.Rate} onChange={(val) => this.setState({ Rate: val }, () => this.calculateTotal())}
-                            ChangeIsValid={(val) => this.setState({ ValidRate: val })}
+                            ChangeIsValid={(val) => { }} ReadOnly={true}
                         />
                     </div>
                 </div>
@@ -361,13 +350,13 @@ class RptAppointment extends Component {
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <AMSInputField Label="Flat Rate" PlaceholderText="Flat Rate" Type="number"
                             Value={this.state.FlatRate} onChange={(val) => this.setState({ FlatRate: val }, () => this.calculateTotal())}
-                            ChangeIsValid={(val) => this.setState({ ValidFlatRate: val })}
+                            ChangeIsValid={(val) => { }} ReadOnly={true}
                         />
                     </div>
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <AMSInputField Label="Paragraph" PlaceholderText="Paragraph" Type="number"
                             Value={this.state.Paragraph} onChange={(val) => this.setState({ Paragraph: val }, () => this.calculateTotal())}
-                            ChangeIsValid={(val) => this.setState({ ValidParagraph: val })}
+                            ChangeIsValid={(val) => { }} ReadOnly={true}
                         />
                     </div>
                 </div>
@@ -375,7 +364,7 @@ class RptAppointment extends Component {
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <AMSInputField Label="Postage" PlaceholderText="Postage" Type="number"
                             Value={this.state.Postage} onChange={(val) => this.setState({ Postage: val }, () => this.calculateTotal())}
-                            ChangeIsValid={(val) => this.setState({ ValidPostage: val })}
+                            ChangeIsValid={(val) => { }} ReadOnly={true}
                         />
                     </div>
                 </div>
@@ -448,9 +437,9 @@ class RptAppointment extends Component {
     actionBodyTemplate(rowData) {
         return (
             <React.Fragment>
-                <Button icon="pi pi-file" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-secondary p-mr-2"
+                <Button icon="fa fa-file-archive-o" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-secondary p-mr-2"
                     onClick={() => this.viewReceivable(rowData.receivable)} title="Receivable Information" />
-                <Button icon="pi pi-file" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-secondary p-mr-2"
+                <Button icon="fa fa-tags" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-secondary p-mr-2"
                     onClick={() => this.viewPayable(rowData.payable)} title="Payable Information" />
             </React.Fragment>
         );
@@ -483,13 +472,13 @@ class RptAppointment extends Component {
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Appointment ID" Type="text" ReadOnly={true}
                                             Value={this.state.AppointmentId} PlaceholderText="Unique Appointment ID"
-                                            ChangeIsValid={(val) => this.setState({ ValidAppointmentId: val })}
+                                            ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Appointment Date" Type="text" ReadOnly={true}
                                             Value={this.state.AppointmentDate}
-                                            ChangeIsValid={(val) => this.setState({ ValidAppointmentDate: val })}
+                                            ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
                                 </div>
@@ -497,13 +486,13 @@ class RptAppointment extends Component {
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Translator" Type="text" ReadOnly={true}
                                             Value={this.state.AppointmentTranslator}
-                                            ChangeIsValid={(val) => this.setState({ ValidTranslator: val })}
+                                            ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Appointment Institute" Type="text" ReadOnly={true}
                                             Value={this.state.AppointmentInstitute}
-                                            ChangeIsValid={(val) => this.setState({ ValidInstitute: val })}
+                                            ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
                                 </div>
@@ -516,13 +505,13 @@ class RptAppointment extends Component {
                                 <div className="row">
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Sub Total" PlaceholderText="Sub Total" Type="number"
-                                            Value={this.state.SubTotal} ReadOnly={true}
+                                            Value={this.state.SubTotal} ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Tax %" PlaceholderText="Tax" Type="number"
                                             Value={this.state.Tax} onChange={(val) => this.setState({ Tax: val }, () => this.calculateTotal())}
-                                            ChangeIsValid={(val) => this.setState({ ValidTax: val })}
+                                            ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
                                 </div>
@@ -530,7 +519,7 @@ class RptAppointment extends Component {
                                 <div className="row">
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <AMSInputField Label="Net Payment" PlaceholderText="Net Payment" Type="number"
-                                            Value={this.state.NetPayment} ReadOnly={true}
+                                            Value={this.state.NetPayment} ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
                                 </div>
@@ -557,13 +546,13 @@ class RptAppointment extends Component {
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Appointment ID" Type="text" ReadOnly={true}
                                             Value={this.state.AppointmentId} PlaceholderText="Unique Appointment ID"
-                                            ChangeIsValid={(val) => this.setState({ ValidAppointmentId: val })}
+                                            ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Appointment Date" Type="text" ReadOnly={true}
                                             Value={this.state.AppointmentDate}
-                                            ChangeIsValid={(val) => this.setState({ ValidAppointmentDate: val })}
+                                            ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
                                 </div>
@@ -571,13 +560,13 @@ class RptAppointment extends Component {
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Translator" Type="text" ReadOnly={true}
                                             Value={this.state.AppointmentTranslator}
-                                            ChangeIsValid={(val) => this.setState({ ValidTranslator: val })}
+                                            ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Appointment Institute" Type="text" ReadOnly={true}
                                             Value={this.state.AppointmentInstitute}
-                                            ChangeIsValid={(val) => this.setState({ ValidInstitute: val })}
+                                            ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
                                 </div>
@@ -587,13 +576,13 @@ class RptAppointment extends Component {
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Sub Total" PlaceholderText="Sub Total" Type="number"
                                             Value={this.state.SubTotal} onChange={(val) => this.setState({ SubTotal: val }, () => this.calculateTotal())}
-                                            ChangeIsValid={(val) => this.setState({ SubTotal: val })}
+                                            ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Tax %" PlaceholderText="Tax" Type="number"
                                             Value={this.state.Tax} onChange={(val) => this.setState({ Tax: val }, () => this.calculateTotal())}
-                                            ChangeIsValid={(val) => this.setState({ ValidTax: val })}
+                                            ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
                                 </div>
@@ -601,7 +590,7 @@ class RptAppointment extends Component {
                                 <div className="row">
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <AMSInputField Label="Net Payment" PlaceholderText="Net Payment" Type="number"
-                                            Value={this.state.NetPayment} ReadOnly={true}
+                                            Value={this.state.NetPayment} ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
                                 </div>
@@ -613,33 +602,34 @@ class RptAppointment extends Component {
         )
     }
 
-    exportPdf() {
-        import('jspdf').then(jsPDF => {
-            import('jspdf-autotable').then(() => {
-                const doc = new jsPDF.default(0, 0);
-                debugger
-                doc.autoTable(this.exportColumns, this.state.AllAppointments);
-                doc.save('data.pdf');
-            })
-        })
-    }
+    // exportPdf() {
+    //     import('jspdf').then(jsPDF => {
+    //         import('jspdf-autotable').then(() => {
+    //             const doc = new jsPDF.default(0, 0);
+    //             debugger
+    //             doc.autoTable(this.exportColumns, this.state.AllAppointments);
+    //             doc.save('data.pdf');
+    //         })
+    //     })
+    // }
 
     exportCSV(selectionOnly) {
         this.dt.exportCSV({ selectionOnly });
     }
 
     render() {
-        const { users, loading, AllAppointments } = this.state;
+        const { users, loading, filteredData } = this.state;
         const header = <div className="row">
             <div className="col-sm-6 col-md-4 col-lg-4">
                 <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Search" size="20" />
-                <Button type="button" icon="pi pi-file-o" onClick={() => this.exportCSV(false)} className="p-mr-2" data-pr-tooltip="CSV" />
-                <Button type="button" icon="pi pi-file-pdf" onClick={this.exportPdf} className="p-button-warning p-mr-2" data-pr-tooltip="PDF" />
+            </div>
+            <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
+                <Button className="p-button-success" icon="pi pi-file-excel" onClick={() => this.exportCSV(false)} data-pr-tooltip="Excel" label="Export To EXCEL" />
             </div>
         </div>
         var payableTotal = 0;
         var receivableTotal = 0;
-        AllAppointments.forEach(x => {
+        filteredData.forEach(x => {
             payableTotal += x.payable.netPayment
             receivableTotal += x.receivable.netPayment
         })
@@ -657,13 +647,13 @@ class RptAppointment extends Component {
 
         return (
             <div>
-                <Growl ref={(el) => this.growl = el}></Growl>
+                {/* <Growl ref={(el) => this.growl = el}></Growl> */}
                 <ContextMenu model={this.menuModel} ref={el => this.cm = el} onHide={() => this.setState({ selectedUser: null })} />
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
-                        <h1>Translaotrs List</h1>
+                        <h1>All Appointments</h1>
                         <div className="content-section implementation">
-                            <DataTable ref={(el) => this.dt = el} onValueChange={filteredData => console.log(filteredData)}
+                            <DataTable ref={(el) => this.dt = el} onValueChange={filteredData => this.setState({ filteredData })}
                                 header={header} value={this.state.AllAppointments}
                                 // paginator={this.state.isLoading === false} rows={15}
                                 onRowDoubleClick={this.dblClickAppointment} responsive={true}

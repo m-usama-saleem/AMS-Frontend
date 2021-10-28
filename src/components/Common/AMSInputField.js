@@ -1,4 +1,4 @@
-import 'primereact/resources/themes/nova-light/theme.css';
+import 'primereact/resources/themes/nova/theme.css';
 import 'primereact/resources/primereact.min.css';
 import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';

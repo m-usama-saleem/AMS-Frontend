@@ -4,7 +4,7 @@ import { withAuthorization } from '../../../Session';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 //import {DataTableCrudDoc} from 'primereact/datatablecruddoc';
-import { Growl } from 'primereact/growl';
+import { Toast } from 'primereact/toast';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
@@ -793,7 +793,8 @@ class ListAppointments extends Component {
 
         return (
             <div>
-                <Growl ref={(el) => this.growl = el}></Growl>
+                {/* <Growl ref={(el) => this.growl = el}></Growl> */}
+                <Toast ref={(el) => this.growl = el} />
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
                         <h1>Appointments List</h1>

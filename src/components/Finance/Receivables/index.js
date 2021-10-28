@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 //import {DataTableCrudDoc} from 'primereact/datatablecruddoc';
-import { Growl } from 'primereact/growl';
+// import { Growl } from 'primereact/growl';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
@@ -45,6 +45,7 @@ const INITIAL_STATE = {
     displayCreateDialog: false,
 
     AllReceivables: [],
+    filteredData: []
 }
 
 class ListReceivables extends Component {
@@ -54,6 +55,17 @@ class ListReceivables extends Component {
         this.state = INITIAL_STATE;
         this.service = new ReceivableService();
         this.actionBodyTemplate = this.actionBodyTemplate.bind(this);
+        this.exportPdf = this.exportPdf.bind(this);
+        this.exportCSV = this.exportCSV.bind(this);
+        this.cols = [
+            { field: 'appointmentId', header: 'Appointment ID' },
+            { field: 'appointmentType', header: 'Type' },
+            { field: 'appointmentInstitute', header: 'Institute' },
+            { field: 'appointmentTranslator', header: 'Translator' },
+            { field: 'netPayment', header: 'Net Receivable' },
+            { field: 'status', header: 'Status' },
+        ];
+        this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
     }
 
     getLists() {
@@ -67,7 +79,7 @@ class ListReceivables extends Component {
     getReceivableList() {
         this.service.GetAll().then(data => {
             if (data && data !== "" && data.length > 0) {
-                this.setState({ AllReceivables: data })
+                this.setState({ AllReceivables: data, filteredData: data })
             }
         })
             .catch(err => {
@@ -310,6 +322,19 @@ class ListReceivables extends Component {
         })
     }
 
+    exportPdf() {
+        import('jspdf').then(jsPDF => {
+            import('jspdf-autotable').then(() => {
+                const doc = new jsPDF.default(0, 0);
+                doc.autoTable(this.exportColumns, this.state.filteredData);
+                doc.save('receivables.pdf');
+            })
+        })
+    }
+
+    exportCSV(selectionOnly) {
+        this.dt.exportCSV({ selectionOnly });
+    }
 
     render() {
         var { disableFields, disableApproveButton, AppointmentType, Status } = this.state
@@ -332,12 +357,18 @@ class ListReceivables extends Component {
             <div className="col-sm-6 col-md-4 col-lg-4">
                 <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Search" size="20" />
             </div>
+            <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
+                <Button className="p-button-success" icon="pi pi-file-excel" onClick={() => this.exportCSV(false)} data-pr-tooltip="Excel" label="EXCEL" />
+            </div>
+            <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
+                <Button className="p-button-danger" icon="pi pi-file-pdf" onClick={() => this.exportPdf()} data-pr-tooltip="PDF" label="PDF" />
+            </div>
             {ReceiveAllButton}
         </div>
 
         return (
             <div>
-                <Growl ref={(el) => this.growl = el}></Growl>
+                {/* <Growl ref={(el) => this.growl = el}></Growl> */}
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
                         <h1>Receivables List</h1>
@@ -347,7 +378,7 @@ class ListReceivables extends Component {
                                 header={header} value={this.state.AllReceivables}
                                 // paginator={this.state.isLoading === false} rows={15}
                                 onRowDoubleClick={this.dblClickReceivable} responsive={true}
-                                selection={this.state.selectedReceivable}
+                                selection={this.state.selectedReceivable} onValueChange={filteredData => this.setState({ filteredData })}
                                 selectionMode="multiple" metaKeySelection={false}
                                 onSelectionChange={e => this.setState({ selectedReceivable: e.value })}
                                 resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/

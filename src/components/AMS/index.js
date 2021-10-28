@@ -12,7 +12,7 @@ import SignInPage from '../SignIn';
 import HomePage from '../Home';
 import { withAuthentication } from '../Session';
 
-import 'primereact/resources/themes/nova-light/theme.css';
+import 'primereact/resources/themes/nova/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
@@ -144,7 +144,7 @@ class AuthenticatedApp extends Component {
             {
                 label: 'Finance', icon: 'fa fa-file',
                 items: [
-                    { label: 'Payables', icon: 'fa fa-rss', to: ROUTES.FINANCE_PAY },
+                    { label: 'Payables', icon: 'fa fa-tags', to: ROUTES.FINANCE_PAY },
                     { label: 'Receivables', icon: 'fa fa-file-archive-o', to: ROUTES.FINANCE_RECEIVE },
                 ]
             },

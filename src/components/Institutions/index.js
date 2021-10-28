@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import * as ROLES from '../../constants/roles'
 import { UserService } from '../../api/user';
 import { DataTable } from 'primereact/datatable';
-import { Growl } from 'primereact/growl';
+// import { Growl } from 'primereact/growl';
 import { Column } from 'primereact/column';
 import { ContextMenu } from 'primereact/contextmenu';
-import 'primereact/resources/themes/nova-light/theme.css';
+import 'primereact/resources/themes/nova/theme.css';
 import 'primereact/resources/primereact.min.css';
 import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
@@ -267,7 +267,7 @@ class InstitutionList extends Component {
 
         return (
             <div>
-                <Growl ref={(el) => this.growl = el}></Growl>
+                {/* <Growl ref={(el) => this.growl = el}></Growl> */}
                 <ContextMenu model={this.menuModel} ref={el => this.cm = el} onHide={() => this.setState({ selectedUser: null })} />
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
