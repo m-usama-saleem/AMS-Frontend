@@ -354,12 +354,13 @@ class TranslatorList extends Component {
                 <ContextMenu model={this.menuModel} ref={el => this.cm = el} onHide={() => this.setState({ selectedUser: null })} />
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
-                        <h1>Translaotrs List</h1>
+                        <h1>Translators List</h1>
                         <div className="content-section implementation">
                             <DataTable header={header} value={users} globalFilter={this.state.globalFilter}
                                 onRowDoubleClick={this.dblClickAppointment} responsive={true}
                                 selection={this.state.selectedUser}
                                 onSelectionChange={e => this.setState({ selectedUser: e.value })}
+                                paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                             >
                                 <Column field="firstName" header="Name" sortable={true} />
                                 <Column field="email" header="Email" sortable={true} />

@@ -367,10 +367,11 @@ class ListAppointments extends Component {
     }
 
     onTranslatorSelected(obj) {
+        debugger
         var LanguageSelection = [];
         const translator_languages = obj.languages.split(',');
         translator_languages.forEach(name => {
-            var langInd = Languages.findIndex(x => x.value == name)
+            var langInd = Languages.findIndex(x => x.value == name.trim())
             if (langInd != -1) {
                 LanguageSelection.push(Languages[langInd]);
             }

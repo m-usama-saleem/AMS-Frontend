@@ -277,6 +277,7 @@ class InstitutionList extends Component {
                                 onRowDoubleClick={this.dblClickAppointment} responsive={true}
                                 selection={this.state.selectedUser}
                                 onSelectionChange={e => this.setState({ selectedUser: e.value })}
+                                paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                             >
                                 <Column field="name" header="Name" sortable={true} />
                                 <Column field="email" header="Email" sortable={true} />
