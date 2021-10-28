@@ -9,8 +9,10 @@
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.4",
     "classnames": "^2.3.1",
+    "file-saver": "^2.0.5",
     "js-file-download": "^0.4.12",
-    "jspdf": "^2.1.1",
+    "jspdf": "^2.4.0",
+    "jspdf-autotable": "^3.5.23",
     "lodash.find": "^4.6.0",
     "node-sass": "^6.0.1",
     "primeflex": "^3.0.1",
@@ -27,9 +29,11 @@
     "react-time-picker": "^4.4.2",
     "react-to-print": "^2.13.0",
     "react-transition-group": "^4.4.2",
+    "recharts": "^2.1.5",
     "recompose": "^0.30.0",
     "rxjs": "^7.3.0",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "xlsx": "^0.17.3"
   },
   "scripts": {
     "start": "react-scripts start",

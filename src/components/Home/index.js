@@ -1,16 +1,71 @@
 import React, { Component } from 'react';
-import FormItem from '../Forms/FormItem';
-import * as ROUTES from '../../constants/routes';
+import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, } from 'recharts';
+import ReportService from '../../api/stats/reportsService';
+import { AMS_BarChart } from './BarChart';
+import { AMS_PieChart } from './PieChart';
 
 class HomePage extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      Appointments: [],
+      CompletePayables: [],
+      IncompletePayables: [],
+      CompleteReceivables: [],
+      IncompleteReceivables: [],
+    }
+    this.service = new ReportService();
+  }
+
+  componentDidMount() {
+    this.service.GetAppointmentStats().then(data => {
+      this.setState({ Appointments: data })
+    })
+    this.service.GetCompletedPayableStats().then(data => {
+      this.setState({ CompletePayables: data })
+    })
+    this.service.GetInCompletedPayableStats().then(data => {
+      this.setState({ IncompletePayables: data })
+    })
+    this.service.GetCompletedReceivableStats().then(data => {
+      this.setState({ CompleteReceivables: data })
+    })
+    this.service.GetInCompletedReceivableStats().then(data => {
+      this.setState({ IncompleteReceivables: data })
+    })
+  }
+
   render() {
+    const { Appointments, IncompletePayables, CompletePayables, CompleteReceivables, IncompleteReceivables } = this.state;
+
     return (
-      <div className="row col-md-12" style={{ justifyContent: 'center' }} >
-        <FormItem {...this.props} title="Appointments" image="assets/demo/images/car/Audi.png" routeName={ROUTES.APPOINTMENT_LIST} />
-        <FormItem {...this.props} title="Dashboard" image="assets/demo/images/car/BMW.png" routeName={ROUTES.DASHBOARD} />
-        <FormItem {...this.props} title="Receiveables" image="assets/demo/images/car/Ford.png" routeName={ROUTES.FINANCE_RECEIVE} />
-        <FormItem {...this.props} title="Payables" image="assets/demo/images/car/Honda.png" routeName={ROUTES.FINANCE_PAY} />
-        <FormItem {...this.props} title="Translators" image="assets/demo/images/car/Volvo.png" routeName={ROUTES.TRANSLATOR_LIST} />
+      <div style={{ width: '100%', height: '100%' }} >
+        <div className="row">
+          <div className="card col col-md-6" style={{ height: 300 }}>
+            <h3>Apointments</h3>
+            <AMS_PieChart Appointments={Appointments} />
+          </div>
+          <div className="card col col-md-6" style={{ height: 300 }}>
+            <h3>Completed Payables</h3>
+            <AMS_BarChart Data={CompletePayables} Label1="SCHREIBEN" Label2="SPRACHEN" Type="type" />
+          </div>
+        </div>
+        <div className="row">
+          <div className="card col col-md-6" style={{ height: 300 }}>
+            <h3>Completed Receivables</h3>
+            <AMS_BarChart Data={CompleteReceivables} Label1="SCHREIBEN" Label2="SPRACHEN" Type="type" />
+          </div>
+          <div className="card col col-md-6" style={{ height: 300 }}>
+            <h3>Pending Payables</h3>
+            <AMS_BarChart Data={IncompletePayables} Label1="SCHREIBEN" Label2="SPRACHEN" Type="type" />
+          </div>
+        </div>
+        <div className="row">
+          <div className="card col col-md-6" style={{ height: 300 }}>
+            <h3>Pending Receivables</h3>
+            <AMS_BarChart Data={IncompleteReceivables} Label1="SCHREIBEN" Label2="SPRACHEN" Type="type" />
+          </div>
+        </div>
       </div>
     )
   }

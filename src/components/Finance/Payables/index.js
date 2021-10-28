@@ -6,31 +6,15 @@ import { Dialog } from 'primereact/dialog';
 import { Growl } from 'primereact/growl';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
-import DatePicker from "react-datepicker";
 import TimePicker from '../../timepicker';
-import { RadioButton } from 'primereact/radiobutton';
-import Select from 'react-select'
 
 import "react-datepicker/dist/react-datepicker.css";
 import PayableService from '../../../api/finance/payableService';
-import * as ROLES from '../../../constants/roles';
 import * as ROUTES from '../../../constants/routes';
 import AMSInputField from '../../Common/AMSInputField';
 import { CommonValues, ListAppointmentType } from '../../../constants/staticValues';
-
-const errorBox = {
-    borderRadius: '3px', borderColor: 'rgba(242, 38, 19, 1)'
-};
-const normalBox = {
-    border: '1px solid #a6a6a6'
-};
-const errorBoxForCheckBox = {
-    border: '1px solid red', borderRadius: '3px'
-};
 
 const INITIAL_STATE = {
     isUploading: '',
@@ -553,7 +537,6 @@ class ListPayables extends Component {
         )
     }
     render() {
-
         var { disableFields, disableApproveButton, AppointmentType, Status } = this.state
         var header, FormFields, PayAllButton, UpdatePayableButton;
 

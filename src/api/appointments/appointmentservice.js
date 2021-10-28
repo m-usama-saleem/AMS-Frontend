@@ -83,6 +83,23 @@ class AppointmentService {
         });
     }
 
+    GetAll() {
+        return new Promise((resolve, reject) => {
+            http.get("/appointmentService/GetAll",
+                {
+                    headers: {
+
+                    }
+                })
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(function (error) {
+                    reject(handleResponseError(error))
+                });
+        })
+    }
+
     GetAllIncomplete() {
         return new Promise((resolve, reject) => {
             http.get("/appointmentService/GetAllIncomplete",

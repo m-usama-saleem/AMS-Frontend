@@ -510,7 +510,14 @@ class ListAppointments extends Component {
 
     getEditAppointmentDialog() {
 
-        const { langList } = this.state;
+        const { langList, Status } = this.state;
+        var EditAppointmentButton;
+
+        if (Status !== "PartiallyCompleted") {
+            EditAppointmentButton = <span className="ui-float-label" style={{ float: 'right' }}>
+                <Button label="Update Appointment" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditAppointment()} />
+            </span>
+        }
 
         var AppointmentType = ListAppointmentType.map(obj =>
             <div key={obj.value} style={{ display: 'inline-block' }}>
@@ -628,9 +635,7 @@ class ListAppointments extends Component {
                                     {this.state.error === true ? "Please fill all the required(red marked) fields" : null}
                                 </div>
                                 <div className="sm-4 md-2 lg-2">
-                                    <span className="ui-float-label" style={{ float: 'right' }}>
-                                        <Button label="Update Appointment" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditAppointment()} />
-                                    </span>
+                                    {EditAppointmentButton}
                                 </div>
                             </div>
                         </div>

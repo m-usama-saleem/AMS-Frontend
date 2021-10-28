@@ -31,6 +31,7 @@ import ListPayables from '../Finance/Payables';
 import ListReceivables from '../Finance/Receivables';
 import '../SignIn/SignIn.scss';
 import TranslatorContract from '../Forms/invoices/Contract';
+import RptAppointment from '../Reports/RptAppointment';
 
 const App = (props) => (
     <div>
@@ -156,6 +157,14 @@ class AuthenticatedApp extends Component {
             {
                 label: 'Users', icon: 'fa fa-users', to: ROUTES.USER_LIST
             },
+            {
+                label: 'Reports', icon: 'fa fa-files',
+                items: [
+                    { label: 'Appointments', icon: 'fa fa-rss', to: ROUTES.REPORT_APPOINTMENT },
+                    { label: 'Translators', icon: 'fa fa-rss', to: ROUTES.REPORT_TRANSLATOR },
+                    { label: 'Institutions', icon: 'fa fa-rss', to: ROUTES.REPORT_INSTITUTION },
+                ]
+            },
         ];
     }
 
@@ -232,6 +241,8 @@ class AuthenticatedApp extends Component {
 
                     <Route path={ROUTES.FINANCE_PAY} render={(props) => <ListPayables {...props} authUser={this.props.authUser} />} />
                     <Route path={ROUTES.FINANCE_RECEIVE} render={(props) => <ListReceivables {...props} authUser={this.props.authUser} />} />
+
+                    <Route path={ROUTES.REPORT_APPOINTMENT} render={(props) => <RptAppointment {...props} authUser={this.props.authUser} />} />
 
                     {/* <Route path={ROUTES.FINANCE_RECEIVE} render={() => <TranslatorInvoiceSpeaking />} /> */}
 
