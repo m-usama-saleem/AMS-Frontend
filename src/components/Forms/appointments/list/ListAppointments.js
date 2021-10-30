@@ -68,7 +68,8 @@ const INITIAL_STATE = {
     AllInstitutions: [],
     AllTranslators: [],
 
-    SentFile: false
+    SentFile: false,
+    changeState: 0
 }
 
 class ListAppointments extends Component {
@@ -111,7 +112,7 @@ class ListAppointments extends Component {
         return new Promise((resolve, reject) => {
             this.setState({ CheckFields: true },
                 () => {
-                    this.setState({ abc: 0 }, () => {
+                    this.setState({ changeState: this.state.changeState + 1 }, () => {
 
                         const { ValidAppointmentId, ValidInstitute, ValidTranslator, ValidLanguage } = this.state
                         let error = "";
@@ -153,6 +154,7 @@ class ListAppointments extends Component {
             SelectedAppointmentDate: '',
             AttachmentFiles: '',
 
+            isAppointmentDateValid: true,
             isTypeValid: true,
 
             disableFields: false,
@@ -161,6 +163,7 @@ class ListAppointments extends Component {
             disableDeleteButton: true,
             disableApproveButton: true,
             displayCreateDialog: false,
+
 
         }, () => {
             // this.getLists();
@@ -340,6 +343,8 @@ class ListAppointments extends Component {
             });
         }
         else {
+            app.Attachments = "";
+
             this.service.Edit(app)
                 .then((data) => {
                     if (data.success == true) {
@@ -391,38 +396,40 @@ class ListAppointments extends Component {
     }
 
     editMode(appointment) {
-        const { AllTranslators, AllInstitutions } = this.state
-        const transInd = AllTranslators.findIndex(x => x.value == appointment.translatorId)
-        const instInd = AllInstitutions.findIndex(x => x.value == appointment.institutionId)
-        const langId = Languages.findIndex(x => x.value == appointment.language)
+        this.setState({ displayEditDialog: true }, () => {
 
-        var LanguageSelection = [];
-        const translator_languages = AllTranslators[transInd].languages.split(',');
-        translator_languages.forEach(name => {
-            var langInd = Languages.findIndex(x => x.value == name)
-            if (langInd != -1) {
-                LanguageSelection.push(Languages[langInd]);
+            const { AllTranslators, AllInstitutions } = this.state
+            const transInd = AllTranslators.findIndex(x => x.value == appointment.translatorId)
+            const instInd = AllInstitutions.findIndex(x => x.value == appointment.institutionId)
+            const langId = Languages.findIndex(x => x.value == appointment.language)
+
+            var LanguageSelection = [];
+            const translator_languages = AllTranslators[transInd].languages.split(',');
+            translator_languages.forEach(name => {
+                var langInd = Languages.findIndex(x => x.value == name)
+                if (langInd != -1) {
+                    LanguageSelection.push(Languages[langInd]);
+                }
+            })
+
+            if (appointment) {
+                this.setState({
+                    selectedAppointmentId: appointment.id,
+
+                    Id: appointment.id,
+                    AppointmentId: appointment.appointmentId,
+                    SelectedTranslatorName: AllTranslators[transInd],
+                    SelectedInstituteName: AllInstitutions[instInd],
+                    SelectedLanguageName: Languages[langId],
+                    Type: appointment.type,
+                    Status: appointment.status,
+                    EntryDate: new Date(appointment.entryDate).toLocaleDateString(),
+                    SelectedAppointmentDate: new Date(appointment.appointmentDate),
+                    langList: LanguageSelection,
+                    AttachmentFiles: appointment.attachments
+                })
             }
         })
-
-        if (appointment) {
-            this.setState({
-                selectedAppointmentId: appointment.id,
-
-                Id: appointment.id,
-                AppointmentId: appointment.appointmentId,
-                SelectedTranslatorName: AllTranslators[transInd],
-                SelectedInstituteName: AllInstitutions[instInd],
-                SelectedLanguageName: Languages[langId],
-                Type: appointment.type,
-                Status: appointment.status,
-                EntryDate: new Date(appointment.entryDate).toLocaleDateString(),
-                SelectedAppointmentDate: new Date(appointment.appointmentDate),
-                displayEditDialog: true,
-                langList: LanguageSelection,
-                AttachmentFiles: appointment.attachments
-            })
-        }
     }
 
     confirmDeleteAppointment(appointment) {
@@ -557,8 +564,10 @@ class ListAppointments extends Component {
         }
 
         return (
-            <Dialog visible={this.state.displayEditDialog} style={{ width: '60vw' }} header="Appointment Information"
-                modal={true} onHide={() => this.setState({ displayEditDialog: false }, () => this.resetForm())}
+            <Dialog draggable={false} visible={this.state.displayEditDialog} style={{ width: '60vw' }} header="Appointment Information"
+                modal={true}
+                closable={false}
+                // onHide={() => this.setState({ displayEditDialog: false }, () => this.resetForm())}
                 contentStyle={{ maxHeight: "550px", overflow: "auto" }}>
                 {
                     <div className="p-grid p-fluid">
@@ -790,7 +799,9 @@ class ListAppointments extends Component {
             Type: '',
             EntryDate: '',
             SelectedAppointmentDate: '',
-            AttachmentFiles: ''
+            AttachmentFiles: '',
+            isAppointmentDateValid: true,
+            isTypeValid: true,
         })
     }
     render() {

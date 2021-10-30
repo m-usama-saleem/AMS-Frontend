@@ -63,14 +63,16 @@ export default class TranslatorInvoice extends Component {
     render() {
         const { Invoice } = this.state;
         const PDF_File = <View style={{ paddingRight: 50, paddingLeft: 50 }}>
-            <View style={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: 10 }}>
+            <View style={{
+                display: 'flex', flex: 1, flexDirection: 'column', alignItems: 'center', marginTop: 10
+            }}>
                 <Image
                     src={companyLogo}
                     style={styles.image}
                 />
-                <Text style={{ fontSize: 24, textAlign: 'center', fontWeight: 'bold' }}>Übersetzungsbüro Qureshi</Text>
-                <Text style={{ fontSize: 10, textAlign: 'center', color: 'red' }}>41 JAHRE DOLMETSCHER- UND ÜBERSETZERMANAGEMENT FÜR DIE JUSTIZ</Text>
-                <Text style={{ fontSize: 10, textAlign: 'center' }}>Alle afrikanischen, asiatischen, west – und osteuropäischen Sprachen</Text>
+                <Text style={{ fontSize: 24, textAlign: 'center', fontWeight: 'extrabold' }}>Übersetzungsbüro Qureshi</Text>
+                <Text style={{ fontSize: 10, textAlign: 'center', color: 'red', marginTop: 5 }}>41 JAHRE DOLMETSCHER- UND ÜBERSETZERMANAGEMENT FÜR DIE JUSTIZ</Text>
+                <Text style={{ fontSize: 10, textAlign: 'center', marginTop: 5 }}>Alle afrikanischen, asiatischen, west – und osteuropäischen Sprachen</Text>
             </View>
             <View style={{ marginTop: 30, maxWidth: 180 }}>
                 <Text style={{
@@ -103,7 +105,7 @@ export default class TranslatorInvoice extends Component {
                 <Text style={{ marginTop: 30 }}>Für die anliegenden Übersetzungen gestatte ich mir, nach dem Justizvergütungs- und
                     Entschädigungsgesetz –JVEG, wie folgt zu berechnen:</Text>
             </View>
-            <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, maxWidth: 95 }}>
+            <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, maxWidth: 95, marginTop: 20 }}>
                 <Text style={{
                     fontWeight: 'heavy', fontSize: 12,
                     borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomStyle: 'solid'
@@ -113,57 +115,61 @@ export default class TranslatorInvoice extends Component {
             <View style={{
                 display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10
             }}>
-                <View style={tableRow}>
+                <View style={[tableRow, { marginTop: 10 }]}>
                     <Text style={{ display: 'flex', flex: 1 }}>Zeilen</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.wordCount / CommonValues.WordsPerLine} Zeilen x</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>1,95 €</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>1,95 €</Text>
                 </View>
-                <View style={tableRow}>
+                <View style={[tableRow, { marginTop: 10 }]}>
                     <Text style={{ display: 'flex', flex: 1 }}>Pauschale</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.flatRate} x</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{CommonValues.FlatRateCost} €</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalFlatRate} €</Text>
                 </View>
-                <View style={tableRow}>
+                <View style={[tableRow, { marginTop: 10 }]}>
                     <Text style={{ display: 'flex', flex: 1 }}>§7Abs 2</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.paragraph} Seiten x</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{CommonValues.ParagraphCost} €</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalParagraph} €</Text>
                 </View>
-                <View style={[tableRow, { borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomStyle: 'solid' }]}>
+                <View style={[tableRow, { marginTop: 10 }]}>
                     <Text style={{ display: 'flex', flex: 1 }}>Porto</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.postage}       x</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{CommonValues.PostageCost} €</Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalPostage} €</Text>
                 </View>
-                <View style={tableRow}>
+                <View style={[tableRow, { borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomStyle: 'solid', marginTop: 15 }]}>
+                </View>
+                <View style={[tableRow, { marginTop: 10 }]}>
                     <Text style={{ display: 'flex', flex: 1 }}>Zwischensumme: </Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.subTotal} €</Text>
                 </View>
-                <View style={[tableRow, { borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomStyle: 'solid' }]}>
+                <View style={[tableRow, { marginTop: 10 }]}>
                     <Text style={{ display: 'flex', flex: 1 }}>zzgl. MwSt. ({Invoice.tax}%):</Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
                     <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalTax} €</Text>
                 </View>
-                <View style={tableRow}>
+                <View style={[tableRow, { borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomStyle: 'solid', marginTop: 15 }]}>
+                </View>
+                <View style={[tableRow, { marginTop: 10 }]}>
                     <Text style={{ display: 'flex', flex: 1, fontWeight: 'bold', fontSize: 12 }}>Rechnungsbetrag</Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
                     <Text style={{ display: 'flex', flex: 1 }}></Text>
                     <Text style={{ display: 'flex', flex: 1, fontWeight: 'bold', fontSize: 12, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.netPayment} €</Text>
                 </View>
             </View>
-            <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 20 }}>
+            <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 80 }}>
                 <Text>Ich bitte um Überweisung des Rechnungsbetrages, <Text style={{ color: 'red' }}>unter Angabe der Rechnungsnummer</Text>, auf das
                     u.a. Konto und verbleibe</Text>
-                <Text>mit freundlichen Grüßen</Text>
+                <Text style={{ marginTop: 20 }}>mit freundlichen Grüßen</Text>
             </View>
-            <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, borderBottomWidth: 2, borderBottomColor: 'blue', borderBottomStyle: 'solid', marginBottom: 10 }}>
+            <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, borderBottomWidth: 2, borderBottomColor: 'blue', borderBottomStyle: 'solid', marginBottom: 10, marginTop: 10 }}>
                 <Text>i. A. Huzaifa A. Sagri</Text>
-                <Text>Anlage: Zeilenangabe, Übersetzung, Original</Text>
+                <Text style={{ marginTop: 10 }}>Anlage: Zeilenangabe, Übersetzung, Original</Text>
             </View>
             <View style={{ display: 'flex', flex: 1, flexDirection: 'row', marginTop: 10, fontSize: 10 }}>
                 <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 8 }}>

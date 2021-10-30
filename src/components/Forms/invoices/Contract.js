@@ -27,14 +27,16 @@ const styles = StyleSheet.create({
 
 const PDF_File = (
     <View style={{ paddingRight: 50, paddingLeft: 50 }}>
-        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: 10 }}>
+        <View style={{
+            display: 'flex', flex: 1, flexDirection: 'column', alignItems: 'center', marginTop: 10
+        }}>
             <Image
                 src={companyLogo}
                 style={styles.image}
             />
-            <Text style={{ fontSize: 24, textAlign: 'center', fontWeight: 'bold' }}>Übersetzungsbüro Qureshi</Text>
-            <Text style={{ fontSize: 10, textAlign: 'center', color: 'red' }}>41 JAHRE DOLMETSCHER- UND ÜBERSETZERMANAGEMENT FÜR DIE JUSTIZ</Text>
-            <Text style={{ fontSize: 10, textAlign: 'center' }}>Alle afrikanischen, asiatischen, west – und osteuropäischen Sprachen</Text>
+            <Text style={{ fontSize: 24, textAlign: 'center', fontWeight: 'extrabold' }}>Übersetzungsbüro Qureshi</Text>
+            <Text style={{ fontSize: 10, textAlign: 'center', color: 'red', marginTop: 5 }}>41 JAHRE DOLMETSCHER- UND ÜBERSETZERMANAGEMENT FÜR DIE JUSTIZ</Text>
+            <Text style={{ fontSize: 10, textAlign: 'center', marginTop: 5 }}>Alle afrikanischen, asiatischen, west – und osteuropäischen Sprachen</Text>
         </View>
         <View style={{ marginTop: 30, maxWidth: 180 }}>
             <Text style={{
@@ -42,33 +44,35 @@ const PDF_File = (
                 borderBottomStyle: 'solid', borderBottomColor: 'blue'
             }}>Qureshi, Jorindeweg 2, 30179 Hannover</Text>
         </View>
-        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: 30 }}>
+        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: 20 }}>
             <Text style={{ fontSize: 10 }}>Amtsgericht Hannover</Text>
             <Text style={{ fontSize: 10 }}>ID</Text>
             <Text style={{ fontSize: 10 }}>Postfach 2 27</Text>
             <Text style={{ fontSize: 10 }}>30002 Hannover.</Text>
         </View>
-        <View style={{ display: 'flex', flex: 1, flexDirection: 'row', marginTop: 0, fontSize: 10, textAlign: 'right' }}>
+        <View style={{ display: 'flex', flex: 1, flexDirection: 'row', marginTop: 10, fontSize: 10, textAlign: 'right' }}>
             <Text>Hannover, den 06.10.2021</Text>
         </View>
-        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 0 }}>
+        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 10 }}>
             <Text>Sehr geehrte Damen und Herren!</Text>
         </View>
-        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 0 }}>
-            <Text>Wie mit Ihnen vereinbart, werden Sie beim</Text>
-            <Text>Amtsgericht Hannover, Volgersweg 1, 30175 Hannover</Text>
-            <Text>als Dolmetscher für die Sprache Urdu eingesetzt.</Text>
-            <Text>Bitte melden Sie sich Mittwoch, den 6. Oktober 2021 um 11:15 Uhr in Saal 1111.</Text>
-            <Text>Nachdrücklich wird um Einhaltung des Termins gebeten.</Text>
-            <Text>Ihre Entschädigung erfolgt nach der mit Ihnen getroffenen Vereinbarung</Text>
-            <Text>Ich weise Sie darauf hin, dass alle Folgetermine in dieser Sache nur über uns abzurechnen sind.</Text>
-        </View>
         <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 10 }}>
+            <Text style={{ marginTop: 15 }}>Wie mit Ihnen vereinbart, werden Sie beim</Text>
+            <Text style={{ marginTop: 15 }}>Amtsgericht Hannover, Volgersweg 1, 30175 Hannover</Text>
+            <Text style={{ marginTop: 15 }}>als Dolmetscher für die Sprache Urdu eingesetzt.</Text>
+            <Text style={{ marginTop: 15 }}>Bitte melden Sie sich Mittwoch, den 6. Oktober 2021 um 11:15 Uhr in Saal 1111.</Text>
+            <Text style={{ marginTop: 15 }}>Nachdrücklich wird um Einhaltung des Termins gebeten.</Text>
+            <Text style={{ marginTop: 15 }}>Ihre Entschädigung erfolgt nach der mit Ihnen getroffenen Vereinbarung</Text>
+            <Text style={{ marginTop: 15 }}>Ich weise Sie darauf hin, dass alle Folgetermine in dieser Sache nur über uns abzurechnen sind.</Text>
+        </View>
+        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 90 }}>
             <Text>mit freundlichen Grüßen</Text>
         </View>
-        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, borderBottomWidth: 2, borderBottomColor: 'blue', borderBottomStyle: 'solid', marginBottom: 10 }}>
+        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 20 }}>
             <Text>i. A. Huzaifa A. Sagri</Text>
             <Text>Anlage: Beleg für die Auszahlung der Vergütung von Dolmetschern</Text>
+        </View>
+        <View style={{ margin: 0, borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomColor: 'blue', borderBottomStyle: 'solid', marginTop: 20 }}>
         </View>
         <View style={{ display: 'flex', flex: 1, flexDirection: 'row', marginTop: 10, fontSize: 10 }}>
             <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 8 }}>

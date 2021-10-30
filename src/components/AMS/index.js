@@ -227,7 +227,7 @@ class AuthenticatedApp extends Component {
                 </div>
 
                 <div className="layout-main">
-                    <Route path={ROUTES.HOME_PAGE} component={HomePage} />
+                    <Route path={ROUTES.DASHBOARD} component={HomePage} />
 
                     <Route path={ROUTES.APPOINTMENT_LIST} render={() => <ListAppointments authUser={this.props.authUser} />} />
 

@@ -40,28 +40,28 @@ class HomePage extends Component {
 
     return (
       <div style={{ width: '100%', height: '100%' }} >
-        <div className="row">
-          <div className="card col col-md-6" style={{ height: 300 }}>
+        <div className="row" style={{ marginBottom: 20 }}>
+          <div className="card col col-md-9" style={{ height: 300, margin: 'auto' }}>
             <h3>Apointments</h3>
             <AMS_PieChart Appointments={Appointments} />
           </div>
-          <div className="card col col-md-6" style={{ height: 300 }}>
+        </div>
+        <div className="row">
+          <div className="card col col-md-6" style={{ height: 300, marginLeft: 10 }}>
             <h3>Completed Payables</h3>
             <AMS_BarChart Data={CompletePayables} Label1="SCHREIBEN" Label2="SPRACHEN" Type="type" />
           </div>
-        </div>
-        <div className="row">
-          <div className="card col col-md-6" style={{ height: 300 }}>
+          <div className="card col col-md-6" style={{ height: 300, marginLeft: 10, marginRight: 10 }}>
             <h3>Completed Receivables</h3>
             <AMS_BarChart Data={CompleteReceivables} Label1="SCHREIBEN" Label2="SPRACHEN" Type="type" />
           </div>
-          <div className="card col col-md-6" style={{ height: 300 }}>
+        </div>
+        <div className="row">
+          <div className="card col col-md-6" style={{ height: 300, marginLeft: 10 }}>
             <h3>Pending Payables</h3>
             <AMS_BarChart Data={IncompletePayables} Label1="SCHREIBEN" Label2="SPRACHEN" Type="type" />
           </div>
-        </div>
-        <div className="row">
-          <div className="card col col-md-6" style={{ height: 300 }}>
+          <div className="card col col-md-6" style={{ height: 300, marginLeft: 10, marginRight: 10 }}>
             <h3>Pending Receivables</h3>
             <AMS_BarChart Data={IncompleteReceivables} Label1="SCHREIBEN" Label2="SPRACHEN" Type="type" />
           </div>

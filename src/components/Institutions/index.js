@@ -15,6 +15,7 @@ import Select from 'react-select'
 
 import { InputText } from 'primereact/inputtext';
 import AMSInputField from '../Common/AMSInputField';
+import { Toast } from 'primereact/toast';
 
 const errorBox = {
     borderRadius: '3px', borderColor: 'rgba(242, 38, 19, 1)'
@@ -268,6 +269,7 @@ class InstitutionList extends Component {
         return (
             <div>
                 {/* <Growl ref={(el) => this.growl = el}></Growl> */}
+                <Toast ref={(el) => this.growl = el} />
                 <ContextMenu model={this.menuModel} ref={el => this.cm = el} onHide={() => this.setState({ selectedUser: null })} />
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
