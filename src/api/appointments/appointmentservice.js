@@ -178,6 +178,24 @@ class AppointmentService {
                 });
         });
     }
+    UploadAndEmail(formData) {
+        return new Promise((resolve, reject) => {
+            http.post('/appointmentService/UploadAndEmail', formData, {
+                headers: {
+                    // 'Authorization': 'Bearer ' + this.currentUserSubject.token,
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(response => {
+                    if (response.data !== null) {
+                        resolve(response.data)
+                    }
+                })
+                .catch(function (error) {
+                    throw error
+                });
+        });
+    }
     downloadFile(data) {
         http.post("appointmentService/download", { 'Name': data },
             {

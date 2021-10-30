@@ -21,6 +21,8 @@ import AppointmentService from '../../../../api/appointments/appointmentservice'
 import * as ROLES from '../../../../constants/roles';
 import AMSInputField from '../../../Common/AMSInputField';
 import { Languages, ListAppointmentType } from '../../../../constants/staticValues';
+import { CONTRACT_PDF } from '../../../../constants/routes';
+import { TranslatorContract } from '../../invoices/Contract';
 
 const errorBox = {
     borderRadius: '3px', borderColor: 'rgba(242, 38, 19, 1)'
@@ -64,7 +66,9 @@ const INITIAL_STATE = {
     CheckFields: false,
     AllAppointments: [],
     AllInstitutions: [],
-    AllTranslators: []
+    AllTranslators: [],
+
+    SentFile: false
 }
 
 class ListAppointments extends Component {
@@ -452,7 +456,12 @@ class ListAppointments extends Component {
                     AllAppointments,
                     displayApproveDialog: false,
                     loadingModel: false,
+                    SentFile: true,
                     error: ''
+                }, () => {
+                    this.setState({
+                        SentFile: false,
+                    })
                 })
             })
                 .catch(error => {
@@ -871,6 +880,7 @@ class ListAppointments extends Component {
                         </div>
                     </div>
                 </div>
+                <TranslatorContract SentFile={this.state.SentFile} AppointmentId={this.state.selectedAppointmentId} />
             </div>
         );
     }

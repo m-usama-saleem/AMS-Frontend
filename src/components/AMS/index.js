@@ -30,7 +30,7 @@ import TranslatorInvoiceSpeaking from '../Forms/invoices/TranslatorInvoiceSpeaki
 import ListPayables from '../Finance/Payables';
 import ListReceivables from '../Finance/Receivables';
 import '../SignIn/SignIn.scss';
-import TranslatorContract from '../Forms/invoices/Contract';
+import { TranslatorContract } from '../Forms/invoices/Contract';
 import RptAppointment from '../Reports/RptAppointment';
 
 const App = (props) => (
