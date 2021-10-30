@@ -3,6 +3,7 @@ import * as ROLES from '../../constants/roles'
 import { UserService } from '../../api/user';
 import { DataTable } from 'primereact/datatable';
 // import { Growl } from 'primereact/growl';
+import { Toast } from 'primereact/toast';
 import { Column } from 'primereact/column';
 import { ContextMenu } from 'primereact/contextmenu';
 import 'primereact/resources/themes/nova/theme.css';
@@ -351,6 +352,7 @@ class TranslatorList extends Component {
         return (
             <div>
                 {/* <Growl ref={(el) => this.growl = el}></Growl> */}
+                <Toast ref={(el) => this.growl = el} />
                 <ContextMenu model={this.menuModel} ref={el => this.cm = el} onHide={() => this.setState({ selectedUser: null })} />
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
