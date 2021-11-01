@@ -64,8 +64,8 @@ class AppointmentFields extends Component {
             <div>
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Appointment ID" Type="text" IsRequired={true}
-                            Value={this.state.AppointmentId} PlaceholderText="Unique Appointment ID"
+                        <AMSInputField Label="Aktenzeichen" Type="text" IsRequired={true}
+                            Value={this.state.AppointmentId} PlaceholderText="Unique Aktenzeichen"
                             onChange={(val) => this.setState({ AppointmentId: val })} />
                     </div>
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
@@ -88,7 +88,7 @@ class AppointmentFields extends Component {
 
                     </div>
                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <label htmlFor="float-input">Institution Name<span style={{ color: 'red' }}>*</span></label>
+                        <label htmlFor="float-input">Auftraggeber<span style={{ color: 'red' }}>*</span></label>
                         <Select
                             value={this.state.SelectedInstituteName}
                             onChange={(e) => this.onInstitutionSelected(e)}
@@ -99,7 +99,7 @@ class AppointmentFields extends Component {
                 <div className="row">
                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                         <span className="ui-float-label">
-                            <label htmlFor="float-input">Appointment Date <span style={{ color: 'red' }}>*</span></label>
+                            <label htmlFor="float-input">Termin <span style={{ color: 'red' }}>*</span></label>
                             <DatePicker dateFormat="dd/MM/yyyy" placeholderText="Select date for appointment"
                                 selected={this.state.SelectedAppointmentDate}
                                 onChange={date => this.setAppointmentDate(date)}
@@ -108,7 +108,7 @@ class AppointmentFields extends Component {
                     </div>
                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <span className="ui-float-label">
-                            <label htmlFor="float-input">Type: <span style={{ color: 'red' }}>*</span></label>
+                            <label htmlFor="float-input">Typ: <span style={{ color: 'red' }}>*</span></label>
                             <div style={this.state.isTypeValid === true ? {} : errorBoxForCheckBox}>
                                 {AppointmentType}
                             </div>
@@ -118,7 +118,7 @@ class AppointmentFields extends Component {
 
                 <div className=" p-col-12 p-sm-12 p-md-6 p-lg-6" style={{ marginBottom: 20 }}>
                     <span className="ui-float-label">
-                        <label htmlFor="float-input">Attachments</label>
+                        <label htmlFor="float-input">Anhänge</label>
                         <div>
                             <input type="file" onChange={this.onFileSelected} multiple />
                         </div>

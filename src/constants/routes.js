@@ -28,6 +28,7 @@ export const FINANCE_PAY = '/finance/payable';
 
 export const TRANSLATOR_INVOICE_SPEAKING = '/translator/speak';
 export const TRANSLATOR_INVOICE = '/translator/invoice';
+export const REPORT_INVOICE = '/invoice';
 export const CONTRACT_PDF = '/translator/contract';
 
 export const REPORT_APPOINTMENT = '/reports/appointments';

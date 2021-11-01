@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import * as ROLES from '../../constants/roles'
 import { UserService } from '../../api/user';
 import { DataTable } from 'primereact/datatable';
-// import { Growl } from 'primereact/growl';
 import { Toast } from 'primereact/toast';
 import { Column } from 'primereact/column';
 import { ContextMenu } from 'primereact/contextmenu';
@@ -11,8 +10,6 @@ import 'primereact/resources/primereact.min.css';
 import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
 import { Dialog } from 'primereact/dialog';
-import { RadioButton } from 'primereact/radiobutton';
-import Select from 'react-select'
 
 import { InputText } from 'primereact/inputtext';
 import AMSInputField from '../Common/AMSInputField';
@@ -57,7 +54,7 @@ class AppUsers extends Component {
             })
             .catch(error => {
                 this.setState({ loading: false, error: error })
-                // this.growl.show({ severity: 'error', summary: 'Error', detail: error });
+                this.growl.show({ severity: 'error', summary: 'Error', detail: error });
             });
     }
 
@@ -76,7 +73,7 @@ class AppUsers extends Component {
         if (id != undefined && id != null && id != 0) {
             this.userSerivce.DeleteAppUser(id).then(() => {
                 var list = this.state.users.filter(x => x.id !== id)
-                // this.growl.show({ severity: 'success', summary: 'Success', detail: 'User Deleted Successfully' });
+                this.growl.show({ severity: 'success', summary: 'Success', detail: 'User Deleted Successfully' });
                 this.setState({
                     users: [...list],
                     displayDeleteDialog: false,
@@ -86,7 +83,7 @@ class AppUsers extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayDeleteDialog: false, })
-                    // this.growl.show({ severity: 'error', summary: 'Error', detail: error });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: error });
                 });
         }
     }
@@ -105,7 +102,7 @@ class AppUsers extends Component {
             .AddAppUser(user)
             .then((data) => {
                 if (data.success == true) {
-                    // this.growl.show({ severity: 'success', summary: 'Success', detail: 'User Created' });
+                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'User Created' });
                     var savedUser = data.user;
                     this.setState({
                         users: [...this.state.users, savedUser],
@@ -117,7 +114,7 @@ class AppUsers extends Component {
                 }
             })
             .catch((error) => {
-                // this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating User' });
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating User' });
                 this.setState({ isLoading: false });
             })
     }
@@ -136,7 +133,7 @@ class AppUsers extends Component {
             .EditAppUser(user)
             .then((data) => {
                 if (data.success == true) {
-                    // this.growl.show({ severity: 'success', summary: 'Success', detail: 'User Updated' });
+                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'User Updated' });
                     var UsersList = this.state.users;
 
                     var ind = UsersList.findIndex(x => x.id == user.Id);
@@ -157,7 +154,7 @@ class AppUsers extends Component {
                 }
             })
             .catch((error) => {
-                // this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating User' });
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating User' });
                 this.setState({ isLoading: false });
             })
     }
@@ -178,27 +175,30 @@ class AppUsers extends Component {
     }
 
     onAddUser = (e) => {
-        this.setState({ isLoading: true });
-        this.validateForm().then(result => {
-            if (result !== false) {
-                this.saveUser();
-            }
-            else {
-                // this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating User' });
-                this.setState({ isLoading: false });
-            }
+        this.setState({ isLoading: true, CheckFields: false }, () => {
+            this.validateForm().then(result => {
+                if (result !== false) {
+                    this.saveUser();
+                }
+                else {
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating User' });
+                    this.setState({ isLoading: false });
+                }
+            });
         });
     }
+
     onEditUser = (e) => {
-        this.setState({ isLoading: true });
-        this.validateForm().then(result => {
-            if (result !== false) {
-                this.editUser();
-            }
-            else {
-                // this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating User' });
-                this.setState({ isLoading: false });
-            }
+        this.setState({ isLoading: true, CheckFields: false }, () => {
+            this.validateForm().then(result => {
+                if (result !== false) {
+                    this.editUser();
+                }
+                else {
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating User' });
+                    this.setState({ isLoading: false });
+                }
+            });
         });
     }
 
@@ -247,31 +247,31 @@ class AppUsers extends Component {
         const { users, loading } = this.state;
         const header = <div className="row">
             <div className="col-sm-6 col-md-4 col-lg-4">
-                <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Search" size="20" />
+                <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Suche" size="20" />
             </div>
             <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
-                <Button className="p-button-info" icon="pi pi-plus" iconPos="left" label="Add"
+                <Button className="p-button-info" icon="pi pi-plus" iconPos="left" label="hinzufügen"
                     onClick={(e) => this.AddNew()} />
             </div>
         </div>
 
         return (
             <div>
-                {/* <Growl ref={(el) => this.growl = el}></Growl> */}
                 <Toast ref={(el) => this.growl = el} />
                 <ContextMenu model={this.menuModel} ref={el => this.cm = el} onHide={() => this.setState({ selectedUser: null })} />
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
-                        <h1>User List</h1>
+                        <h1>Nutzerliste</h1>
                         <div className="content-section implementation">
                             <DataTable header={header} value={users} globalFilter={this.state.globalFilter}
                                 onRowDoubleClick={this.dblClickAppointment} responsive={true}
                                 selection={this.state.selectedUser}
                                 onSelectionChange={e => this.setState({ selectedUser: e.value })}
+                                style={{ fontSize: 12 }}
                             >
                                 <Column field="name" header="Name" sortable={true} />
-                                <Column field="email" header="Email" sortable={true} />
-                                <Column header="Action" body={this.actionBodyTemplate}></Column>
+                                <Column field="email" header="E-Mail" sortable={true} />
+                                <Column header="Aktion" body={this.actionBodyTemplate}></Column>
                             </DataTable>
                             <div className="p-col-12 p-sm-12 p-md-12 p-lg-12" style={{ paddingTop: '20px' }}>
                                 {loading === true ?
@@ -320,7 +320,7 @@ class AppUsers extends Component {
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Email" Type="email" IsRequired={true}
+                                                        <AMSInputField Label="E-Mail" Type="email" IsRequired={true}
                                                             Value={this.state.email}
                                                             onChange={(val) => this.setState({ email: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
@@ -330,7 +330,7 @@ class AppUsers extends Component {
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Password" Type="password" IsRequired={true}
+                                                        <AMSInputField Label="Passwort" Type="password" IsRequired={true}
                                                             Value={this.state.password}
                                                             onChange={(val) => this.setState({ password: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidPassword: val })}
@@ -345,14 +345,14 @@ class AppUsers extends Component {
                                                     {(this.state.isValidForm === false || this.state.error) ? this.state.error : ''}
                                                 </div>
                                                 <div className="row" style={{ marginTop: 15, justifyContent: 'right' }}>
-                                                    <div className="col-sm-4 col-md-2 col-lg-2">
+                                                    <div className="col-sm-4 col-md-3 col-lg-3">
                                                         <span className="ui-float-label">
-                                                            <Button label="Reset" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset()} />
+                                                            <Button label="Zurücksetzen" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset()} />
                                                         </span>
                                                     </div>
-                                                    <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
+                                                    <div className="col-sm-4 col-md-3 col-lg-3" style={{ float: 'right' }}>
                                                         <span className="ui-float-label">
-                                                            <Button label="Save" className="p-button-primary ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onAddUser(e)} />
+                                                            <Button label="Speichern" className="p-button-primary ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onAddUser(e)} />
                                                         </span>
                                                     </div>
                                                 </div>
@@ -362,7 +362,7 @@ class AppUsers extends Component {
                                 }
                             </Dialog>
 
-                            <Dialog style={{ width: '50vw' }} visible={this.state.displayEditDialog} header="Edit User"
+                            <Dialog style={{ width: '50vw' }} visible={this.state.displayEditDialog} header="Nutzer bearbeiten"
                                 modal={true} onHide={() => this.setState({ displayEditDialog: false }, () => this.onReset())}
                                 contentStyle={{ minHeight: "350px", maxHeight: "550px", overflow: "auto" }}>
                                 {
@@ -379,7 +379,7 @@ class AppUsers extends Component {
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Email" Type="email" IsRequired={true}
+                                                        <AMSInputField Label="E-Mail" Type="email" IsRequired={true}
                                                             Value={this.state.email} ReadOnly={true}
                                                             onChange={(val) => this.setState({ email: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
@@ -389,7 +389,7 @@ class AppUsers extends Component {
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Password" Type="password" IsRequired={true}
+                                                        <AMSInputField Label="Passwort" Type="password" IsRequired={true}
                                                             Value={this.state.password}
                                                             onChange={(val) => this.setState({ password: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidPassword: val })}
@@ -406,12 +406,12 @@ class AppUsers extends Component {
                                                 <div className="row" style={{ marginTop: 15, justifyContent: 'right' }}>
                                                     <div className="col-sm-4 col-md-2 col-lg-2">
                                                         <span className="ui-float-label">
-                                                            <Button label="Reset" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset(e)} />
+                                                            <Button label="Zurücksetzen" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset(e)} />
                                                         </span>
                                                     </div>
                                                     <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
                                                         <span className="ui-float-label">
-                                                            <Button label="Update" className="p-button-primary ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onEditUser(e)} />
+                                                            <Button label="Aktualisieren" className="p-button-primary ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onEditUser(e)} />
                                                         </span>
                                                     </div>
                                                 </div>

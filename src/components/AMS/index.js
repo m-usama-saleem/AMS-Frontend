@@ -32,6 +32,7 @@ import ListReceivables from '../Finance/Receivables';
 import '../SignIn/SignIn.scss';
 import { TranslatorContract } from '../Forms/invoices/Contract';
 import RptAppointment from '../Reports/RptAppointment';
+import ShowReport from '../Forms/invoices';
 
 const App = (props) => (
     <div>
@@ -229,15 +230,16 @@ class AuthenticatedApp extends Component {
                 <div className="layout-main">
                     <Route path={ROUTES.DASHBOARD} component={HomePage} />
 
-                    <Route path={ROUTES.APPOINTMENT_LIST} render={() => <ListAppointments authUser={this.props.authUser} />} />
+                    <Route path={ROUTES.APPOINTMENT_LIST} render={(props) => <ListAppointments {...props} authUser={this.props.authUser} />} />
 
                     <Route path={ROUTES.TRANSLATOR_LIST} render={() => <TranslatorList authUser={this.props.authUser} />} />
                     <Route path={ROUTES.INSTITUTION_LIST} render={() => <InstitutiontList authUser={this.props.authUser} />} />
                     <Route path={ROUTES.USER_LIST} render={() => <AppUsers authUser={this.props.authUser} />} />
 
-                    <Route path={ROUTES.TRANSLATOR_INVOICE} render={(props) => <TranslatorInvoice {...props} />} />
+                    {/* <Route path={ROUTES.TRANSLATOR_INVOICE} render={(props) => <TranslatorInvoice {...props} />} />
                     <Route path={ROUTES.TRANSLATOR_INVOICE_SPEAKING} render={(props) => <TranslatorInvoiceSpeaking {...props} />} />
-                    <Route path={ROUTES.CONTRACT_PDF} render={(props) => <TranslatorContract {...props} />} />
+                    <Route path={ROUTES.CONTRACT_PDF} render={(props) => <TranslatorContract {...props} />} /> */}
+                    <Route path={ROUTES.REPORT_INVOICE} render={(props) => <ShowReport {...props} />} />
 
                     <Route path={ROUTES.FINANCE_PAY} render={(props) => <ListPayables {...props} authUser={this.props.authUser} />} />
                     <Route path={ROUTES.FINANCE_RECEIVE} render={(props) => <ListReceivables {...props} authUser={this.props.authUser} />} />

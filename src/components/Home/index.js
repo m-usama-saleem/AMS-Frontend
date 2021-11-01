@@ -42,7 +42,7 @@ class HomePage extends Component {
       <div style={{ width: '100%', height: '100%' }} >
         <div className="row" style={{ marginBottom: 20 }}>
           <div className="card col col-md-9" style={{ height: 300, margin: 'auto' }}>
-            <h3>Apointments</h3>
+            <h3>Termine</h3>
             <AMS_PieChart Appointments={Appointments} />
           </div>
         </div>

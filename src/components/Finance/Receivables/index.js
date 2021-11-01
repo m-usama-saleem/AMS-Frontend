@@ -59,9 +59,9 @@ class ListReceivables extends Component {
         this.exportPdf = this.exportPdf.bind(this);
         this.exportCSV = this.exportCSV.bind(this);
         this.cols = [
-            { field: 'appointmentId', header: 'Appointment ID' },
-            { field: 'appointmentType', header: 'Type' },
-            { field: 'appointmentInstitute', header: 'Institute' },
+            { field: 'appointmentId', header: 'Aktenzeichen' },
+            { field: 'appointmentType', header: 'Typ' },
+            { field: 'appointmentInstitute', header: 'Auftraggeber' },
             { field: 'appointmentTranslator', header: 'Translator' },
             { field: 'netPayment', header: 'Net Receivable' },
             { field: 'status', header: 'Status' },
@@ -289,7 +289,7 @@ class ListReceivables extends Component {
 
         if (rowData.status != "Approved") {
             EditButton = <Button icon="pi pi-pencil" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-success p-mr-2"
-                onClick={() => this.editMode(rowData)} title="Edit" />
+                onClick={() => this.editMode(rowData)} title="Bearbeiten" />
 
             PaidButton = <Button icon="pi pi-check" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-info p-mr-2"
                 onClick={() => this.confirmReceivable(rowData)} title="Receive" />
@@ -356,7 +356,7 @@ class ListReceivables extends Component {
 
         header = <div className="row">
             <div className="col-sm-6 col-md-4 col-lg-4">
-                <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Search" size="20" />
+                <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Suche" size="20" />
             </div>
             <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
                 <Button className="p-button-success" icon="pi pi-file-excel" onClick={() => this.exportCSV(false)} data-pr-tooltip="Excel" label="EXCEL" />
@@ -388,14 +388,15 @@ class ListReceivables extends Component {
                                 sortField="appointmentDate" sortOrder={1}
                                 paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                                 dataKey="id"
+                                style={{ fontSize: 12 }}
                             >
-                                <Column field="appointmentId" header="Appointment ID" sortable={true} />
-                                <Column field="appointmentType" header="Type" sortable={true} />
-                                <Column field="appointmentInstitute" header="Institute" sortable={true} />
+                                <Column field="appointmentId" header="Aktenzeichen" sortable={true} />
+                                <Column field="appointmentType" header="Typ" sortable={true} />
+                                <Column field="appointmentInstitute" header="Auftraggeber" sortable={true} />
                                 <Column field="appointmentTranslator" header="Translator" sortable={true} />
                                 <Column field="netPayment" header="Net Receivable" sortable={true} />
                                 <Column field="status" header="Status" sortable={true} />
-                                <Column header="Action" body={this.actionBodyTemplate}></Column>
+                                <Column header="Aktion" body={this.actionBodyTemplate}></Column>
                             </DataTable>
 
                             <div className="p-col-12 p-sm-12 p-md-12 p-lg-12" style={{ paddingTop: '20px' }}>
@@ -428,23 +429,23 @@ class ListReceivables extends Component {
                                 }
                             </Dialog>
 
-                            <Dialog visible={this.state.displayEditDialog} style={{ width: '60vw' }} header="Payment Information"
+                            <Dialog visible={this.state.displayEditDialog} style={{ width: '60vw' }} header="Zahlungsinformationen"
                                 modal={true} onHide={() => this.setState({ displayEditDialog: false })}
                                 contentStyle={{ maxHeight: "550px", overflow: "auto" }}>
                                 {
                                     <div className="p-grid p-fluid">
                                         <div className="card card-w-title">
-                                            <h1>Payment Information</h1>
+                                            <h1>Zahlungsinformationen</h1>
                                             <div className="p-grid" >
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Appointment ID" Type="text" ReadOnly={true}
-                                                            Value={this.state.AppointmentId} PlaceholderText="Unique Appointment ID"
+                                                        <AMSInputField Label="Aktenzeichen" Type="text" ReadOnly={true}
+                                                            Value={this.state.AppointmentId} PlaceholderText="Unique Aktenzeichen"
                                                             ChangeIsValid={(val) => this.setState({ ValidAppointmentId: val })}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Appointment Date" Type="text" ReadOnly={true}
+                                                        <AMSInputField Label="Termin" Type="text" ReadOnly={true}
                                                             Value={this.state.AppointmentDate}
                                                             ChangeIsValid={(val) => this.setState({ ValidAppointmentDate: val })}
                                                         />
@@ -458,7 +459,7 @@ class ListReceivables extends Component {
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Appointment Institute" Type="text" ReadOnly={true}
+                                                        <AMSInputField Label="Auftraggeber" Type="text" ReadOnly={true}
                                                             Value={this.state.AppointmentInstitute}
                                                             ChangeIsValid={(val) => this.setState({ ValidInstitute: val })}
                                                         />
@@ -468,13 +469,13 @@ class ListReceivables extends Component {
                                                 <hr style={{ lineHeight: 5, borderColor: 'black' }}></hr>
                                                 <div className="row">
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Sub Total" PlaceholderText="Sub Total" Type="number"
+                                                        <AMSInputField Label="Insgesamt" PlaceholderText="Insgesamt" Type="number"
                                                             Value={this.state.SubTotal} onChange={(val) => this.setState({ SubTotal: val }, () => this.calculateTotal())}
                                                             ChangeIsValid={(val) => this.setState({ SubTotal: val })}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Tax %" PlaceholderText="Tax" Type="number"
+                                                        <AMSInputField Label="MwSt %" PlaceholderText="MwSt" Type="number"
                                                             Value={this.state.Tax} onChange={(val) => this.setState({ Tax: val }, () => this.calculateTotal())}
                                                             ChangeIsValid={(val) => this.setState({ ValidTax: val })}
                                                         />
@@ -483,7 +484,7 @@ class ListReceivables extends Component {
                                                 <hr style={{ lineHeight: 5, borderColor: 'black' }}></hr>
                                                 <div className="row">
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
-                                                        <AMSInputField Label="Net Payment" PlaceholderText="Net Payment" Type="number"
+                                                        <AMSInputField Label="Netto Betrag" PlaceholderText="Netto Betrag" Type="number"
                                                             Value={this.state.NetPayment} ReadOnly={true}
                                                         />
                                                     </div>

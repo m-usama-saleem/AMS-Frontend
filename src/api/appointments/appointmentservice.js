@@ -211,6 +211,24 @@ class AppointmentService {
             }).catch(ex => {
             })
     }
+    DownloadWord(formData) {
+        http.post("appointmentService/DownloadWord", formData,
+            {
+                headers: {
+                    // 'Authorization': 'Bearer ' + this.currentUserSubject.token,
+                    'Content-Type': 'multipart/form-data'
+                },
+                responseType: 'arraybuffer'
+            })
+            .then(response => {
+                if (response.data !== null) {
+                    FileDownload(response.data, "file.docx");
+                }
+            })
+            .catch(function (error) {
+                throw error
+            })
+    }
 }
 
 export default AppointmentService;

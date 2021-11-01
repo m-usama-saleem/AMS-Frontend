@@ -48,11 +48,11 @@ class ListPayables extends Component {
         this.exportPdf = this.exportPdf.bind(this);
         this.exportCSV = this.exportCSV.bind(this);
         this.cols = [
-            { field: 'appointmentId', header: 'Appointment ID' },
-            { field: 'appointmentType', header: 'Type' },
-            { field: 'appointmentInstitute', header: 'Institute' },
+            { field: 'appointmentId', header: 'Aktenzeichen' },
+            { field: 'appointmentType', header: 'Typ' },
+            { field: 'appointmentInstitute', header: 'Auftraggeber' },
             { field: 'appointmentTranslator', header: 'Translator' },
-            { field: 'netPayment', header: 'Net Payable' },
+            { field: 'netPayment', header: 'Netto Betrag' },
             { field: 'status', header: 'Status' },
         ];
         this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
@@ -307,18 +307,10 @@ class ListPayables extends Component {
 
     viewInvoice(payable) {
         if (payable) {
-            if (payable.appointmentType === "SPRACHEN") {
-                this.props.history.push({
-                    pathname: ROUTES.TRANSLATOR_INVOICE_SPEAKING,
-                    Invoice: payable
-                })
-            }
-            else if (payable.appointmentType === "SCHREIBEN") {
-                this.props.history.push({
-                    pathname: ROUTES.TRANSLATOR_INVOICE,
-                    Invoice: payable
-                })
-            }
+            this.props.history.push({
+                pathname: ROUTES.REPORT_INVOICE,
+                Invoice: payable
+            })
         }
     }
 
@@ -328,16 +320,16 @@ class ListPayables extends Component {
 
         if (rowData.status != "Approved") {
             EditButton = <Button icon="pi pi-pencil" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-success p-mr-2"
-                onClick={() => this.editMode(rowData)} title="Edit" />
+                onClick={() => this.editMode(rowData)} title="Bearbeiten" />
 
             PaidButton = <Button icon="pi pi-check" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-info p-mr-2"
-                onClick={() => this.confirmPayable(rowData)} title="Pay" />
+                onClick={() => this.confirmPayable(rowData)} title="bezahlen" />
         }
 
         return (
             <React.Fragment>
                 <Button icon="pi pi-file" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-secondary p-mr-2"
-                    onClick={() => this.viewInvoice(rowData)} title="View Invoice" />
+                    onClick={() => this.viewInvoice(rowData)} title="Rechnung ansehen" />
                 {PaidButton}
                 {EditButton}
 
@@ -435,19 +427,19 @@ class ListPayables extends Component {
     getSpeakingFields() {
         return (
             <div>
-                <h3 style={{ borderBottomStyle: 'solid', borderBottomWidth: 2, borderColor: 'black' }}>Trip Details</h3>
+                <h3 style={{ borderBottomStyle: 'solid', borderBottomWidth: 2, borderColor: 'black' }}>Reise Details</h3>
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <span className="ui-float-label">
-                            <label htmlFor="float-input">Start Of The Trip</label>
-                            <TimePicker className="form-control" time={this.state.StartOfTheTrip} theme="Ash" placeholder="Start Of The Trip"
+                            <label htmlFor="float-input">Reisebeginn</label>
+                            <TimePicker className="form-control" time={this.state.StartOfTheTrip} theme="Ash" placeholder="Reisebeginn"
                                 onSet={(val) => this.ChangeStartOfTheTrip(val.format24)} />
                         </span>
                     </div>
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <span className="ui-float-label">
-                            <label htmlFor="float-input">Appointment start</label>
-                            <TimePicker className="form-control" time={this.state.AppointmentStart} theme="Ash" placeholder="Appointment start time"
+                            <label htmlFor="float-input">Terminbeginn</label>
+                            <TimePicker className="form-control" time={this.state.AppointmentStart} theme="Ash" placeholder="Terminbeginn time"
                                 onSet={(val) => this.ChangeAppointmentStart(val.format24)} />
                         </span>
                     </div>
@@ -455,22 +447,22 @@ class ListPayables extends Component {
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <span className="ui-float-label">
-                            <label htmlFor="float-input">End of the appointment</label>
-                            <TimePicker className="form-control" time={this.state.EndOfTheAppointment} theme="Ash" placeholder="End of the appointment time"
+                            <label htmlFor="float-input">Terminende</label>
+                            <TimePicker className="form-control" time={this.state.EndOfTheAppointment} theme="Ash" placeholder="Terminende time"
                                 onSet={(val) => this.ChangeEndOfTheAppointment(val.format24)} />
                         </span>
                     </div>
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <span className="ui-float-label">
-                            <label htmlFor="float-input">End of the trip</label>
-                            <TimePicker className="form-control" time={this.state.EndOfTheTrip} theme="Ash" placeholder="End of the trip time"
+                            <label htmlFor="float-input">Ende der Reise</label>
+                            <TimePicker className="form-control" time={this.state.EndOfTheTrip} theme="Ash" placeholder="Ende der Reise time"
                                 onSet={(val) => this.ChangeEndOfTheTrip(val.format24)} />
                         </span>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Total hours" PlaceholderText="Total hours" Type="text"
+                        <AMSInputField Label="Stunden insgesamt" PlaceholderText="Stunden insgesamt" Type="text"
                             Value={this.state.TotalHours} onChange={(val) => this.setState({ TotalHours: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => this.setState({ ValidTotalHours: val })}
                         />
@@ -478,13 +470,13 @@ class ListPayables extends Component {
                 </div>
                 <div className="row">
                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Ride Distance (KM)" PlaceholderText="Ride Distance (KM)" Type="number"
+                        <AMSInputField Label="Reisedistanz (KM)" PlaceholderText="Reisedistanz (KM)" Type="number"
                             Value={this.state.RideDistance} onChange={(val) => this.setState({ RideDistance: val }, () => this.calculateRideCost())}
                             ChangeIsValid={(val) => this.setState({ ValidRideDistance: val })}
                         />
                     </div>
                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Ride Cost" PlaceholderText="Ride Cost" Type="number" /* ReadOnly={true} */
+                        <AMSInputField Label="Reisekosten" PlaceholderText="Reisekosten" Type="number" /* ReadOnly={true} */
                             Value={this.state.RideCost} onChange={(val) => this.setState({ RideCost: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => this.setState({ ValidRideCost: val })}
                         />
@@ -492,13 +484,13 @@ class ListPayables extends Component {
                 </div>
                 <div className="row">
                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
-                        <AMSInputField Label="Daily Allowance" PlaceholderText="Daily Allowance" Type="number"
+                        <AMSInputField Label="Pauschale" PlaceholderText="Pauschale" Type="number"
                             Value={this.state.DailyAllowance} onChange={(val) => this.setState({ DailyAllowance: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => this.setState({ ValidDailyAllowance: val })}
                         />
                     </div>
                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Ticket Cost" PlaceholderText="Ticket Cost" Type="number"
+                        <AMSInputField Label="Ticketgebühren" PlaceholderText="Ticketgebühren" Type="number"
                             Value={this.state.TicketCost} onChange={(val) => this.setState({ TicketCost: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => this.setState({ ValidTicketCost: val })}
                         />
@@ -576,20 +568,18 @@ class ListPayables extends Component {
         }
         header = <div className="row">
             <div className="col-sm-6 col-md-4 col-lg-4">
-                <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Search" size="20" />
+                <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Suche" size="20" />
             </div>
             <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
-                <Button className="p-button-success" icon="pi pi-file-excel" onClick={() => this.exportCSV(false)} data-pr-tooltip="Excel" label="EXCEL" />
-            </div>
-            <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
-                <Button className="p-button-danger" icon="pi pi-file-pdf" onClick={() => this.exportPdf()} data-pr-tooltip="PDF" label="PDF" />
+                <Button style={{ borderRadius: 20 }} className="p-button-success" icon="pi pi-file-excel" onClick={() => this.exportCSV(false)} data-pr-tooltip="Excel" />
+                <Button style={{ borderRadius: 20, marginLeft: 10 }} className="p-button-danger" icon="pi pi-file-pdf" onClick={() => this.exportPdf()} data-pr-tooltip="PDF" />
             </div>
             {PayAllButton}
         </div>
 
         if (Status == "Pending") {
             UpdatePayableButton = <span className="ui-float-label" style={{ float: 'right' }}>
-                <Button label="Update Payable" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditPayable()} />
+                <Button label="Verbindlichkeiten aktualisieren" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditPayable()} />
             </span>
         }
 
@@ -621,14 +611,15 @@ class ListPayables extends Component {
                                 sortField="appointmentDate" sortOrder={1}
                                 paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                                 dataKey="id"
+                                style={{ fontSize: 12 }}
                             >
-                                <Column field="appointmentId" header="Appointment ID" sortable={true} />
-                                <Column field="appointmentType" header="Type" sortable={true} />
-                                <Column field="appointmentInstitute" header="Institute" sortable={true} />
+                                <Column field="appointmentId" header="Aktenzeichen" sortable={true} />
+                                <Column field="appointmentType" header="Typ" sortable={true} />
+                                <Column field="appointmentInstitute" header="Auftraggeber" sortable={true} />
                                 <Column field="appointmentTranslator" header="Translator" sortable={true} />
-                                <Column field="netPayment" header="Net Payable" sortable={true} />
+                                <Column field="netPayment" header="Netto Betrag" sortable={true} />
                                 <Column field="status" header="Status" sortable={true} />
-                                <Column header="Action" body={this.actionBodyTemplate}></Column>
+                                <Column header="Aktion" body={this.actionBodyTemplate}></Column>
                             </DataTable>
 
                             <div className="p-col-12 p-sm-12 p-md-12 p-lg-12" style={{ paddingTop: '20px' }}>
@@ -661,23 +652,23 @@ class ListPayables extends Component {
                                 }
                             </Dialog>
 
-                            <Dialog visible={this.state.displayEditDialog} style={{ width: '60vw' }} header="Payment Information"
+                            <Dialog visible={this.state.displayEditDialog} style={{ width: '60vw' }} header="Zahlungsinformationen"
                                 modal={true} onHide={() => this.setState({ displayEditDialog: false })}
                                 contentStyle={{ maxHeight: "550px", overflow: "auto" }}>
                                 {
                                     <div className="p-grid p-fluid">
                                         <div className="card card-w-title">
-                                            <h1>Payment Information</h1>
+                                            <h1>Zahlungsinformationen</h1>
                                             <div className="p-grid" >
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Appointment ID" Type="text" ReadOnly={true}
-                                                            Value={this.state.AppointmentId} PlaceholderText="Unique Appointment ID"
+                                                        <AMSInputField Label="Aktenzeichen" Type="text" ReadOnly={true}
+                                                            Value={this.state.AppointmentId} PlaceholderText="Unique Aktenzeichen"
                                                             ChangeIsValid={(val) => this.setState({ ValidAppointmentId: val })}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Appointment Date" Type="text" ReadOnly={true}
+                                                        <AMSInputField Label="Termin" Type="text" ReadOnly={true}
                                                             Value={this.state.AppointmentDate}
                                                             ChangeIsValid={(val) => this.setState({ ValidAppointmentDate: val })}
                                                         />
@@ -691,7 +682,7 @@ class ListPayables extends Component {
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Appointment Institute" Type="text" ReadOnly={true}
+                                                        <AMSInputField Label="Auftraggeber" Type="text" ReadOnly={true}
                                                             Value={this.state.AppointmentInstitute}
                                                             ChangeIsValid={(val) => this.setState({ ValidInstitute: val })}
                                                         />
@@ -705,12 +696,12 @@ class ListPayables extends Component {
                                                 <hr style={{ lineHeight: 5, borderColor: 'black' }}></hr>
                                                 <div className="row">
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Sub Total" PlaceholderText="Sub Total" Type="number"
+                                                        <AMSInputField Label="Insgesamt" PlaceholderText="Insgesamt" Type="number"
                                                             Value={this.state.SubTotal} ReadOnly={true}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Tax %" PlaceholderText="Tax" Type="number"
+                                                        <AMSInputField Label="MwSt %" PlaceholderText="MwSt" Type="number"
                                                             Value={this.state.Tax} onChange={(val) => this.setState({ Tax: val }, () => this.calculateTotal())}
                                                             ChangeIsValid={(val) => this.setState({ ValidTax: val })}
                                                         />
@@ -719,7 +710,7 @@ class ListPayables extends Component {
                                                 <hr style={{ lineHeight: 5, borderColor: 'black' }}></hr>
                                                 <div className="row">
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
-                                                        <AMSInputField Label="Net Payment" PlaceholderText="Net Payment" Type="number"
+                                                        <AMSInputField Label="Netto Betrag" PlaceholderText="Netto Betrag" Type="number"
                                                             Value={this.state.NetPayment} ReadOnly={true}
                                                         />
                                                     </div>

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import * as ROLES from '../../constants/roles'
 import { UserService } from '../../api/user';
 import { DataTable } from 'primereact/datatable';
-import { Toast } from 'primereact/toast';
 // import { Growl } from 'primereact/growl';
 import { Column } from 'primereact/column';
 import { ContextMenu } from 'primereact/contextmenu';
@@ -194,27 +193,29 @@ class InstitutionList extends Component {
 
 
     onAddUser = (e) => {
-        this.setState({ isLoading: true });
-        this.validateForm().then(result => {
-            if (result !== false) {
-                this.saveUser();
-            }
-            else {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Institution' });
-                this.setState({ isLoading: false });
-            }
+        this.setState({ isLoading: true, CheckFields: false }, () => {
+            this.validateForm().then(result => {
+                if (result !== false) {
+                    this.saveUser();
+                }
+                else {
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Institution' });
+                    this.setState({ isLoading: false });
+                }
+            });
         });
     }
     onEditUser = (e) => {
-        this.setState({ isLoading: true });
-        this.validateForm().then(result => {
-            if (result !== false) {
-                this.editUser();
-            }
-            else {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Institution' });
-                this.setState({ isLoading: false });
-            }
+        this.setState({ isLoading: true, CheckFields: false }, () => {
+            this.validateForm().then(result => {
+                if (result !== false) {
+                    this.editUser();
+                }
+                else {
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Institution' });
+                    this.setState({ isLoading: false });
+                }
+            });
         });
     }
 
@@ -259,10 +260,10 @@ class InstitutionList extends Component {
         const { users, loading } = this.state;
         const header = <div className="row">
             <div className="col-sm-6 col-md-4 col-lg-4">
-                <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Search" size="20" />
+                <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Suche" size="20" />
             </div>
             <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
-                <Button className="p-button-info" icon="pi pi-plus" iconPos="left" label="Add"
+                <Button className="p-button-info" icon="pi pi-plus" iconPos="left" label="hinzufügen"
                     onClick={() => this.AddNew()} />
             </div>
         </div>
@@ -274,19 +275,20 @@ class InstitutionList extends Component {
                 <ContextMenu model={this.menuModel} ref={el => this.cm = el} onHide={() => this.setState({ selectedUser: null })} />
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
-                        <h1>Instituition List</h1>
+                        <h1>Auftragsgeberliste</h1>
                         <div className="content-section implementation">
                             <DataTable header={header} value={users} globalFilter={this.state.globalFilter}
                                 onRowDoubleClick={this.dblClickAppointment} responsive={true}
                                 selection={this.state.selectedUser}
                                 onSelectionChange={e => this.setState({ selectedUser: e.value })}
                                 paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
+                                style={{ fontSize: 12 }}
                             >
                                 <Column field="name" header="Name" sortable={true} />
-                                <Column field="email" header="Email" sortable={true} />
-                                <Column field="address" header="Address" sortable={true} />
-                                <Column field="city" header="City" sortable={true} />
-                                <Column header="Action" body={this.actionBodyTemplate}></Column>
+                                <Column field="email" header="E-Mail" sortable={true} />
+                                <Column field="address" header="Adresse" sortable={true} />
+                                <Column field="city" header="Stadt" sortable={true} />
+                                <Column header="Aktion" body={this.actionBodyTemplate}></Column>
                             </DataTable>
                             <div className="p-col-12 p-sm-12 p-md-12 p-lg-12" style={{ paddingTop: '20px' }}>
                                 {loading === true ?
@@ -335,7 +337,7 @@ class InstitutionList extends Component {
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Email" Type="email" IsRequired={true}
+                                                        <AMSInputField Label="E-Mail" Type="email" IsRequired={true}
                                                             Value={this.state.email}
                                                             onChange={(val) => this.setState({ email: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
@@ -345,7 +347,7 @@ class InstitutionList extends Component {
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-12 col-lg-12" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Address" Type="text" IsRequired={true}
+                                                        <AMSInputField Label="Adresse" Type="text" IsRequired={true}
                                                             Value={this.state.address}
                                                             onChange={(val) => this.setState({ address: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidAddress: val })}
@@ -355,14 +357,14 @@ class InstitutionList extends Component {
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Postcode" Type="text"
+                                                        <AMSInputField Label="Postleitzahl" Type="text"
                                                             Value={this.state.postcode}
                                                             onChange={(val) => this.setState({ postcode: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidPostcode: val })}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="City" Type="text"
+                                                        <AMSInputField Label="Stadt" Type="text"
                                                             Value={this.state.city}
                                                             onChange={(val) => this.setState({ city: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidCity: val })}
@@ -376,14 +378,14 @@ class InstitutionList extends Component {
                                                     {(this.state.isValidForm === false || this.state.error) ? this.state.error : ''}
                                                 </div>
                                                 <div className="row" style={{ marginTop: 15, justifyContent: 'right' }}>
-                                                    <div className="col-sm-4 col-md-2 col-lg-2">
+                                                    <div className="col-sm-4 col-md-3 col-lg-3">
                                                         <span className="ui-float-label">
-                                                            <Button label="Reset" className="p-button-secondary " disabled={this.state.isLoading} onClick={() => this.onReset()} />
+                                                            <Button label="Zurücksetzen" className="p-button-secondary " disabled={this.state.isLoading} onClick={() => this.onReset()} />
                                                         </span>
                                                     </div>
-                                                    <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
+                                                    <div className="col-sm-4 col-md-3 col-lg-3" style={{ float: 'right' }}>
                                                         <span className="ui-float-label">
-                                                            <Button label="Save" className="p-button-primary ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onAddUser(e)} />
+                                                            <Button label="Speichern" className="p-button-primary ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onAddUser(e)} />
                                                         </span>
                                                     </div>
                                                 </div>
@@ -410,7 +412,7 @@ class InstitutionList extends Component {
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Email" Type="email" IsRequired={true}
+                                                        <AMSInputField Label="E-Mail" Type="email" IsRequired={true}
                                                             Value={this.state.email} ReadOnly={true}
                                                             onChange={(val) => this.setState({ email: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
@@ -420,7 +422,7 @@ class InstitutionList extends Component {
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-12 col-lg-12" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Address" Type="text" IsRequired={true}
+                                                        <AMSInputField Label="Adresse" Type="text" IsRequired={true}
                                                             Value={this.state.address}
                                                             onChange={(val) => this.setState({ address: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidAddress: val })}
@@ -430,14 +432,14 @@ class InstitutionList extends Component {
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Postcode" Type="text"
+                                                        <AMSInputField Label="Postleitzahl" Type="text"
                                                             Value={this.state.postcode}
                                                             onChange={(val) => this.setState({ postcode: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidPostcode: val })}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="City" Type="text"
+                                                        <AMSInputField Label="Stadt" Type="text"
                                                             Value={this.state.city}
                                                             onChange={(val) => this.setState({ city: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidCity: val })}
@@ -453,12 +455,12 @@ class InstitutionList extends Component {
                                                 <div className="row" style={{ marginTop: 15, justifyContent: 'right' }}>
                                                     <div className="col-sm-4 col-md-2 col-lg-2">
                                                         <span className="ui-float-label">
-                                                            <Button label="Reset" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset(e)} />
+                                                            <Button label="Zurücksetzen" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset(e)} />
                                                         </span>
                                                     </div>
                                                     <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
                                                         <span className="ui-float-label">
-                                                            <Button label="Update" className="p-button-primary ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onEditUser(e)} />
+                                                            <Button label="Aktualisieren" className="p-button-primary ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onEditUser(e)} />
                                                         </span>
                                                     </div>
                                                 </div>

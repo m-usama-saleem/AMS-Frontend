@@ -220,7 +220,7 @@ class TranslatorList extends Component {
                         let error = "";
                         if (!this.state.SelectedLanguageName || this.state.SelectedLanguageName === "" || this.state.SelectedLanguageName == undefined || this.state.SelectedLanguageName.length <= 0) {
                             this.setState({ ValidLanguage: false });
-                            error += "Language cannot be empty \n";
+                            error += "Sprache cannot be empty \n";
                         } else { this.setState({ ValidLanguage: true }); }
 
                         if (this.state.type.trim() === '') {
@@ -238,28 +238,30 @@ class TranslatorList extends Component {
     }
 
     onAddUser = (e) => {
-        this.setState({ isLoading: true });
-        this.validateForm().then(result => {
-            if (result !== false) {
-                this.saveUser();
-            }
-            else {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Translator' });
-                this.setState({ isLoading: false });
-            }
+        this.setState({ isLoading: true, CheckFields: false }, () => {
+            this.validateForm().then(result => {
+                if (result !== false) {
+                    this.saveUser();
+                }
+                else {
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Translator' });
+                    this.setState({ isLoading: false });
+                }
+            });
         });
     }
 
     onEditUser = (e) => {
-        this.setState({ isLoading: true });
-        this.validateForm().then(result => {
-            if (result !== false) {
-                this.editUser();
-            }
-            else {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Translator' });
-                this.setState({ isLoading: false });
-            }
+        this.setState({ isLoading: true, CheckFields: false }, () => {
+            this.validateForm().then(result => {
+                if (result !== false) {
+                    this.editUser();
+                }
+                else {
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Translator' });
+                    this.setState({ isLoading: false });
+                }
+            });
         });
     }
 
@@ -338,10 +340,10 @@ class TranslatorList extends Component {
         const { users, loading } = this.state;
         const header = <div className="row">
             <div className="col-sm-6 col-md-4 col-lg-4">
-                <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Search" size="20" />
+                <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Suche" size="20" />
             </div>
             <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
-                <Button className="p-button-info" icon="pi pi-plus" iconPos="left" label="Add"
+                <Button className="p-button-info" icon="pi pi-plus" iconPos="left" label="hinzufügen"
                     onClick={(e) => this.AddNew()} />
             </div>
         </div>
@@ -356,19 +358,20 @@ class TranslatorList extends Component {
                 <ContextMenu model={this.menuModel} ref={el => this.cm = el} onHide={() => this.setState({ selectedUser: null })} />
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
-                        <h1>Translators List</h1>
+                        <h1>Dolmetscherliste</h1>
                         <div className="content-section implementation">
                             <DataTable header={header} value={users} globalFilter={this.state.globalFilter}
                                 onRowDoubleClick={this.dblClickAppointment} responsive={true}
                                 selection={this.state.selectedUser}
                                 onSelectionChange={e => this.setState({ selectedUser: e.value })}
                                 paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
+                                style={{ fontSize: 12 }}
                             >
                                 <Column field="firstName" header="Name" sortable={true} />
-                                <Column field="email" header="Email" sortable={true} />
-                                <Column field="type" header="Type" sortable={true} />
-                                <Column field="language" header="Languages" sortable={true} />
-                                <Column header="Action" body={this.actionBodyTemplate}></Column>
+                                <Column field="email" header="E-Mail" sortable={true} />
+                                <Column field="type" header="Typ" sortable={true} />
+                                <Column field="language" header="Sprachen" sortable={true} />
+                                <Column header="Aktion" body={this.actionBodyTemplate}></Column>
                             </DataTable>
                             <div className="p-col-12 p-sm-12 p-md-12 p-lg-12" style={{ paddingTop: '20px' }}>
                                 {loading === true ?
@@ -409,7 +412,7 @@ class TranslatorList extends Component {
                                             <div className="p-grid ">
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="First Name" Type="text" IsRequired={true}
+                                                        <AMSInputField Label="Vorname" Type="text" IsRequired={true}
                                                             Value={this.state.firstName}
                                                             onChange={(val) => this.setState({ firstName: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidFirstName: val })}
@@ -417,7 +420,7 @@ class TranslatorList extends Component {
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Last Name" Type="text" IsRequired={true}
+                                                        <AMSInputField Label="Nachname" Type="text" IsRequired={true}
                                                             Value={this.state.lastName}
                                                             onChange={(val) => this.setState({ lastName: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidLastName: val })}
@@ -427,7 +430,7 @@ class TranslatorList extends Component {
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Email" Type="email" IsRequired={true}
+                                                        <AMSInputField Label="E-Mail" Type="email" IsRequired={true}
                                                             Value={this.state.email}
                                                             onChange={(val) => this.setState({ email: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
@@ -438,7 +441,7 @@ class TranslatorList extends Component {
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Type: <span style={{ color: 'red' }}>*</span></label>
+                                                            <label htmlFor="float-input">Typ: <span style={{ color: 'red' }}>*</span></label>
                                                             <div style={this.state.isTypeValid === true ? {} : errorBoxForCheckBox}>
                                                                 <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">SCHREIBEN</span>
                                                                 <RadioButton value="SCHREIBEN" name="Type"
@@ -453,7 +456,7 @@ class TranslatorList extends Component {
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={this.state.ValidLanguage === false ? errorBoxForDDL : normalBoxForDDL}>
                                                         <span className="ui-float-label" >
-                                                            <label htmlFor="float-input">Language<span style={{ color: 'red' }}>*</span></label>
+                                                            <label htmlFor="float-input">Sprache<span style={{ color: 'red' }}>*</span></label>
                                                             <Select isMulti={true}
                                                                 value={this.state.SelectedLanguageName}
                                                                 onChange={(e) => this.onLanguageSelected(e)}
@@ -466,7 +469,7 @@ class TranslatorList extends Component {
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Gender</label>
+                                                            <label htmlFor="float-input">Geschlecht</label>
                                                             <Select
                                                                 value={this.state.SelectedGender}
                                                                 onChange={(e) => this.onGenderSelected(e)}
@@ -476,7 +479,7 @@ class TranslatorList extends Component {
                                                         </span>
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Contact" Type="text"
+                                                        <AMSInputField Label="Kontakt" Type="text"
                                                             Value={this.state.contact}
                                                             onChange={(val) => this.setState({ contact: val })}
                                                         />
@@ -484,13 +487,13 @@ class TranslatorList extends Component {
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Address" Type="text"
+                                                        <AMSInputField Label="Adresse" Type="text"
                                                             Value={this.state.address}
                                                             onChange={(val) => this.setState({ address: val })}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Postcode" Type="text"
+                                                        <AMSInputField Label="Postleitzahl" Type="text"
                                                             Value={this.state.postCode}
                                                             onChange={(val) => this.setState({ postCode: val })}
                                                         />
@@ -498,13 +501,13 @@ class TranslatorList extends Component {
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="City" Type="text"
+                                                        <AMSInputField Label="Stadt" Type="text"
                                                             Value={this.state.city}
                                                             onChange={(val) => this.setState({ city: val })}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Country" Type="text"
+                                                        <AMSInputField Label="Land" Type="text"
                                                             Value={this.state.country}
                                                             onChange={(val) => this.setState({ country: val })}
                                                         />
@@ -518,14 +521,14 @@ class TranslatorList extends Component {
                                                     {(this.state.isValidForm === false || this.state.error) ? this.state.error : ''}
                                                 </div>
                                                 <div className="row" style={{ marginTop: 15, justifyContent: 'right' }}>
-                                                    <div className="col-sm-4 col-md-2 col-lg-2">
+                                                    <div className="col-sm-4 col-md-3 col-lg-3">
                                                         <span className="ui-float-label">
-                                                            <Button label="Reset" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset()} />
+                                                            <Button label="Zurücksetzen" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset()} />
                                                         </span>
                                                     </div>
-                                                    <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
+                                                    <div className="col-sm-4 col-md-3 col-lg-3" style={{ float: 'right' }}>
                                                         <span className="ui-float-label">
-                                                            <Button label="Save" className="p-button-primary ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onAddUser(e)} />
+                                                            <Button label="Speichern" className="p-button-primary ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onAddUser(e)} />
                                                         </span>
                                                     </div>
                                                 </div>
@@ -535,7 +538,7 @@ class TranslatorList extends Component {
                                 }
                             </Dialog>
 
-                            <Dialog style={{ width: '50vw' }} visible={this.state.displayEditDialog} header="Edit Translator"
+                            <Dialog style={{ width: '50vw' }} visible={this.state.displayEditDialog} header="Dolmetscher bearbeiten"
                                 modal={true} onHide={() => this.setState({ displayEditDialog: false }, () => this.onReset())}
                                 contentStyle={{ minHeight: "350px", maxHeight: "550px", overflow: "auto" }}>
                                 {
@@ -544,7 +547,7 @@ class TranslatorList extends Component {
                                             <div className="p-grid ">
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="First Name" Type="text" IsRequired={true}
+                                                        <AMSInputField Label="Vorname" Type="text" IsRequired={true}
                                                             Value={this.state.firstName}
                                                             onChange={(val) => this.setState({ firstName: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidFirstName: val })}
@@ -552,7 +555,7 @@ class TranslatorList extends Component {
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Last Name" Type="text" IsRequired={true}
+                                                        <AMSInputField Label="Nachname" Type="text" IsRequired={true}
                                                             Value={this.state.lastName}
                                                             onChange={(val) => this.setState({ lastName: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidLastName: val })}
@@ -562,7 +565,7 @@ class TranslatorList extends Component {
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Email" Type="email" IsRequired={true}
+                                                        <AMSInputField Label="E-Mail" Type="email" IsRequired={true}
                                                             Value={this.state.email}
                                                             onChange={(val) => this.setState({ email: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
@@ -573,7 +576,7 @@ class TranslatorList extends Component {
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Type: <span style={{ color: 'red' }}>*</span></label>
+                                                            <label htmlFor="float-input">Typ: <span style={{ color: 'red' }}>*</span></label>
                                                             <div style={this.state.isTypeValid === true ? {} : errorBoxForCheckBox}>
                                                                 <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">SCHREIBEN</span>
                                                                 <RadioButton value="SCHREIBEN" name="Type"
@@ -588,7 +591,7 @@ class TranslatorList extends Component {
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Language<span style={{ color: 'red' }}>*</span></label>
+                                                            <label htmlFor="float-input">Sprache<span style={{ color: 'red' }}>*</span></label>
                                                             <Select isMulti={true}
                                                                 value={this.state.SelectedLanguageName}
                                                                 onChange={(e) => this.onLanguageSelected(e)}
@@ -601,7 +604,7 @@ class TranslatorList extends Component {
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <span className="ui-float-label">
-                                                            <label htmlFor="float-input">Gender</label>
+                                                            <label htmlFor="float-input">Geschlecht</label>
                                                             <Select
                                                                 value={this.state.SelectedGender}
                                                                 onChange={(e) => this.onGenderSelected(e)}
@@ -611,7 +614,7 @@ class TranslatorList extends Component {
                                                         </span>
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Contact" Type="text"
+                                                        <AMSInputField Label="Kontakt" Type="text"
                                                             Value={this.state.contact}
                                                             onChange={(val) => this.setState({ contact: val })}
                                                         />
@@ -619,13 +622,13 @@ class TranslatorList extends Component {
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Address" Type="text"
+                                                        <AMSInputField Label="Adresse" Type="text"
                                                             Value={this.state.address}
                                                             onChange={(val) => this.setState({ address: val })}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Postcode" Type="text"
+                                                        <AMSInputField Label="Postleitzahl" Type="text"
                                                             Value={this.state.postCode}
                                                             onChange={(val) => this.setState({ postCode: val })}
                                                         />
@@ -633,13 +636,13 @@ class TranslatorList extends Component {
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="City" Type="text"
+                                                        <AMSInputField Label="Stadt" Type="text"
                                                             Value={this.state.city}
                                                             onChange={(val) => this.setState({ city: val })}
                                                         />
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
-                                                        <AMSInputField Label="Country" Type="text"
+                                                        <AMSInputField Label="Land" Type="text"
                                                             Value={this.state.country}
                                                             onChange={(val) => this.setState({ country: val })}
                                                         />
@@ -654,12 +657,12 @@ class TranslatorList extends Component {
                                                 <div className="row" style={{ marginTop: 15, justifyContent: 'right' }}>
                                                     <div className="col-sm-4 col-md-2 col-lg-2">
                                                         <span className="ui-float-label">
-                                                            <Button label="Reset" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset(e)} />
+                                                            <Button label="Zurücksetzen" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset(e)} />
                                                         </span>
                                                     </div>
                                                     <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
                                                         <span className="ui-float-label">
-                                                            <Button label="Update" className="p-button-primary ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onEditUser(e)} />
+                                                            <Button label="Aktualisieren" className="p-button-primary ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onEditUser(e)} />
                                                         </span>
                                                     </div>
                                                 </div>
