@@ -269,15 +269,13 @@ export const TranslatorInvoiceSpeakingDownload = (props) => {
     if (instance.error) return <div>Something went wrong: { }</div>;
 
     if (instance.blob) {
-        debugger
         if (check == true) {
             var service = new AppointmentService();
             var file = new File([instance.blob], "name.pdf");
 
             let f = new FormData();
             f.append("File[]", file)
-            service.DownloadWord(f).then((fileName) => {
-            })
+            service.DownloadWord(f)
             setCheck(false)
         }
     }

@@ -3,7 +3,7 @@ import { Button } from 'primereact/button';
 import AppointmentService from '../../../api/appointments/appointmentservice';
 import TranslatorInvoice, { TranslatorInvoiceDownload } from './TranslatorInvoice'
 import TranslatorInvoiceSpeaking, { TranslatorInvoiceSpeakingDownload } from './TranslatorInvoiceSpeaking';
-import TranslatorContractDownload, { TranslatorContract } from './Contract';
+import TranslatorContract, { TranslatorContractDownload } from './Contract';
 
 export default class ShowReport extends Component {
     constructor(props) {
@@ -52,7 +52,7 @@ export default class ShowReport extends Component {
                 return (
                     <div style={{ width: '100%', height: '85vh' }}>
                         <TranslatorContractDownload Invoice={this.state.Invoice} SentFile={this.state.SentFile} />
-                        <TranslatorInvoice Invoice={this.state.Invoice} />
+                        <TranslatorContract Invoice={this.state.Invoice} />
                     </div>
                 )
             }
