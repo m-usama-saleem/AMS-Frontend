@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as ROLES from '../../constants/roles'
 import { UserService } from '../../api/user';
 import { DataTable } from 'primereact/datatable';
-// import { Growl } from 'primereact/growl';
+import { Toast } from 'primereact/toast';
 import { Column } from 'primereact/column';
 import { ContextMenu } from 'primereact/contextmenu';
 import 'primereact/resources/themes/nova/theme.css';
