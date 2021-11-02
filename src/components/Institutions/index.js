@@ -15,7 +15,6 @@ import Select from 'react-select'
 
 import { InputText } from 'primereact/inputtext';
 import AMSInputField from '../Common/AMSInputField';
-import { Toast } from 'primereact/toast';
 
 const errorBox = {
     borderRadius: '3px', borderColor: 'rgba(242, 38, 19, 1)'
