@@ -30,7 +30,7 @@ class SignInFormBase extends Component {
     this.authenticationService.login(userid, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.LANDING);
+        this.props.history.push(ROUTES.DASHBOARD);
       })
       .catch(error => {
         this.setState({ error: error });
@@ -46,7 +46,7 @@ class SignInFormBase extends Component {
     const isInvalid = password === '' || userid === '';
     return (
       <div id="login" className="login-form-container">
-        <header style={{ fontSize: 40 }}>Login</header>
+        <header style={{ fontSize: 40 }}>Anmeldung</header>
         <form onSubmit={this.onSubmit}>
           <fieldset>
             <div className="input-wrapper">
@@ -55,7 +55,7 @@ class SignInFormBase extends Component {
                 value={userid}
                 onChange={this.onChange}
                 type="text"
-                placeholder="Username"
+                placeholder="Anmeldung"
                 autocomplete="off"
               />
             </div>
@@ -65,7 +65,7 @@ class SignInFormBase extends Component {
                 value={password}
                 onChange={this.onChange}
                 type="password"
-                placeholder="Password"
+                placeholder="Passwort"
                 autoComplete="off"
               />
             </div>
@@ -73,7 +73,7 @@ class SignInFormBase extends Component {
               <label style={{ color: 'red' }}>{error && <p>{error.message}</p>}</label>
             </div>
             <button onClick={this.onSubmit} disabled={isInvalid} type="submit">
-              Sign In
+              anmelden
             </button>
           </fieldset>
         </form>

@@ -24,7 +24,7 @@ export class AppTopbar extends Component {
     render() {
         let userItems = [
             {
-                label: 'Logout', icon: 'pi pi-sign-out',
+                label: 'abmelden', icon: 'pi pi-sign-out',
                 command: (event) => {
                     this.signOut();
                 }

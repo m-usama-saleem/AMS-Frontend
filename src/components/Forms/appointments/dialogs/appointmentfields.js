@@ -65,12 +65,12 @@ class AppointmentFields extends Component {
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <AMSInputField Label="Aktenzeichen" Type="text" IsRequired={true}
-                            Value={this.state.AppointmentId} PlaceholderText="Unique Aktenzeichen"
+                            Value={this.state.AppointmentId} PlaceholderText="Aktenzeichen"
                             onChange={(val) => this.setState({ AppointmentId: val })} />
                     </div>
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                         <span className="ui-float-label">
-                            <label htmlFor="float-input">Date</label>
+                            <label htmlFor="float-input">Datum</label>
                             <InputText placeholderText="Select Date" value={new Date().toDateString()} type="text" size="30" disabled={true} />
                         </span>
                     </div>
@@ -78,7 +78,7 @@ class AppointmentFields extends Component {
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <span className="ui-float-label">
-                            <label htmlFor="float-input">Translator Name<span style={{ color: 'red' }}>*</span></label>
+                            <label htmlFor="float-input">Dolmetscher/ Übersetzer<span style={{ color: 'red' }}>*</span></label>
                             <Select
                                 value={this.state.SelectedTranslatorName}
                                 onChange={(e) => this.onTranslatorSelected(e)}
@@ -100,7 +100,7 @@ class AppointmentFields extends Component {
                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                         <span className="ui-float-label">
                             <label htmlFor="float-input">Termin <span style={{ color: 'red' }}>*</span></label>
-                            <DatePicker dateFormat="dd/MM/yyyy" placeholderText="Select date for appointment"
+                            <DatePicker dateFormat="dd/MM/yyyy" placeholderText="Datum"
                                 selected={this.state.SelectedAppointmentDate}
                                 onChange={date => this.setAppointmentDate(date)}
                                 className={this.state.isAppointmentDateValid === true ? "p-inputtext normalbox" : "p-inputtext errorBox"} />

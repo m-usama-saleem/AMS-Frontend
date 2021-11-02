@@ -376,7 +376,7 @@ class TranslatorList extends Component {
                             <div className="p-col-12 p-sm-12 p-md-12 p-lg-12" style={{ paddingTop: '20px' }}>
                                 {loading === true ?
                                     <div>
-                                        <p style={{ textAlign: 'center', fontSize: '20px' }}>Loading Data </p>
+                                        <p style={{ textAlign: 'center', fontSize: '20px' }}>Daten laden </p>
                                         <ProgressBar style={{ marginTop: '40px', height: '2px' }} mode="indeterminate" />
                                     </div>
                                     : null
@@ -387,7 +387,7 @@ class TranslatorList extends Component {
                                 }
 
                             </div>
-                            <Dialog visible={this.state.displayDeleteDialog} width="400px" header="You sure to delete this Translator?"
+                            <Dialog visible={this.state.displayDeleteDialog} width="400px" header="Dolmetscher/Übersetzer wirklich löschen?"
                                 modal={true} onHide={() => this.setState({ displayDeleteDialog: false })}>
                                 {
                                     <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>
@@ -462,6 +462,7 @@ class TranslatorList extends Component {
                                                                 onChange={(e) => this.onLanguageSelected(e)}
                                                                 options={langList}
                                                                 maxMenuHeight={150}
+                                                                placeholder="Suche"
                                                             />
                                                         </span>
                                                     </div>
@@ -475,6 +476,7 @@ class TranslatorList extends Component {
                                                                 onChange={(e) => this.onGenderSelected(e)}
                                                                 options={genderList}
                                                                 maxMenuHeight={150}
+                                                                placeholder="Suche"
                                                             />
                                                         </span>
                                                     </div>
@@ -597,6 +599,7 @@ class TranslatorList extends Component {
                                                                 onChange={(e) => this.onLanguageSelected(e)}
                                                                 options={langList}
                                                                 maxMenuHeight={150}
+                                                                placeholder="Suche"
                                                             />
                                                         </span>
                                                     </div>
@@ -610,6 +613,7 @@ class TranslatorList extends Component {
                                                                 onChange={(e) => this.onGenderSelected(e)}
                                                                 options={genderList}
                                                                 maxMenuHeight={150}
+                                                                placeholder="Suche"
                                                             />
                                                         </span>
                                                     </div>
@@ -655,12 +659,12 @@ class TranslatorList extends Component {
                                                     {(this.state.isValidForm === false || this.state.error) ? this.state.error : ''}
                                                 </div>
                                                 <div className="row" style={{ marginTop: 15, justifyContent: 'right' }}>
-                                                    <div className="col-sm-4 col-md-2 col-lg-2">
+                                                    <div className="col-sm-4 col-md-3 col-lg-3">
                                                         <span className="ui-float-label">
                                                             <Button label="Zurücksetzen" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset(e)} />
                                                         </span>
                                                     </div>
-                                                    <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
+                                                    <div className="col-sm-4 col-md-3 col-lg-3" style={{ float: 'right' }}>
                                                         <span className="ui-float-label">
                                                             <Button label="Aktualisieren" className="p-button-primary ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onEditUser(e)} />
                                                         </span>

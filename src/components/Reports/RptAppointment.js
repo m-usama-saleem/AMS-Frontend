@@ -69,12 +69,12 @@ class RptAppointment extends Component {
         this.cols = [
             { field: 'appointment.appointmentId', header: 'Aktenzeichen' },
             { field: 'appointment.appointmentDate', header: 'Termin' },
-            { field: 'appointment.translatorName', header: 'Translator' },
+            { field: 'appointment.translatorName', header: 'Dolmetscher/ Übersetzer' },
             { field: 'appointment.institutionName', header: 'Institution' },
             { field: 'appointment.type', header: 'Typ' },
             { field: 'appointment.status', header: 'Status' },
             { field: 'payable.netPayment', header: 'Netto Betrag' },
-            { field: 'receivable.netPayment', header: 'Receivable Amount' }
+            { field: 'receivable.netPayment', header: 'Forderungsbetrag' }
         ];
         this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
     }
@@ -200,7 +200,7 @@ class RptAppointment extends Component {
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Aktenzeichen" Type="text" ReadOnly={true}
-                                            Value={this.state.AppointmentId} PlaceholderText="Unique Aktenzeichen"
+                                            Value={this.state.AppointmentId} PlaceholderText="Aktenzeichen"
                                             ChangeIsValid={(val) => { }}
                                         />
                                     </div>
@@ -222,7 +222,7 @@ class RptAppointment extends Component {
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
                                             <label htmlFor="float-input">Termin <span style={{ color: 'red' }}>*</span></label>
-                                            <DatePicker dateFormat="dd/MM/yyyy" placeholderText="Select date for appointment"
+                                            <DatePicker dateFormat="dd/MM/yyyy" placeholderText="Datum"
                                                 selected={this.state.SelectedAppointmentDate}
                                                 className="p-inputtext normalbox" readOnly={true} />
                                         </span>
@@ -230,7 +230,7 @@ class RptAppointment extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <AMSInputField Label="Translator Name" Type="text" ReadOnly={true}
+                                        <AMSInputField Label="Dolmetscher/ Übersetzer" Type="text" ReadOnly={true}
                                             Value={this.state.SelectedTranslatorName ? this.state.SelectedTranslatorName.label : ""}
                                             ChangeIsValid={(val) => { }}
                                         />
@@ -451,7 +451,7 @@ class RptAppointment extends Component {
         return (
             <React.Fragment>
                 <Button icon="fa fa-file-archive-o" className="p-button-rounded p-button-secondary "
-                    onClick={() => this.viewReceivable(rowData.receivable)} title="Receivable Information" />
+                    onClick={() => this.viewReceivable(rowData.receivable)} title="Informationen zu Forderungen" />
                 <Button icon="fa fa-tags" style={{ marginLeft: 5 }} className="p-button-rounded p-button-secondary"
                     onClick={() => this.viewPayable(rowData.payable)} title="Payable Information" />
             </React.Fragment>
@@ -484,7 +484,7 @@ class RptAppointment extends Component {
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Aktenzeichen" Type="text" ReadOnly={true}
-                                            Value={this.state.AppointmentId} PlaceholderText="Unique Aktenzeichen"
+                                            Value={this.state.AppointmentId} PlaceholderText="Aktenzeichen"
                                             ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
@@ -497,7 +497,7 @@ class RptAppointment extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <AMSInputField Label="Translator" Type="text" ReadOnly={true}
+                                        <AMSInputField Label="Dolmetscher/ Übersetzer" Type="text" ReadOnly={true}
                                             Value={this.state.AppointmentTranslator}
                                             ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
@@ -553,12 +553,12 @@ class RptAppointment extends Component {
                 {
                     <div className="p-grid p-fluid">
                         <div className="card card-w-title">
-                            <h1>Receivable Information</h1>
+                            <h1>Informationen zu Forderungen</h1>
                             <div className="p-grid" >
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Aktenzeichen" Type="text" ReadOnly={true}
-                                            Value={this.state.AppointmentId} PlaceholderText="Unique Aktenzeichen"
+                                            Value={this.state.AppointmentId} PlaceholderText="Aktenzeichen"
                                             ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
@@ -571,7 +571,7 @@ class RptAppointment extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <AMSInputField Label="Translator" Type="text" ReadOnly={true}
+                                        <AMSInputField Label="Dolmetscher/ Übersetzer" Type="text" ReadOnly={true}
                                             Value={this.state.AppointmentTranslator}
                                             ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
@@ -677,7 +677,7 @@ class RptAppointment extends Component {
         })
         let footerGroup = <ColumnGroup>
             <Row>
-                <Column footer="Totals:" colSpan={6} footerStyle={{ textAlign: 'right' }} />
+                <Column footer="Netto:" colSpan={8} footerStyle={{ textAlign: 'right' }} />
                 <Column footer={payableTotal.toFixed(2)} />
                 <Column footer={receivableTotal.toFixed(2)} />
             </Row>
@@ -693,7 +693,7 @@ class RptAppointment extends Component {
                 {/* <Growl ref={(el) => this.growl = el}></Growl> */}
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
-                        <h1>All Appointments</h1>
+                        <h1>Terminliste</h1>
                         <div className="content-section implementation">
                             <DataTable ref={(el) => this.dt = el} onValueChange={filteredData => this.setState({ filteredData })}
                                 header={header} value={AllAppointments}
@@ -711,21 +711,21 @@ class RptAppointment extends Component {
                             >
                                 <Column field="appointment.appointmentId" header="Aktenzeichen" sortable={true} />
                                 <Column field="appointment.appointmentDate" header="Termin" sortable={true} style={{ textAlign: 'center' }} />
-                                <Column field="appointment.approvalDate" header="Approved Date" sortable={true} style={{ textAlign: 'center' }} />
-                                <Column field="appointment.completionDate" header="Completed Date" sortable={true} style={{ textAlign: 'center' }} />
-                                <Column field="appointment.translatorName" header="Translator" sortable={true} />
+                                <Column field="appointment.approvalDate" header="bestätigtes Datum" sortable={true} style={{ textAlign: 'center' }} />
+                                <Column field="appointment.completionDate" header="vollendeter Tag" sortable={true} style={{ textAlign: 'center' }} />
+                                <Column field="appointment.translatorName" header="Dolmetscher/ Übersetzer" sortable={true} />
                                 <Column field="appointment.institutionName" header="Auftraggeber" sortable={true} />
                                 <Column field="appointment.type" header="Typ" sortable={true} />
                                 <Column field="appointment.status" header="Status" sortable={true} />
                                 <Column field="payable.netPayment" header="Netto Betrag" sortable={true} />
-                                <Column field="receivable.netPayment" header="Receivable Amount" sortable={true} />
+                                <Column field="receivable.netPayment" header="Forderungsbetrag" sortable={true} />
                                 <Column header="Aktion" body={this.actionBodyTemplate} ></Column>
                             </DataTable>
 
                             <div className="p-col-12 p-sm-12 p-md-12 p-lg-12" style={{ paddingTop: '20px' }}>
                                 {loading === true ?
                                     <div>
-                                        <p style={{ textAlign: 'center', fontSize: '20px' }}>Loading Data </p>
+                                        <p style={{ textAlign: 'center', fontSize: '20px' }}>Daten laden </p>
                                         <ProgressBar style={{ marginTop: '40px', height: '2px' }} mode="indeterminate" />
                                     </div>
                                     : null

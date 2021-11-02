@@ -139,6 +139,7 @@ export default class AMSInputField extends Component {
                             options={ItemsList}
                             maxMenuHeight={150}
                             onBlur={() => this.checkForValidation()}
+                            placeholder={PlaceholderText}
                         />
                     </div>
                 );

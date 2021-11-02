@@ -49,7 +49,7 @@ const NavigationAuth = ({ authUser }) => (
     <div className="sidebar-footer">
       <a href="" className="link" data-toggle="tooltip" title="Settings"><i className="ti-settings"></i></a>
       <a href="" className="link" data-toggle="tooltip" title="E-Mail"><i className="mdi mdi-gmail"></i></a>
-      <a href="" className="link" data-toggle="tooltip" title="Logout"><i className="mdi mdi-power"></i></a>
+      <a href="" className="link" data-toggle="tooltip" title="abmelden"><i className="mdi mdi-power"></i></a>
     </div>
   </aside>
 )
@@ -63,7 +63,7 @@ const NavigationNonAuth = () => (
       <Link to={ROUTES.ADD_PAPER}>Landing</Link>
     </li>
     <li>
-      <Link to={ROUTES.SIGN_IN}>Sign In</Link>
+      <Link to={ROUTES.SIGN_IN}>anmelden</Link>
     </li>
   </ul>
 );

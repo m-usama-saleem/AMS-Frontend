@@ -109,7 +109,7 @@ class SignUpFormBase extends Component {
           value={passwordOne}
           onChange={this.onChange}
           type="password"
-          placeholderText="Password"
+          placeholderText="Passwort"
         />
         <input
           name="passwordTwo"

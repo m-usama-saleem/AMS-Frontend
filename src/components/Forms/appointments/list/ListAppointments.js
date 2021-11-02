@@ -593,7 +593,7 @@ class ListAppointments extends Component {
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Aktenzeichen" Type="text" IsRequired={true}
-                                            Value={this.state.AppointmentId} PlaceholderText="Unique Aktenzeichen"
+                                            Value={this.state.AppointmentId} PlaceholderText="Aktenzeichen"
                                             onChange={(val) => this.setState({ AppointmentId: val })}
                                             ChangeIsValid={(val) => this.setState({ ValidAppointmentId: val })}
                                             CheckField={this.state.CheckFields}
@@ -601,7 +601,7 @@ class ListAppointments extends Component {
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
-                                            <label htmlFor="float-input">Date</label>
+                                            <label htmlFor="float-input">Datum</label>
                                             <InputText placeholderText="Select Date" value={this.state.EntryDate}
                                                 type="text" size="30" disabled={true} />
                                         </span>
@@ -610,7 +610,7 @@ class ListAppointments extends Component {
                                 <div className="row">
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Auftraggeber" Type="ddl_select" IsRequired={true}
-                                            Value={this.state.SelectedInstituteName} PlaceholderText="Select Institution"
+                                            Value={this.state.SelectedInstituteName} PlaceholderText="Suche Institution"
                                             ItemsList={this.state.AllInstitutions}
                                             onChange={(val) => this.setState({ SelectedInstituteName: val })}
                                             CheckField={this.state.CheckFields}
@@ -620,7 +620,7 @@ class ListAppointments extends Component {
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
                                             <label htmlFor="float-input">Termin <span style={{ color: 'red' }}>*</span></label>
-                                            <DatePicker dateFormat="dd/MM/yyyy" placeholderText="Select date for appointment"
+                                            <DatePicker dateFormat="dd/MM/yyyy" placeholderText="Datum"
                                                 selected={this.state.SelectedAppointmentDate}
                                                 onChange={date => this.setAppointmentDate(date)}
                                                 className={this.state.isAppointmentDateValid === true ? "p-inputtext normalbox" : "p-inputtext errorBox"} />
@@ -629,8 +629,8 @@ class ListAppointments extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <AMSInputField Label="Translator Name" Type="ddl_select" IsRequired={true}
-                                            Value={this.state.SelectedTranslatorName} PlaceholderText="Select Translator"
+                                        <AMSInputField Label="Dolmetscher/ Übersetzer" Type="ddl_select" IsRequired={true}
+                                            Value={this.state.SelectedTranslatorName} PlaceholderText="Suche"
                                             ItemsList={this.state.AllTranslators}
                                             onChange={(val) => this.onTranslatorSelected(val)}
                                             CheckField={this.state.CheckFields}
@@ -639,7 +639,7 @@ class ListAppointments extends Component {
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Sprache" Type="ddl_select" IsRequired={true}
-                                            Value={this.state.SelectedLanguageName} PlaceholderText="Select Language"
+                                            Value={this.state.SelectedLanguageName} PlaceholderText="Suche"
                                             ItemsList={langList}
                                             onChange={(val) => this.setState({ SelectedLanguageName: val })}
                                             CheckField={this.state.CheckFields}
@@ -649,15 +649,15 @@ class ListAppointments extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <AMSInputField Label="Room Number" Type="text"
-                                            Value={this.state.RoomNumber} PlaceholderText="Room Number"
+                                        <AMSInputField Label="Saal/Raum" Type="text"
+                                            Value={this.state.RoomNumber} PlaceholderText="Saal/Raum"
                                             onChange={(val) => this.setState({ RoomNumber: val })}
                                             ChangeIsValid={(val) => { }}
                                         />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
-                                            <label htmlFor="float-input">Time to Arrive</label>
+                                            <label htmlFor="float-input">Ankunftszeit</label>
                                             <TimePicker className="form-control" time={this.state.AppointmentTime} theme="Ash" placeholder="Reisebeginn"
                                                 onSet={(val) => this.setState({ AppointmentTime: val.format24 })} />
                                         </span>
@@ -718,7 +718,7 @@ class ListAppointments extends Component {
         )
 
         return (
-            <Dialog visible={this.state.displayCreateDialog} style={{ width: '60vw' }} header="Create New Appointment"
+            <Dialog visible={this.state.displayCreateDialog} style={{ width: '60vw' }} header="Neuen Termin erstellen"
                 modal={true} onHide={() => this.setState({ displayCreateDialog: false })}
                 contentStyle={{ maxHeight: "550px", overflow: "auto", }}>
                 {
@@ -729,7 +729,7 @@ class ListAppointments extends Component {
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Aktenzeichen" Type="text" IsRequired={true}
-                                            Value={this.state.AppointmentId} PlaceholderText="Unique Aktenzeichen"
+                                            Value={this.state.AppointmentId} PlaceholderText="Aktenzeichen"
                                             onChange={(val) => this.setState({ AppointmentId: val })}
                                             CheckField={this.state.CheckFields}
                                             ChangeIsValid={(val) => this.setState({ ValidAppointmentId: val })}
@@ -737,7 +737,7 @@ class ListAppointments extends Component {
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
-                                            <label htmlFor="float-input">Date</label>
+                                            <label htmlFor="float-input">Datum</label>
                                             <InputText placeholderText="Select Date" value={new Date().toLocaleDateString()} type="text" size="30" disabled={true} />
                                         </span>
                                     </div>
@@ -745,7 +745,7 @@ class ListAppointments extends Component {
                                 <div className="row">
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Auftraggeber" Type="ddl_select" IsRequired={true}
-                                            Value={this.state.SelectedInstituteName} PlaceholderText="Select Institution"
+                                            Value={this.state.SelectedInstituteName} PlaceholderText="Suche"
                                             ItemsList={this.state.AllInstitutions}
                                             onChange={(val) => this.setState({ SelectedInstituteName: val })}
                                             CheckField={this.state.CheckFields}
@@ -755,7 +755,7 @@ class ListAppointments extends Component {
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
                                             <label htmlFor="float-input">Termin <span style={{ color: 'red' }}>*</span></label>
-                                            <DatePicker dateFormat="dd/MM/yyyy" placeholderText="Select date for appointment"
+                                            <DatePicker dateFormat="dd/MM/yyyy" placeholderText="Datum"
                                                 selected={this.state.SelectedAppointmentDate}
                                                 onChange={date => this.setAppointmentDate(date)}
                                                 className={this.state.isAppointmentDateValid === true ? "p-inputtext normalbox" : "p-inputtext errorBox"} />
@@ -764,8 +764,8 @@ class ListAppointments extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <AMSInputField Label="Translator Name" Type="ddl_select" IsRequired={true}
-                                            Value={this.state.SelectedTranslatorName} PlaceholderText="Select Translator"
+                                        <AMSInputField Label="Dolmetscher/ Übersetzer" Type="ddl_select" IsRequired={true}
+                                            Value={this.state.SelectedTranslatorName} PlaceholderText="Suche"
                                             ItemsList={this.state.AllTranslators}
                                             onChange={(val) => this.onTranslatorSelected(val)}
                                             CheckField={this.state.CheckFields}
@@ -774,7 +774,7 @@ class ListAppointments extends Component {
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <AMSInputField Label="Sprache" Type="ddl_select" IsRequired={true}
-                                            Value={this.state.SelectedLanguageName} PlaceholderText="Select Language"
+                                            Value={this.state.SelectedLanguageName} PlaceholderText="Suche"
                                             ItemsList={langList}
                                             onChange={(val) => this.setState({ SelectedLanguageName: val })}
                                             CheckField={this.state.CheckFields}
@@ -784,15 +784,15 @@ class ListAppointments extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <AMSInputField Label="Room Number" Type="text"
-                                            Value={this.state.RoomNumber} PlaceholderText="Room Number"
+                                        <AMSInputField Label="Saal/Raum" Type="text"
+                                            Value={this.state.RoomNumber} PlaceholderText="Saal/Raum"
                                             onChange={(val) => this.setState({ RoomNumber: val })}
                                             ChangeIsValid={(val) => { }}
                                         />
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
-                                            <label htmlFor="float-input">Time to Arrive</label>
+                                            <label htmlFor="float-input">Ankunftszeit</label>
                                             <TimePicker className="form-control" time={this.state.AppointmentTime} theme="Ash" placeholder="Reisebeginn"
                                                 onSet={(val) => this.setState({ AppointmentTime: val.format24 })} />
                                         </span>
@@ -825,7 +825,7 @@ class ListAppointments extends Component {
                                 </div>
                                 <div className="sm-4 md-2 lg-2">
                                     <span className="ui-float-label" style={{ float: 'right' }}>
-                                        <Button label="Create Appointment" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onSaveAppointment()} />
+                                        <Button label="Termin erstellen" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onSaveAppointment()} />
                                     </span>
                                 </div>
                             </div>
@@ -904,17 +904,17 @@ class ListAppointments extends Component {
                             >
                                 <Column field="appointmentId" header="Aktenzeichen" sortable={true} />
                                 <Column field="appointmentDate" header="Termin" sortable={true} style={{ textAlign: 'center' }} />
-                                <Column field="translatorName" header="Translator" sortable={true} />
+                                <Column field="translatorName" header="Dolmetscher/ Übersetzer" sortable={true} />
                                 <Column field="institutionName" header="Auftraggeber" sortable={true} />
                                 <Column field="type" header="Typ" sortable={true} />
                                 <Column field="status" header="Status" sortable={true} />
-                                <Column header="Aktion" body={this.actionBodyTemplate}></Column>
+                                <Column header="Aktion" body={this.actionBodyTemplate} style={{ width: 250 }}></Column>
                             </DataTable>
 
                             <div className="p-col-12 p-sm-12 p-md-12 p-lg-12" style={{ paddingTop: '20px' }}>
                                 {this.state.isLoading === true ?
                                     <div>
-                                        <p style={{ textAlign: 'center', fontSize: '20px' }}>Loading Data </p>
+                                        <p style={{ textAlign: 'center', fontSize: '20px' }}>Daten laden </p>
                                         <ProgressBar style={{ marginTop: '40px', height: '2px' }} mode="indeterminate" />
                                     </div>
                                     : null

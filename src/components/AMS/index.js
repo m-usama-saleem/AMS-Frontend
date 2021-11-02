@@ -137,33 +137,33 @@ class AuthenticatedApp extends Component {
     createMenuForAdmin() {
         this.menu = [
             {
-                label: 'Dashboard', icon: 'fa fa-file', to: ROUTES.DASHBOARD
+                label: 'Übersicht', icon: 'fa fa-line-chart', to: ROUTES.DASHBOARD
             },
             {
-                label: 'Appointments', icon: 'fa fa-file', to: ROUTES.APPOINTMENT_LIST
+                label: 'Termine', icon: 'fa fa-calendar', to: ROUTES.APPOINTMENT_LIST
             },
             {
-                label: 'Finance', icon: 'fa fa-file',
+                label: 'Finanzen', icon: 'fa fa-money',
                 items: [
-                    { label: 'Payables', icon: 'fa fa-tags', to: ROUTES.FINANCE_PAY },
-                    { label: 'Receivables', icon: 'fa fa-file-archive-o', to: ROUTES.FINANCE_RECEIVE },
+                    { label: 'Verbindlichkeiten', icon: 'fa fa-credit-card', to: ROUTES.FINANCE_PAY },
+                    { label: 'Forderungen', icon: 'fa fa-euro', to: ROUTES.FINANCE_RECEIVE },
                 ]
             },
             {
-                label: 'Translators', icon: 'fa fa-users', to: ROUTES.TRANSLATOR_LIST
+                label: 'Dolmetscher/ Übersetzer', icon: 'fa fa-users', to: ROUTES.TRANSLATOR_LIST
             },
             {
-                label: 'Institutions', icon: 'fa fa-users', to: ROUTES.INSTITUTION_LIST
+                label: 'Auftraggeber', icon: 'fa fa-university', to: ROUTES.INSTITUTION_LIST
             },
             {
-                label: 'Users', icon: 'fa fa-users', to: ROUTES.USER_LIST
+                label: 'Auftragnehmer', icon: 'fa fa-user-plus', to: ROUTES.USER_LIST
             },
             {
-                label: 'Reports', icon: 'fa fa-files',
+                label: 'Berichte', icon: 'fa fa-file',
                 items: [
-                    { label: 'Appointments', icon: 'fa fa-rss', to: ROUTES.REPORT_APPOINTMENT },
-                    { label: 'Translators', icon: 'fa fa-rss', to: ROUTES.REPORT_TRANSLATOR },
-                    { label: 'Institutions', icon: 'fa fa-rss', to: ROUTES.REPORT_INSTITUTION },
+                    { label: 'Termine', icon: 'fa fa-calendar', to: ROUTES.REPORT_APPOINTMENT },
+                    // { label: 'Übersetzer/Dolmetscherliste', icon: 'fa fa-rss', to: ROUTES.REPORT_TRANSLATOR },
+                    // { label: 'Auftraggeber', icon: 'fa fa-rss', to: ROUTES.REPORT_INSTITUTION },
                 ]
             },
         ];

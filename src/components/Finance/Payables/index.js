@@ -51,7 +51,7 @@ class ListPayables extends Component {
             { field: 'appointmentId', header: 'Aktenzeichen' },
             { field: 'appointmentType', header: 'Typ' },
             { field: 'appointmentInstitute', header: 'Auftraggeber' },
-            { field: 'appointmentTranslator', header: 'Translator' },
+            { field: 'appointmentTranslator', header: 'Dolmetscher/ Übersetzer' },
             { field: 'netPayment', header: 'Netto Betrag' },
             { field: 'status', header: 'Status' },
         ];
@@ -596,7 +596,7 @@ class ListPayables extends Component {
                 <Toast ref={(el) => this.growl = el} />
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
-                        <h1>Payables List</h1>
+                        <h1>Verbindlichkeitenliste</h1>
                         <div className="p-grid" style={{ marginTop: '8px' }} ></div>
                         <div className="content-section implementation">
                             <DataTable ref={(el) => this.dt = el}
@@ -616,7 +616,7 @@ class ListPayables extends Component {
                                 <Column field="appointmentId" header="Aktenzeichen" sortable={true} />
                                 <Column field="appointmentType" header="Typ" sortable={true} />
                                 <Column field="appointmentInstitute" header="Auftraggeber" sortable={true} />
-                                <Column field="appointmentTranslator" header="Translator" sortable={true} />
+                                <Column field="appointmentTranslator" header="Dolmetscher/ Übersetzer" sortable={true} />
                                 <Column field="netPayment" header="Netto Betrag" sortable={true} />
                                 <Column field="status" header="Status" sortable={true} />
                                 <Column header="Aktion" body={this.actionBodyTemplate}></Column>
@@ -625,7 +625,7 @@ class ListPayables extends Component {
                             <div className="p-col-12 p-sm-12 p-md-12 p-lg-12" style={{ paddingTop: '20px' }}>
                                 {this.state.isLoading === true ?
                                     <div>
-                                        <p style={{ textAlign: 'center', fontSize: '20px' }}>Loading Data </p>
+                                        <p style={{ textAlign: 'center', fontSize: '20px' }}>Daten laden </p>
                                         <ProgressBar style={{ marginTop: '40px', height: '2px' }} mode="indeterminate" />
                                     </div>
                                     : null
@@ -663,7 +663,7 @@ class ListPayables extends Component {
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <AMSInputField Label="Aktenzeichen" Type="text" ReadOnly={true}
-                                                            Value={this.state.AppointmentId} PlaceholderText="Unique Aktenzeichen"
+                                                            Value={this.state.AppointmentId} PlaceholderText="Aktenzeichen"
                                                             ChangeIsValid={(val) => this.setState({ ValidAppointmentId: val })}
                                                         />
                                                     </div>
@@ -676,7 +676,7 @@ class ListPayables extends Component {
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Translator" Type="text" ReadOnly={true}
+                                                        <AMSInputField Label="Dolmetscher/ Übersetzer" Type="text" ReadOnly={true}
                                                             Value={this.state.AppointmentTranslator}
                                                             ChangeIsValid={(val) => this.setState({ ValidTranslator: val })}
                                                         />

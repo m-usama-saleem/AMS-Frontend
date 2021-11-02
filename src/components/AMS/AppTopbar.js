@@ -35,7 +35,7 @@ export class AppTopbar extends Component {
     render() {
         let userItems = [
             {
-                label: 'Logout', icon: 'pi pi-sign-out',
+                label: 'abmelden', icon: 'pi pi-sign-out',
                 command: (event) => {
                     this.signOut();
                 }
@@ -81,7 +81,7 @@ export class AppTopbar extends Component {
                         <div className="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{ display: this.state.showMenu }}
                             onClick={() => this.signOut()} >
                             <button className="p-link layout-menu-button" >
-                                <span style={{ fontSize: 16, color: 'black' }}>Logout</span>
+                                <span style={{ fontSize: 16, color: 'black' }}>abmelden</span>
                             </button>
                             <button className="p-link layout-menu-button">
                                 <span style={{ fontSize: 16, float: 'right', marginRight: 20, color: 'black' }} className="pi pi-sign-out" />

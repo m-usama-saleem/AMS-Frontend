@@ -292,7 +292,7 @@ class InstitutionList extends Component {
                             <div className="p-col-12 p-sm-12 p-md-12 p-lg-12" style={{ paddingTop: '20px' }}>
                                 {loading === true ?
                                     <div>
-                                        <p style={{ textAlign: 'center', fontSize: '20px' }}>Loading Data </p>
+                                        <p style={{ textAlign: 'center', fontSize: '20px' }}>Daten laden </p>
                                         <ProgressBar style={{ marginTop: '40px', height: '2px' }} mode="indeterminate" />
                                     </div>
                                     : null
@@ -303,7 +303,7 @@ class InstitutionList extends Component {
                                 }
 
                             </div>
-                            <Dialog visible={this.state.displayDeleteDialog} width="400px" header="You sure to delete this Instituition?"
+                            <Dialog visible={this.state.displayDeleteDialog} width="400px" header="Arbeitsgeber wirklich löschen?"
                                 modal={true} onHide={() => this.setState({ displayDeleteDialog: false }, () => this.onReset())}>
                                 {
                                     <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>
@@ -319,7 +319,7 @@ class InstitutionList extends Component {
                                 }
                             </Dialog>
 
-                            <Dialog style={{ width: '50vw' }} visible={this.state.displayCreateDialog} header="Create New Instituition"
+                            <Dialog style={{ width: '50vw' }} visible={this.state.displayCreateDialog} header="Neuen Arbeitgeber erstellen"
                                 modal={true} onHide={() => this.setState({ displayCreateDialog: false }, () => this.onReset())}
                                 contentStyle={{ minHeight: "350px", maxHeight: "550px", overflow: "auto" }}>
                                 {
@@ -394,7 +394,7 @@ class InstitutionList extends Component {
                                 }
                             </Dialog>
 
-                            <Dialog style={{ width: '50vw' }} visible={this.state.displayEditDialog} header="Edit Instituition"
+                            <Dialog style={{ width: '50vw' }} visible={this.state.displayEditDialog} header="Arbeitgeber bearbeiten"
                                 modal={true} onHide={() => this.setState({ displayEditDialog: false }, () => this.onReset())}
                                 contentStyle={{ minHeight: "350px", maxHeight: "550px", overflow: "auto" }}>
                                 {
@@ -452,12 +452,12 @@ class InstitutionList extends Component {
                                                     {(this.state.isValidForm === false || this.state.error) ? this.state.error : ''}
                                                 </div>
                                                 <div className="row" style={{ marginTop: 15, justifyContent: 'right' }}>
-                                                    <div className="col-sm-4 col-md-2 col-lg-2">
+                                                    <div className="col-sm-4 col-md-3 col-lg-3">
                                                         <span className="ui-float-label">
                                                             <Button label="Zurücksetzen" className="p-button-secondary " disabled={this.state.isLoading} onClick={(e) => this.onReset(e)} />
                                                         </span>
                                                     </div>
-                                                    <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
+                                                    <div className="col-sm-4 col-md-3 col-lg-3" style={{ float: 'right' }}>
                                                         <span className="ui-float-label">
                                                             <Button label="Aktualisieren" className="p-button-primary ui-btns" disabled={this.state.isLoading} onClick={(e) => this.onEditUser(e)} />
                                                         </span>

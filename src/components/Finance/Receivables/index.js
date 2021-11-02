@@ -62,8 +62,8 @@ class ListReceivables extends Component {
             { field: 'appointmentId', header: 'Aktenzeichen' },
             { field: 'appointmentType', header: 'Typ' },
             { field: 'appointmentInstitute', header: 'Auftraggeber' },
-            { field: 'appointmentTranslator', header: 'Translator' },
-            { field: 'netPayment', header: 'Net Receivable' },
+            { field: 'appointmentTranslator', header: 'Dolmetscher/ Übersetzer' },
+            { field: 'netPayment', header: 'Forderungen Netto' },
             { field: 'status', header: 'Status' },
         ];
         this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
@@ -292,7 +292,7 @@ class ListReceivables extends Component {
                 onClick={() => this.editMode(rowData)} title="Bearbeiten" />
 
             PaidButton = <Button icon="pi pi-check" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-info p-mr-2"
-                onClick={() => this.confirmReceivable(rowData)} title="Receive" />
+                onClick={() => this.confirmReceivable(rowData)} title="erhalten" />
         }
 
         return (
@@ -359,10 +359,8 @@ class ListReceivables extends Component {
                 <InputText type="search" onInput={(e) => this.setState({ globalFilter: e.target.value })} placeholder="Suche" size="20" />
             </div>
             <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
-                <Button className="p-button-success" icon="pi pi-file-excel" onClick={() => this.exportCSV(false)} data-pr-tooltip="Excel" label="EXCEL" />
-            </div>
-            <div className="col-sm-4 col-md-2 col-lg-2" style={{ float: 'right' }}>
-                <Button className="p-button-danger" icon="pi pi-file-pdf" onClick={() => this.exportPdf()} data-pr-tooltip="PDF" label="PDF" />
+                <Button style={{ borderRadius: 20 }} className="p-button-success" icon="pi pi-file-excel" onClick={() => this.exportCSV(false)} data-pr-tooltip="Excel" />
+                <Button style={{ borderRadius: 20, marginLeft: 10 }} className="p-button-danger" icon="pi pi-file-pdf" onClick={() => this.exportPdf()} data-pr-tooltip="PDF" />
             </div>
             {ReceiveAllButton}
         </div>
@@ -393,8 +391,8 @@ class ListReceivables extends Component {
                                 <Column field="appointmentId" header="Aktenzeichen" sortable={true} />
                                 <Column field="appointmentType" header="Typ" sortable={true} />
                                 <Column field="appointmentInstitute" header="Auftraggeber" sortable={true} />
-                                <Column field="appointmentTranslator" header="Translator" sortable={true} />
-                                <Column field="netPayment" header="Net Receivable" sortable={true} />
+                                <Column field="appointmentTranslator" header="Dolmetscher/ Übersetzer" sortable={true} />
+                                <Column field="netPayment" header="Forderungen Netto" sortable={true} />
                                 <Column field="status" header="Status" sortable={true} />
                                 <Column header="Aktion" body={this.actionBodyTemplate}></Column>
                             </DataTable>
@@ -402,7 +400,7 @@ class ListReceivables extends Component {
                             <div className="p-col-12 p-sm-12 p-md-12 p-lg-12" style={{ paddingTop: '20px' }}>
                                 {this.state.isLoading === true ?
                                     <div>
-                                        <p style={{ textAlign: 'center', fontSize: '20px' }}>Loading Data </p>
+                                        <p style={{ textAlign: 'center', fontSize: '20px' }}>Daten laden </p>
                                         <ProgressBar style={{ marginTop: '40px', height: '2px' }} mode="indeterminate" />
                                     </div>
                                     : null
@@ -440,7 +438,7 @@ class ListReceivables extends Component {
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <AMSInputField Label="Aktenzeichen" Type="text" ReadOnly={true}
-                                                            Value={this.state.AppointmentId} PlaceholderText="Unique Aktenzeichen"
+                                                            Value={this.state.AppointmentId} PlaceholderText="Aktenzeichen"
                                                             ChangeIsValid={(val) => this.setState({ ValidAppointmentId: val })}
                                                         />
                                                     </div>
@@ -453,7 +451,7 @@ class ListReceivables extends Component {
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Translator" Type="text" ReadOnly={true}
+                                                        <AMSInputField Label="Dolmetscher/ Übersetzer" Type="text" ReadOnly={true}
                                                             Value={this.state.AppointmentTranslator}
                                                             ChangeIsValid={(val) => this.setState({ ValidTranslator: val })}
                                                         />
