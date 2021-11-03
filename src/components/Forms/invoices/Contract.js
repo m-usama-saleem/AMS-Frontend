@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         position: 'absolute',
-        right: -60,
+        right: 0,
         top: 5
     },
 });
@@ -38,23 +38,12 @@ export default class TranslatorContract extends Component {
 
     componentDidMount() {
         if (this.props && this.props && this.props.Invoice) {
-
-            // const { totalHours, tax, rideCost, ticketCost, dailyAllowance } = this.props.Invoice;
-
-            // var totalHoursCost = parseFloat(totalHours) * CommonValues.HoursCost;
-            // var totalRideCost = parseFloat(rideCost) * CommonValues.RideCost;
-            // var TotalDailyAllowance = parseFloat(dailyAllowance) * CommonValues.DailyAllowance;
-
-            // var SubTotal = totalHoursCost + totalRideCost + TotalDailyAllowance;
-            // var TotalTax = SubTotal * (tax / 100);
-            // var NetPayment = SubTotal + TotalTax + parseFloat(ticketCost)
-
-            // this.props.Invoice.totalHoursCost = totalHoursCost.toFixed(2);
-            // this.props.Invoice.totalRideCost = totalRideCost.toFixed(2);
-            // this.props.Invoice.totalDailyAllowance = TotalDailyAllowance.toFixed(2);
-            // this.props.Invoice.subTotal = SubTotal.toFixed(2);
-            // this.props.Invoice.totalTax = TotalTax.toFixed(2);
-            // this.props.Invoice.netPayment = NetPayment.toFixed(2);
+            if (this.props.Invoice.type === "SPRACHEN") {
+                this.props.Invoice.translatorType = "Dolmetscher"
+            }
+            else if (this.props.Invoice.type === "SCHREIBEN") {
+                this.props.Invoice.translatorType = "Übersetzer"
+            }
 
             this.setState({ Invoice: this.props.Invoice })
         }
@@ -75,8 +64,8 @@ export default class TranslatorContract extends Component {
 }
 
 const PDF_File = (props) => {
-    debugger
     const [Invoice, setInvoice] = useState(props.Invoice)
+
     return (
         <Document>
             <Page size="A4" style={styles.page}>
@@ -89,31 +78,32 @@ const PDF_File = (props) => {
                             style={styles.image}
                         />
                         <Text style={{ fontSize: 24, textAlign: 'center', fontWeight: 'extrabold' }}>Übersetzungsbüro Qureshi</Text>
-                        <Text style={{ fontSize: 10, textAlign: 'center', color: 'red', marginTop: 5 }}>41 JAHRE DOLMETSCHER- UND ÜBERSETZERMANAGEMENT FÜR DIE JUSTIZ</Text>
+                        <Text style={{ fontSize: 10, textAlign: 'center', color: 'red', marginTop: 10 }}>41 JAHRE DOLMETSCHER- UND ÜBERSETZERMANAGEMENT FÜR DIE JUSTIZ</Text>
                         <Text style={{ fontSize: 10, textAlign: 'center', marginTop: 5 }}>Alle afrikanischen, asiatischen, west – und osteuropäischen Sprachen</Text>
                     </View>
                     <View style={{ marginTop: 30, maxWidth: 180 }}>
-                        <Text style={{
-                            fontSize: 10, borderBottomWidth: 2, borderBottomColor: '#112131',
-                            borderBottomStyle: 'solid', borderBottomColor: 'blue'
-                        }}>Qureshi, Jorindeweg 2, 30179 Hannover</Text>
+                        <Text style={{ fontSize: 10, }}>Qureshi, Jorindeweg 2, 30179 Hannover</Text>
+                        <Text style={{ color: 'blue', marginTop: -18 }}>__________________</Text>
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: 20 }}>
-                        <Text style={{ fontSize: 10 }}>{Invoice.institutionName}</Text>
+                        <Text style={{ fontSize: 10 }}>{Invoice.translatorName}</Text>
                         <Text style={{ fontSize: 10 }}>ID</Text>
-                        <Text style={{ fontSize: 10 }}>{Invoice.institutionAddress}</Text>
+                        <Text style={{ fontSize: 10 }}>{Invoice.translatorAddress}</Text>
                     </View>
-                    <View style={{ display: 'flex', flex: 1, flexDirection: 'row', marginTop: 10, fontSize: 10, textAlign: 'right' }}>
-                        <Text>Hannover, den 06.10.2021</Text>
+                    <View style={{
+                        display: 'flex', flex: 1, flexDirection: 'row', justifyContent: 'flex-end',
+                        marginTop: 10, fontSize: 10, textAlign: 'right'
+                    }}>
+                        <Text style={{ textAlign: 'right' }}>Hannover, den {new Date().toLocaleDateString('en-de', { weekday: "long", year: "numeric", month: "short", day: "numeric" })}</Text>
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 10 }}>
                         <Text>Sehr geehrte Damen und Herren!</Text>
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 10 }}>
                         <Text style={{ marginTop: 15 }}>Wie mit Ihnen vereinbart, werden Sie beim</Text>
-                        <Text style={{ marginTop: 15 }}>Amtsgericht Hannover, Volgersweg 1, 30175 Hannover</Text>
-                        <Text style={{ marginTop: 15 }}>als Dolmetscher für die Sprache Urdu eingesetzt.</Text>
-                        <Text style={{ marginTop: 15 }}>Bitte melden Sie sich Mittwoch, den 6. Oktober 2021 um  {Invoice.appointmentTime} Uhr in Saal {Invoice.roomNumber}.</Text>
+                        <Text style={{ marginTop: 15 }}>{Invoice.institutionAddress}</Text>
+                        <Text style={{ marginTop: 15 }}>als {Invoice.translatorType} für die Sprache {Invoice.language} eingesetzt.</Text>
+                        <Text style={{ marginTop: 15 }}>Bitte melden Sie sich {Invoice.appointmentDate} um  {Invoice.appointmentTime} Uhr in Saal {Invoice.roomNumber}.</Text>
                         <Text style={{ marginTop: 15 }}>Nachdrücklich wird um Einhaltung des Termins gebeten.</Text>
                         <Text style={{ marginTop: 15 }}>Ihre Entschädigung erfolgt nach der mit Ihnen getroffenen Vereinbarung</Text>
                         <Text style={{ marginTop: 15 }}>Ich weise Sie darauf hin, dass alle Folgetermine in dieser Sache nur über uns abzurechnen sind.</Text>
@@ -125,27 +115,28 @@ const PDF_File = (props) => {
                         <Text>i. A. Huzaifa A. Sagri</Text>
                         <Text>Anlage: Beleg für die Auszahlung der Vergütung von Dolmetschern</Text>
                     </View>
-                    <View style={{ margin: 0, borderBottomWidth: 2, borderBottomColor: '#112131', borderBottomColor: 'blue', borderBottomStyle: 'solid', marginTop: 100 }}>
+                    <View style={{ marginTop: 180 }}>
+                        <Text style={{ color: 'blue' }}>__________________________________________________</Text>
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'row', marginTop: 10 }}>
-                        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 7 }}>
+                        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 8 }}>
                             <Text>Übersetzungsbüro Qureshi</Text>
                             <Text>Jorindeweg 2</Text>
                             <Text>30179 Hannover</Text>
                         </View>
-                        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 7 }}>
+                        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 8 }}>
                             <Text>Geschäftsleitung:</Text>
                             <Text>Mohammad Afzal Qureshi</Text>
                             <Text>Allgemein beeidigt und</Text>
                             <Text>ermächtigt beim LG Hannover</Text>
                         </View>
-                        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 7 }}>
+                        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 8 }}>
                             <Text>Telefon: 0511/6041996</Text>
                             <Text>Fax: 0511/6041993</Text>
                             <Text>Mobil: 0172/7394392</Text>
                             <Text>E-Mail: qureshi.buero@t-online.de</Text>
                         </View>
-                        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 7 }}>
+                        <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 8 }}>
                             <Text>IBAN:</Text>
                             <Text style={{ color: 'red' }}>DE48 2504 0066 0862 1401 00</Text>
                             <Text>Steuer-Nr.: 25/134/07134</Text>
