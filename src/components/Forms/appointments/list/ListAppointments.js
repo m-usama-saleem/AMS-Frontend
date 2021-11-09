@@ -7,14 +7,15 @@ import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { Dropdown } from 'primereact/dropdown';
+// import { InputTextarea } from 'primereact/inputtextarea';
+// import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
 import DatePicker from "react-datepicker";
-import TimePicker from '../../../timepicker';
+// import TimePicker from '../../../timepicker';
 import { RadioButton } from 'primereact/radiobutton';
-import Select from 'react-select'
+// import Select from 'react-select'
+import MaskedInput from 'react-text-mask'
 
 import "react-datepicker/dist/react-datepicker.css";
 import AppointmentService from '../../../../api/appointments/appointmentservice';
@@ -229,20 +230,14 @@ class ListAppointments extends Component {
                 this.service.Add(app)
                     .then((data) => {
                         if (data.success == true) {
-                            var savedAppointment = data.appointment;
-                            savedAppointment.appointmentDate = new Date(app.AppointmentDate).toLocaleDateString();
-                            savedAppointment.translatorName = app.TranslatorName;
-                            savedAppointment.institutionName = app.InstitutionName;
-
                             this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Created' });
                             this.setState({
-                                AllAppointments: [...this.state.AllAppointments, savedAppointment],
                                 isLoading: false,
                                 displayCreateDialog: false
                             }, () => {
                                 this.resetForm();
+                                this.getAppointmentList();
                             });
-
                         }
                     })
                     .catch((error) => {
@@ -255,18 +250,13 @@ class ListAppointments extends Component {
             this.service.Add(app)
                 .then((data) => {
                     if (data.success == true) {
-                        var savedAppointment = data.appointment;
-                        savedAppointment.translatorName = app.TranslatorName;
-                        savedAppointment.institutionName = app.InstitutionName;
-                        savedAppointment.appointmentDate = new Date(app.AppointmentDate).toLocaleDateString();
-
                         this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Created' });
                         this.setState({
-                            AllAppointments: [...this.state.AllAppointments, savedAppointment],
                             isLoading: false,
                             displayCreateDialog: false
                         }, () => {
                             this.resetForm();
+                            this.getAppointmentList();
                         });
                     }
                 })
@@ -331,21 +321,12 @@ class ListAppointments extends Component {
                         if (data.success == true) {
                             this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Updated' });
 
-                            var editedAppointment = data.appointment;
-                            editedAppointment.translatorName = app.TranslatorName;
-                            editedAppointment.institutionName = app.InstitutionName;
-                            editedAppointment.appointmentDate = new Date(app.AppointmentDate).toLocaleDateString();
-
-                            var AllAppointments = this.state.AllAppointments;
-                            var ind = AllAppointments.findIndex(x => x.id == editedAppointment.id);
-                            AllAppointments[ind] = editedAppointment;
-
                             this.setState({
-                                AllAppointments: AllAppointments,
                                 isLoading: false,
                                 displayEditDialog: false
                             }, () => {
                                 this.resetForm();
+                                this.getAppointmentList();
                             });
                         }
                     })
@@ -362,22 +343,12 @@ class ListAppointments extends Component {
                 .then((data) => {
                     if (data.success == true) {
                         this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Updated' });
-
-                        var editedAppointment = data.appointment;
-                        editedAppointment.translatorName = app.TranslatorName;
-                        editedAppointment.institutionName = app.InstitutionName;
-                        editedAppointment.appointmentDate = new Date(app.AppointmentDate).toLocaleDateString();
-
-                        var AllAppointments = this.state.AllAppointments;
-                        var ind = AllAppointments.findIndex(x => x.id == editedAppointment.id);
-                        AllAppointments[ind] = editedAppointment;
-
                         this.setState({
-                            AllAppointments: AllAppointments,
                             isLoading: false,
                             displayEditDialog: false
                         }, () => {
                             this.resetForm();
+                            this.getAppointmentList();
                         });
                     }
                 })
@@ -466,9 +437,10 @@ class ListAppointments extends Component {
 
     onApproveAppointment() {
         var id = this.state.selectedAppointmentId;
+        var userId = this.props.authUser.id;
         this.setState({ loadingModel: true });
         if (id != undefined && id != null && id != 0) {
-            this.service.Approve(id).then(() => {
+            this.service.Approve({ id, userId }).then(() => {
                 var AllAppointments = this.state.AllAppointments;
                 var ind = AllAppointments.findIndex(x => x.id == id);
                 AllAppointments[ind].status = "Approved";
@@ -495,9 +467,11 @@ class ListAppointments extends Component {
 
     onDeleteAppointment() {
         var id = this.state.selectedAppointmentId;
+        var text = this.state.Reason;
+        var userId = this.props.authUser.id;
         this.setState({ loadingModel: true });
         if (id != undefined && id != null && id != 0) {
-            this.service.Delete(id).then(() => {
+            this.service.Delete({ id, text, userId }).then(() => {
                 var list = this.state.AllAppointments.filter(x => x.id !== id)
                 this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Deleted Successfully' });
                 this.setState({
@@ -658,8 +632,10 @@ class ListAppointments extends Component {
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
                                             <label htmlFor="float-input">Ankunftszeit</label>
-                                            <TimePicker className="form-control" time={this.state.AppointmentTime} theme="Ash" placeholder="Reisebeginn"
-                                                onSet={(val) => this.setState({ AppointmentTime: val.format24 })} />
+                                            <MaskedInput mask={[/[012]/, /2[0-3]|[0-1]?[\d]/, ':', /[0-5]/, /[0-9]/]} className="form-control" placeholder="00:00" guide={false}
+                                                value={this.state.AppointmentTime} onChange={(e) => { this.setState({ AppointmentTime: e.target.value }) }} />
+                                            {/* <TimePicker className="form-control" time={this.state.AppointmentTime} theme="Ash" placeholder="Reisebeginn"
+                                                onSet={(val) => this.setState({ AppointmentTime: val.format24 })} /> */}
                                         </span>
                                     </div>
                                 </div>
@@ -793,8 +769,10 @@ class ListAppointments extends Component {
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
                                             <label htmlFor="float-input">Ankunftszeit</label>
-                                            <TimePicker className="form-control" time={this.state.AppointmentTime} theme="Ash" placeholder="Reisebeginn"
-                                                onSet={(val) => this.setState({ AppointmentTime: val.format24 })} />
+                                            <MaskedInput mask={[/[012]/, /2[0-3]|[0-1]?[\d]/, ':', /[0-5]/, /[0-9]/]} className="form-control" placeholder="00:00" guide={false}
+                                                value={this.state.AppointmentTime} onChange={(e) => { this.setState({ AppointmentTime: e.target.value }) }} />
+                                            {/* <TimePicker className="form-control" time={this.state.AppointmentTime} theme="Ash" placeholder="Reisebeginn"
+                                                onSet={(val) => this.setState({ AppointmentTime: val.format24 })} /> */}
                                         </span>
                                     </div>
                                 </div>
@@ -921,10 +899,16 @@ class ListAppointments extends Component {
                                 }
                             </div>
 
-                            <Dialog visible={this.state.displayDeleteDialog} width="300px" header="You sure to delete this Appointment?"
+                            <Dialog visible={this.state.displayDeleteDialog} width="400px" header="You sure to delete this Appointment?"
                                 modal={true} onHide={() => this.setState({ displayDeleteDialog: false })}>
                                 {
                                     <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>
+                                        <div style={{ margin: 10 }}>
+                                            <label>Reason: </label>
+                                            <textarea value={this.state.Reason}
+                                                placeholder="Saal/Raum" className="form-control"
+                                                onChange={(e) => this.setState({ Reason: e.target.value })} />
+                                        </div>
                                         <Button label="Yes" style={{ width: 100 }} className="p-button-danger" onClick={() => this.onDeleteAppointment()} />
                                         <Button label="No" style={{ width: 100, marginLeft: 5 }} className="p-button-primary" onClick={() => this.setState({ displayDeleteDialog: false })} />
                                     </div>

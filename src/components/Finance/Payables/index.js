@@ -9,7 +9,9 @@ import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
-import TimePicker from '../../timepicker';
+// import TimePicker from '../../timepicker';
+// import DatePicker from "react-datepicker";
+import MaskedInput from 'react-text-mask'
 
 import "react-datepicker/dist/react-datepicker.css";
 import PayableService from '../../../api/finance/payableService';
@@ -34,7 +36,8 @@ const INITIAL_STATE = {
     Postage: 0,
     Paragraph: 0,
     AllPayables: [],
-    filteredData: []
+    filteredData: [],
+    SelectionTotal: 0
 }
 
 class ListPayables extends Component {
@@ -349,20 +352,26 @@ class ListPayables extends Component {
     ChangeEndOfTheTrip(val) {
         this.setState({ EndOfTheTrip: val }, () => { this.calculateHours() })
     }
+
     calculateHours() {
         const { StartOfTheTrip, EndOfTheTrip } = this.state;
-        if (StartOfTheTrip && EndOfTheTrip) {
-            //create date format          
-            var timeStart = new Date("01/01/2021 " + StartOfTheTrip);
-            var timeEnd = new Date("01/01/2021 " + EndOfTheTrip);
+        if (StartOfTheTrip.length == 5 && EndOfTheTrip.length == 5) {
+            //create date format
+            if (!isNaN(Date.parse(new Date("01/01/2021 " + StartOfTheTrip)))
+                && !isNaN(Date.parse(new Date("01/01/2021 " + EndOfTheTrip)))) {
 
-            var diff_in_minutes = this.Diff_minutes(timeEnd, timeStart);
-            var ceil_diff_in_half_hours = Math.ceil(diff_in_minutes / 30) * 30;
-            // var hourDiff = timeEnd.getMinutes() - timeStart.getMinutes();
+                var timeStart = new Date("01/01/2021 " + StartOfTheTrip);
+                var timeEnd = new Date("01/01/2021 " + EndOfTheTrip);
 
+                var diff_in_minutes = this.Diff_minutes(timeEnd, timeStart);
+                var ceil_diff_in_half_hours = Math.ceil(diff_in_minutes / 30) * 30;
+                // var hourDiff = timeEnd.getMinutes() - timeStart.getMinutes();
 
-            this.setState({ TotalHours: ceil_diff_in_half_hours / 60 }, this.calculateTotal())
-
+                this.setState({ TotalHours: ceil_diff_in_half_hours / 60 }, this.calculateTotal())
+            }
+            else {
+                this.setState({ TotalHours: 0 }, this.calculateTotal())
+            }
         }
     }
 
@@ -394,7 +403,6 @@ class ListPayables extends Component {
             })
         }
         if (AppointmentType === "SCHREIBEN") {
-            debugger
             const { WordCount, Tax, Rate, FlatRate, Postage, Paragraph } = this.state;
             var Lines = parseFloat(WordCount) / CommonValues.WordsPerLine * parseFloat(Rate);
             var TotalFlatRate = parseFloat(FlatRate) * CommonValues.FlatRateCost;
@@ -430,17 +438,30 @@ class ListPayables extends Component {
                 <h3 style={{ borderBottomStyle: 'solid', borderBottomWidth: 2, borderColor: 'black' }}>Reise Details</h3>
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+
+                        {/* <span className="ui-float-label">
+                            <label htmlFor="float-input">Termin <span style={{ color: 'red' }}>*</span></label>
+                            <input type="text" maxLength={5} placeholder="00:00"
+                                selected={this.state.StartOfTheTrip}
+                                onChange={e => this.ChangeStartOfTheTrip(e.target.value)}
+                            // className={this.state.isAppointmentDateValid === true ? "p-inputtext normalbox" : "p-inputtext errorBox"}
+                            />
+                        </span> */}
                         <span className="ui-float-label">
                             <label htmlFor="float-input">Reisebeginn</label>
-                            <TimePicker className="form-control" time={this.state.StartOfTheTrip} theme="Ash" placeholder="Reisebeginn"
-                                onSet={(val) => this.ChangeStartOfTheTrip(val.format24)} />
+                            <MaskedInput mask={[/[012]/, /2[0-3]|[0-1]?[\d]/, ':', /[0-5]/, /[0-9]/]} className="form-control" placeholder="00:00" guide={false}
+                                value={this.state.StartOfTheTrip} onChange={(e) => { this.ChangeStartOfTheTrip(e.target.value) }} />
+                            {/* <TimePicker className="form-control" time={this.state.StartOfTheTrip} theme="Ash" placeholder="Reisebeginn"
+                                onSet={(val) => this.ChangeStartOfTheTrip(val.format24)} /> */}
                         </span>
                     </div>
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <span className="ui-float-label">
                             <label htmlFor="float-input">Terminbeginn</label>
-                            <TimePicker className="form-control" time={this.state.AppointmentStart} theme="Ash" placeholder="Terminbeginn time"
-                                onSet={(val) => this.ChangeAppointmentStart(val.format24)} />
+                            <MaskedInput mask={[/[012]/, /2[0-3]|[0-1]?[\d]/, ':', /[0-5]/, /[0-9]/]} className="form-control" placeholder="00:00" guide={false}
+                                value={this.state.AppointmentStart} onChange={(e) => { this.ChangeAppointmentStart(e.target.value) }} />
+                            {/* <TimePicker className="form-control" time={this.state.AppointmentStart} theme="Ash" placeholder="Terminbeginn time"
+                                onSet={(val) => this.ChangeAppointmentStart(val.format24)} /> */}
                         </span>
                     </div>
                 </div>
@@ -448,22 +469,27 @@ class ListPayables extends Component {
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <span className="ui-float-label">
                             <label htmlFor="float-input">Terminende</label>
-                            <TimePicker className="form-control" time={this.state.EndOfTheAppointment} theme="Ash" placeholder="Terminende time"
-                                onSet={(val) => this.ChangeEndOfTheAppointment(val.format24)} />
+                            <MaskedInput mask={[/[012]/, /2[0-3]|[0-1]?[\d]/, ':', /[0-5]/, /[0-9]/]} className="form-control" placeholder="00:00" guide={false}
+                                value={this.state.EndOfTheAppointment} onChange={(e) => { this.ChangeEndOfTheAppointment(e.target.value) }} />
+                            {/* <TimePicker className="form-control" time={this.state.EndOfTheAppointment} theme="Ash" placeholder="Terminende time"
+                                onSet={(val) => this.ChangeEndOfTheAppointment(val.format24)} /> */}
                         </span>
                     </div>
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <span className="ui-float-label">
                             <label htmlFor="float-input">Ende der Reise</label>
-                            <TimePicker className="form-control" time={this.state.EndOfTheTrip} theme="Ash" placeholder="Ende der Reise time"
-                                onSet={(val) => this.ChangeEndOfTheTrip(val.format24)} />
+                            <MaskedInput mask={[/[012]/, /2[0-3]|[0-1]?[\d]/, ':', /[0-5]/, /[0-9]/]} className="form-control" placeholder="00:00" guide={false}
+                                value={this.state.EndOfTheTrip} onChange={(e) => { this.ChangeEndOfTheTrip(e.target.value) }} />
+                            {/* <TimePicker className="form-control" time={this.state.EndOfTheTrip} theme="Ash" placeholder="Ende der Reise time"
+                                onSet={(val) => this.ChangeEndOfTheTrip(val.format24)} /> */}
                         </span>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                         <AMSInputField Label="Stunden insgesamt" PlaceholderText="Stunden insgesamt" Type="text"
-                            Value={this.state.TotalHours} onChange={(val) => this.setState({ TotalHours: val }, () => this.calculateTotal())}
+                            Value={this.state.TotalHours}
+                            //  onChange={(val) => this.setState({ TotalHours: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => this.setState({ ValidTotalHours: val })}
                         />
                     </div>
@@ -556,13 +582,24 @@ class ListPayables extends Component {
         this.dt.exportCSV({ selectionOnly });
     }
 
-    render() {
-        var { disableFields, disableApproveButton, AppointmentType, Status } = this.state
-        var header, FormFields, PayAllButton, UpdatePayableButton;
+    onRowSelection(row) {
+        var net = parseFloat(row.netPayment);
+        var prev = parseFloat(this.state.SelectionTotal)
+        this.setState({ SelectionTotal: parseFloat(prev + net).toFixed(2) })
+    }
+    onRowDeselection(row) {
+        var net = parseFloat(row.netPayment);
+        var prev = parseFloat(this.state.SelectionTotal)
+        this.setState({ SelectionTotal: parseFloat(prev - net).toFixed(2) })
+    }
 
+    render() {
+        var { disableFields, disableApproveButton, AppointmentType, Status, SelectionTotal } = this.state
+        var header, FormFields, PayAllButton, UpdatePayableButton;
         if (this.state.selectedPayable && this.state.selectedPayable.length > 1) {
-            PayAllButton = <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
-                <Button className="p-button-info" icon="pi pi-tick" iconPos="left" label="Pay All"
+            PayAllButton = <div className="col-sm-4 col-md-4 col-lg-4" style={{ position: 'absolute', right: 0, display: 'inline' }}>
+                <label className="col-sm-6 col-md-6 col-lg-6" style={{ fontSize: 16 }}>Total: {SelectionTotal}</label>
+                <Button className="p-button-info col-sm-6 col-md-6 col-lg-6" icon="pi pi-tick" iconPos="left" label="Pay All"
                     onClick={(e) => this.setState({ displayMultiApproveDialog: true })} />
             </div>
         }
@@ -605,6 +642,8 @@ class ListPayables extends Component {
                                 onRowDoubleClick={this.dblClickPayable} responsive={true}
                                 selection={this.state.selectedPayable} onValueChange={filteredData => this.setState({ filteredData })}
                                 selectionMode="multiple" metaKeySelection={false}
+                                onRowSelect={(e) => this.onRowSelection(e.data)}
+                                onRowUnselect={(e) => this.onRowDeselection(e.data)}
                                 onSelectionChange={e => this.setState({ selectedPayable: e.value })}
                                 resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/
                                 globalFilter={this.state.globalFilter}

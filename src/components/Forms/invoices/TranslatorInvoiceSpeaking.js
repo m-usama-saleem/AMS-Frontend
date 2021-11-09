@@ -107,18 +107,17 @@ const PDF_File = (props) => {
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: 20 }}>
                         <Text style={{ fontSize: 10 }}>{Invoice.appointmentInstitute}</Text>
-                        <Text style={{ fontSize: 10 }}>ID</Text>
                         <Text style={{ fontSize: 10 }}>{Invoice.instituteAddress}</Text>
                         {/* <Text style={{ fontSize: 10 }}>30002 Hannover.</Text> */}
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'row', fontSize: 10, margin: 0 }}>
                         <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                             <Text>Ihr Zeichen / Ihre Nachricht  </Text>
-                            <Text>ID</Text>
+                            <Text>{Invoice.appointmentId}</Text>
                         </View>
                         <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                             <Text>Rechnungsnummer</Text>
-                            <Text>{Invoice.appointmentId}</Text>
+                            <Text>Will be provided</Text>
                         </View>
                         <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                             <Text>Datum</Text>
@@ -130,35 +129,35 @@ const PDF_File = (props) => {
                         <Text style={{ marginTop: 20 }}>Für die Wahrnehmung des folgenden Termins gestatte ich mir, nach dem Justizvergütungs- und
                             Entschädigungsgesetz –JVEG, wie folgt zu berechnen:</Text>
                     </View>
-                    <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, maxWidth: 80, marginTop: 10 }}>
+                    <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, maxWidth: 80, marginTop: 0 }}>
                         <Text style={{ fontWeight: 'heavy', fontsize: 12, }}>Kostenrechnung:</Text>
                         <Text style={{ marginTop: -10 }}>______________</Text>
                         <Text style={{ marginTop: 10, }}>Sprache: {Invoice.appointmentLanguage}</Text>
                     </View>
-                    <View style={{
-                        display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, margin: 0
-                    }}>
-                        <View style={[tableRow, { marginTop: 5 }]}>
+                    <View style={{ width: '50%', display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, margin: 0, marginTop: -20 }}>
+                        <View style={[{ marginTop: 5, marginLeft: 50 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Termin am:</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.appointmentDate}</Text>
                         </View>
-                        <View style={[tableRow, { marginTop: 10 }]}>
+                        <View style={[{ marginTop: 10, marginLeft: 50 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Antritt der Reise:</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.startOfTheTrip} Uhr</Text>
                         </View>
-                        <View style={[tableRow, { marginTop: 10 }]}>
+                        <View style={[{ marginTop: 10, marginLeft: 50 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Terminbeginn:</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.appointmentStart} Uhr</Text>
                         </View>
-                        <View style={[tableRow, { marginTop: 10 }]}>
+                        <View style={[{ marginTop: 10, marginLeft: 50 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Ende des Termins:</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.endOfTheAppointment} Uhr</Text>
                         </View>
-                        <View style={[tableRow, { marginTop: 10 }]}>
+                        <View style={[{ marginTop: 10, marginLeft: 50 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Ende der Reise: </Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.endOfTheTrip} Uhr</Text>
                         </View>
-                        <View style={[tableRow, { marginTop: 5 }]}>
+                    </View>
+                    <View style={{ fontSize: 10, marginTop: -20 }}>
+                        <View style={{ width: '100%', alignItems: 'center', marginTop: 0 }}>
                             <Text>_________________________________________________________________________</Text>
                         </View>
                     </View>

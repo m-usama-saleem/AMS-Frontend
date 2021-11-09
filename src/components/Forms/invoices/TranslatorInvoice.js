@@ -106,7 +106,7 @@ const PDF_File = (props) => {
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: 20 }}>
                         <Text style={{ fontSize: 10 }}>{Invoice.appointmentInstitute}</Text>
-                        <Text style={{ fontSize: 10 }}>ID</Text>
+                        <Text style={{ fontSize: 10 }}>{Invoice.appointmentId}</Text>
                         <Text style={{ fontSize: 10 }}>{Invoice.instituteAddress}</Text>
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'row', marginTop: 10, fontSize: 10 }}>
@@ -116,7 +116,7 @@ const PDF_File = (props) => {
                         </View>
                         <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                             <Text style={{ fontWeight: 'bold' }}>Rechnungsnummer</Text>
-                            <Text>{Invoice.appointmentId}</Text>
+                            <Text>Will be provided</Text>
                         </View>
                         <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                             <Text>Datum</Text>

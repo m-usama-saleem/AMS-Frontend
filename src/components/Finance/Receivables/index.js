@@ -46,7 +46,8 @@ const INITIAL_STATE = {
     displayCreateDialog: false,
 
     AllReceivables: [],
-    filteredData: []
+    filteredData: [],
+    SelectionTotal: 0
 }
 
 class ListReceivables extends Component {
@@ -336,14 +337,25 @@ class ListReceivables extends Component {
     exportCSV(selectionOnly) {
         this.dt.exportCSV({ selectionOnly });
     }
+    onRowSelection(row) {
+        var net = parseFloat(row.netPayment);
+        var prev = parseFloat(this.state.SelectionTotal)
+        this.setState({ SelectionTotal: parseFloat(prev + net).toFixed(2) })
+    }
+    onRowDeselection(row) {
+        var net = parseFloat(row.netPayment);
+        var prev = parseFloat(this.state.SelectionTotal)
+        this.setState({ SelectionTotal: parseFloat(prev - net).toFixed(2) })
+    }
 
     render() {
-        var { disableFields, disableApproveButton, AppointmentType, Status } = this.state
+        var { disableFields, disableApproveButton, AppointmentType, Status, SelectionTotal } = this.state
         var header, FormFields, UpdateReceivableButton, ReceiveAllButton;
 
         if (this.state.selectedReceivable && this.state.selectedReceivable.length > 1) {
-            ReceiveAllButton = <div className="col-sm-4 col-md-2 col-lg-2" style={{ position: 'absolute', right: 0 }}>
-                <Button className="p-button-info" icon="pi pi-tick" iconPos="left" label="Receive All"
+            ReceiveAllButton = <div className="col-sm-6 col-md-4 col-lg-4" style={{ position: 'absolute', right: 0, display: 'inline' }}>
+                <label className="col-sm-6 col-md-6 col-lg-6" style={{ fontSize: 16 }}>Total: {SelectionTotal}</label>
+                <Button className="p-button-info col-sm-6 col-md-6 col-lg-6" icon="pi pi-tick" iconPos="left" label="Receive All"
                     onClick={(e) => this.setState({ displayMultiApproveDialog: true })} />
             </div>
         }
@@ -380,6 +392,8 @@ class ListReceivables extends Component {
                                 onRowDoubleClick={this.dblClickReceivable} responsive={true}
                                 selection={this.state.selectedReceivable} onValueChange={filteredData => this.setState({ filteredData })}
                                 selectionMode="multiple" metaKeySelection={false}
+                                onRowSelect={(e) => this.onRowSelection(e.data)}
+                                onRowUnselect={(e) => this.onRowDeselection(e.data)}
                                 onSelectionChange={e => this.setState({ selectedReceivable: e.value })}
                                 resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/
                                 globalFilter={this.state.globalFilter}

@@ -45,9 +45,9 @@ class AppointmentService {
         })
     }
 
-    Delete = (appId) => {
+    Delete = (obj) => {
         return new Promise((resolve, reject) => {
-            http.post("/AppointmentService/DeleteAppointment", { id: appId },
+            http.post("/AppointmentService/DeleteAppointment", obj,
                 {
                     headers: {
                         // 'Authorization': 'Bearer ' + this.currentUserSubject.token,
@@ -64,9 +64,9 @@ class AppointmentService {
         });
     }
 
-    Approve = (appId) => {
+    Approve = (obj) => {
         return new Promise((resolve, reject) => {
-            http.post("/AppointmentService/ApproveAppointment", { id: appId },
+            http.post("/AppointmentService/ApproveAppointment", obj,
                 {
                     headers: {
                         // 'Authorization': 'Bearer ' + this.currentUserSubject.token,

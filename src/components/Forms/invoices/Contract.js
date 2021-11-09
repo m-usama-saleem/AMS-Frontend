@@ -2,6 +2,8 @@ import { Component, useEffect, useState } from 'react';
 import { PDFViewer, usePDF, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import companyLogo from '../../../assets/head_image.png'
 import AppointmentService from '../../../api/appointments/appointmentservice';
+import moment from 'moment'
+
 
 // Create styles
 const styles = StyleSheet.create({
@@ -87,14 +89,15 @@ const PDF_File = (props) => {
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'column', marginTop: 20 }}>
                         <Text style={{ fontSize: 10 }}>{Invoice.translatorName}</Text>
-                        <Text style={{ fontSize: 10 }}>ID</Text>
                         <Text style={{ fontSize: 10 }}>{Invoice.translatorAddress}</Text>
                     </View>
                     <View style={{
                         display: 'flex', flex: 1, flexDirection: 'row', justifyContent: 'flex-end',
                         marginTop: 10, fontSize: 10, textAlign: 'right'
                     }}>
-                        <Text style={{ textAlign: 'right' }}>Hannover, den {new Date().toLocaleDateString('en-de', { weekday: "long", year: "numeric", month: "short", day: "numeric" })}</Text>
+                        <Text style={{ textAlign: 'right' }}>Hannover, den {moment().format('DD.MM.YYYY')}
+                            {/* {new Date().toLocaleDateString('en-de', { weekday: "long", year: "numeric", month: "short", day: "numeric" })} */}
+                        </Text>
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 10 }}>
                         <Text>Sehr geehrte Damen und Herren!</Text>
@@ -103,7 +106,8 @@ const PDF_File = (props) => {
                         <Text style={{ marginTop: 15 }}>Wie mit Ihnen vereinbart, werden Sie beim</Text>
                         <Text style={{ marginTop: 15 }}>{Invoice.institutionAddress}</Text>
                         <Text style={{ marginTop: 15 }}>als {Invoice.translatorType} für die Sprache {Invoice.language} eingesetzt.</Text>
-                        <Text style={{ marginTop: 15 }}>Bitte melden Sie sich {Invoice.appointmentDate} um  {Invoice.appointmentTime} Uhr in Saal {Invoice.roomNumber}.</Text>
+                        <Text style={{ marginTop: 15 }}>Bitte melden Sie sich
+                            {/* {Invoice.appointmentDate} */} {moment(Invoice.appointmentDate).locale('de').format('dddd DD MMMM YYYY')} um  {Invoice.appointmentTime} Uhr in Saal {Invoice.roomNumber}.</Text>
                         <Text style={{ marginTop: 15 }}>Nachdrücklich wird um Einhaltung des Termins gebeten.</Text>
                         <Text style={{ marginTop: 15 }}>Ihre Entschädigung erfolgt nach der mit Ihnen getroffenen Vereinbarung</Text>
                         <Text style={{ marginTop: 15 }}>Ich weise Sie darauf hin, dass alle Folgetermine in dieser Sache nur über uns abzurechnen sind.</Text>
