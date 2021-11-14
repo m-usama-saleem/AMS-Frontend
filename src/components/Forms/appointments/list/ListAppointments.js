@@ -24,6 +24,8 @@ import AMSInputField from '../../../Common/AMSInputField';
 import { Languages, ListAppointmentType } from '../../../../constants/staticValues';
 import { TranslatorContract } from '../../invoices/Contract';
 import * as ROUTES from '../../../../constants/routes';
+import moment from 'moment'
+import 'moment/locale/de';
 
 const errorBox = {
     borderRadius: '3px', borderColor: 'rgba(242, 38, 19, 1)'
@@ -83,6 +85,7 @@ class ListAppointments extends Component {
         this.state = INITIAL_STATE;
         this.service = new AppointmentService();
         this.actionBodyTemplate = this.actionBodyTemplate.bind(this);
+        this.appointments = [];
     }
 
     getLists() {
@@ -103,7 +106,8 @@ class ListAppointments extends Component {
     getAppointmentList() {
         this.service.GetAllIncomplete().then(data => {
             if (data && data !== "" && data.length > 0) {
-                data.forEach(x => x.appointmentDate = new Date(x.appointmentDate).toLocaleDateString())
+                data.forEach(x => x.appointmentDate = moment(x.appointmentDate).format('L'))
+                this.appointments = data;
                 this.setState({ AllAppointments: data })
             }
         })
@@ -210,7 +214,7 @@ class ListAppointments extends Component {
             InstitutionName: SelectedInstituteName.label,
             AppointmentDate: SelectedAppointmentDate,
             Language: SelectedLanguageName.value,
-            Status: 'Pending',
+            Status: 'Ausstehend',
             CreatedBy: this.props.authUser.id
         }
 
@@ -299,7 +303,7 @@ class ListAppointments extends Component {
             InstitutionName: SelectedInstituteName.label,
             Language: SelectedLanguageName.value,
             AppointmentDate: SelectedAppointmentDate,
-            Status: 'Pending',
+            Status: 'Ausstehend',
             CreatedBy: this.props.authUser.id,
             Attachments: AttachmentFiles
         }
@@ -434,7 +438,6 @@ class ListAppointments extends Component {
             })
         }
     }
-
     onApproveAppointment() {
         var id = this.state.selectedAppointmentId;
         var userId = this.props.authUser.id;
@@ -443,7 +446,7 @@ class ListAppointments extends Component {
             this.service.Approve({ id, userId }).then(() => {
                 var AllAppointments = this.state.AllAppointments;
                 var ind = AllAppointments.findIndex(x => x.id == id);
-                AllAppointments[ind].status = "Approved";
+                AllAppointments[ind].status = "bestätigt";
 
                 this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Approved Successfully' });
                 this.setState({
@@ -464,7 +467,6 @@ class ListAppointments extends Component {
                 });
         }
     }
-
     onDeleteAppointment() {
         var id = this.state.selectedAppointmentId;
         var text = this.state.Reason;
@@ -491,10 +493,10 @@ class ListAppointments extends Component {
     actionBodyTemplate(rowData) {
         var DisableApproveButton = false;
         var DisableEditButton = false;
-        if (rowData.status === "Approved" || rowData.status === "PartiallyCompleted") {
+        if (rowData.status === "bestätigt" || rowData.status === "teilweise abgeschlossen") {
             DisableApproveButton = true
         }
-        if (rowData.status === "PartiallyCompleted") {
+        if (rowData.status === "teilweise abgeschlossen") {
             DisableEditButton = true
         }
 
@@ -530,7 +532,7 @@ class ListAppointments extends Component {
 
         const { langList, Status } = this.state;
         var EditAppointmentButton;
-        if (Status !== "PartiallyCompleted") {
+        if (Status !== "teilweise abgeschlossen") {
             EditAppointmentButton = <span className="ui-float-label" style={{ float: 'right' }}>
                 <Button label="Termin aktualisieren" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditAppointment()} />
             </span>
@@ -680,7 +682,6 @@ class ListAppointments extends Component {
             </Dialog>
         )
     }
-
     getNewAppointmentDialog() {
         const { langList } = this.state;
 
@@ -830,7 +831,6 @@ class ListAppointments extends Component {
             isTypeValid: true,
         })
     }
-
     viewInvoice(appointment) {
         if (appointment) {
             appointment.appointmentType = "CONTRACT"
@@ -841,6 +841,17 @@ class ListAppointments extends Component {
         }
     }
 
+    sortDates(e) {
+        if (e.order != this.state.order) {
+            this.appointments.sort((a, b) => {
+                let x = moment(a.appointmentDate, 'DD-MM-YYYY');
+                let y = moment(b.appointmentDate, 'DD-MM-YYYY');
+                return (x.valueOf() - y.valueOf()) * e.order;
+            })
+            return this.appointments;
+        }
+
+    }
     render() {
         var { disableFields, disableDeleteButton, disableApproveButton } = this.state
         var header;
@@ -868,20 +879,19 @@ class ListAppointments extends Component {
                         <div className="p-grid" style={{ marginTop: '8px' }} ></div>
                         <div className="content-section implementation">
                             <DataTable ref={(el) => this.dt = el}
-                                header={header} value={this.state.AllAppointments}
+                                header={header} value={this.appointments}
                                 // paginator={this.state.isLoading === false} rows={15}
                                 onRowDoubleClick={this.dblClickAppointment} responsive={true}
                                 selection={this.state.selectedAppointment}
                                 onSelectionChange={e => this.setState({ selectedAppointment: e.value })}
                                 resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/
                                 globalFilter={this.state.globalFilter}
-                                sortField="appointmentDate" sortOrder={-1}
                                 paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                                 dataKey="id"
                                 style={{ fontSize: 12 }}
                             >
                                 <Column field="appointmentId" header="Aktenzeichen" sortable={true} />
-                                <Column field="appointmentDate" header="Termin" sortable={true} style={{ textAlign: 'center' }} />
+                                <Column field="appointmentDate" header="Termin" sortFunction={(e) => this.sortDates(e)} sortable={true} style={{ textAlign: 'center' }} />
                                 <Column field="translatorName" header="Dolmetscher/ Übersetzer" sortable={true} />
                                 <Column field="institutionName" header="Auftraggeber" sortable={true} />
                                 <Column field="type" header="Typ" sortable={true} />

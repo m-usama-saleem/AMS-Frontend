@@ -138,7 +138,7 @@ class ListReceivables extends Component {
         let app = {
             Id: selectedReceivableId,
             AppointmentId_Fk,
-            Status: 'Pending',
+            Status: 'Ausstehend',
             Type,
             Rate: SubTotal,
             Tax,
@@ -231,7 +231,7 @@ class ListReceivables extends Component {
             this.service.Approve(id).then(() => {
                 var AllReceivables = this.state.AllReceivables;
                 var ind = AllReceivables.findIndex(x => x.id == id);
-                AllReceivables[ind].status = "Approved";
+                AllReceivables[ind].status = "bestätigt";
 
                 this.growl.show({ severity: 'success', summary: 'Success', detail: 'Received Successfully' });
                 this.setState({
@@ -266,7 +266,7 @@ class ListReceivables extends Component {
             this.service.ApproveMultipleReceivables(lists).then(() => {
                 lists.forEach(model => {
                     var ind = AllReceivables.findIndex(x => x.id == model.id);
-                    AllReceivables[ind].status = "Approved";
+                    AllReceivables[ind].status = "bestätigt";
                 });
 
                 this.growl.show({ severity: 'success', summary: 'Success', detail: 'All Received Successfully' });
@@ -288,7 +288,7 @@ class ListReceivables extends Component {
         var EditButton;
         var PaidButton;
 
-        if (rowData.status != "Approved") {
+        if (rowData.status != "bestätigt") {
             EditButton = <Button icon="pi pi-pencil" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-success p-mr-2"
                 onClick={() => this.editMode(rowData)} title="Bearbeiten" />
 
@@ -360,7 +360,7 @@ class ListReceivables extends Component {
             </div>
         }
 
-        if (Status == "Pending") {
+        if (Status == "Ausstehend") {
             UpdateReceivableButton = <span className="ui-float-label" style={{ float: 'right' }}>
                 <Button label="Update Receivable" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditReceivable()} />
             </span>

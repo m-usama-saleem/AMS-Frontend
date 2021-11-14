@@ -129,7 +129,7 @@ class ListPayables extends Component {
         let app = {
             Id: selectedPayableId,
             AppointmentId_Fk,
-            Status: 'Pending',
+            Status: 'Ausstehend',
             Type,
             WordCount, Rate,
             FlatRate, Postage, Paragraph,
@@ -256,7 +256,7 @@ class ListPayables extends Component {
             this.service.Approve(id).then(() => {
                 var AllPayables = this.state.AllPayables;
                 var ind = AllPayables.findIndex(x => x.id == id);
-                AllPayables[ind].status = "Approved";
+                AllPayables[ind].status = "bestätigt";
 
                 this.growl.show({ severity: 'success', summary: 'Success', detail: 'Paybale Paid Successfully' });
                 this.setState({
@@ -290,7 +290,7 @@ class ListPayables extends Component {
             this.service.ApproveMultiplePayables(lists).then(() => {
                 lists.forEach(model => {
                     var ind = AllPayables.findIndex(x => x.id == model.id);
-                    AllPayables[ind].status = "Approved";
+                    AllPayables[ind].status = "bestätigt";
                 });
 
                 this.growl.show({ severity: 'success', summary: 'Success', detail: 'All Paybales Paid Successfully' });
@@ -321,7 +321,7 @@ class ListPayables extends Component {
         var EditButton;
         var PaidButton;
 
-        if (rowData.status != "Approved") {
+        if (rowData.status != "bestätigt") {
             EditButton = <Button icon="pi pi-pencil" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-success p-mr-2"
                 onClick={() => this.editMode(rowData)} title="Bearbeiten" />
 
@@ -614,7 +614,7 @@ class ListPayables extends Component {
             {PayAllButton}
         </div>
 
-        if (Status == "Pending") {
+        if (Status == "Ausstehend") {
             UpdatePayableButton = <span className="ui-float-label" style={{ float: 'right' }}>
                 <Button label="Verbindlichkeiten aktualisieren" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditPayable()} />
             </span>

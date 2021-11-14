@@ -3,7 +3,7 @@ import { PDFViewer, usePDF, Document, Page, Text, View, StyleSheet, Image } from
 import companyLogo from '../../../assets/head_image.png'
 import AppointmentService from '../../../api/appointments/appointmentservice';
 import moment from 'moment'
-
+import 'moment/locale/de';
 
 // Create styles
 const styles = StyleSheet.create({
