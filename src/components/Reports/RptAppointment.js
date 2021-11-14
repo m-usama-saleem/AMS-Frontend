@@ -21,23 +21,12 @@ import AMSInputField from '../Common/AMSInputField';
 import AppointmentService from '../../api/appointments/appointmentservice';
 import * as ROUTES from '../../constants/routes';
 import TimePicker from '../timepicker';
+import moment from 'moment'
+import 'moment/locale/de';
 
-const errorBox = {
-    borderRadius: '3px', borderColor: 'rgba(242, 38, 19, 1)'
-};
-const normalBox = {
-    border: '1px solid #a6a6a6'
-};
 const errorBoxForCheckBox = {
     border: '1px solid red', borderRadius: '3px'
 };
-const normalBoxForDDL = {
-    border: '1px solid white', borderRadius: '3px'
-};
-const errorBoxForDDL = {
-    border: '1px solid red', borderRadius: '3px'
-};
-
 
 class RptAppointment extends Component {
     constructor(props) {
@@ -53,14 +42,14 @@ class RptAppointment extends Component {
             displayEditDialog: false,
             displayPayableDialog: false,
             displayReceivableDialog: false,
-            isTypeValid: true,
             error: '',
             CheckFields: false,
             AllAppointments: [],
             ListAllAppointments: [],
-            filteredData: []
+            filteredData: [],
         };
         this.service = new AppointmentService();
+        this.appointments = []
 
         this.actionBodyTemplate = this.actionBodyTemplate.bind(this);
         // this.exportPdf = this.exportPdf.bind(this);
@@ -97,19 +86,31 @@ class RptAppointment extends Component {
         this.service.GetAll().then(data => {
             if (data && data !== "" && data.length > 0) {
                 data.forEach(x => {
-                    x.appointment.appointmentDate = new Date(x.appointment.appointmentDate).toLocaleDateString()
+                    x.appointment.appointmentDate = moment(x.appointment.appointmentDate).format('L')
+                    x.appointment.entryDate = moment(x.appointment.entryDate).format('L')
+
+                    x.payable.appointmentDate = moment(x.payable.appointmentDate).format('L')
+                    x.receivable.appointmentDate = moment(x.receivable.appointmentDate).format('L')
+
                     if (new Date(x.appointment.approvalDate).toLocaleDateString() == "1/1/1")
                         x.appointment.approvalDate = ""
                     else
-                        x.appointment.approvalDate = new Date(x.appointment.approvalDate).toLocaleDateString()
+                        x.appointment.approvalDate = moment(x.appointment.approvalDate).format('L')
+                    // x.appointment.approvalDate = new Date(x.appointment.approvalDate).toLocaleDateString()
 
                     if (new Date(x.appointment.completionDate).toLocaleDateString() == "1/1/1")
                         x.appointment.completionDate = ""
                     else
-                        x.appointment.completionDate = new Date(x.appointment.completionDate).toLocaleDateString()
+                        x.appointment.completionDate = moment(x.appointment.completionDate).format('L')
+                    // x.appointment.completionDate = new Date(x.appointment.completionDate).toLocaleDateString()
 
                 })
-                this.setState({ ListAllAppointments: data, AllAppointments: data, filteredData: data })
+                this.appointments = data;
+                this.setState({
+                    ListAllAppointments: data,
+                    AllAppointments: data,
+                    filteredData: data,
+                })
             }
         })
             .catch(err => {
@@ -123,8 +124,6 @@ class RptAppointment extends Component {
             firstName: '', lastName: '', contact: '',
             address: '', city: '', postCode: '', country: '',
             gender: '',
-            isTypeValid: true,
-            ValidLanguage: true,
             CheckFields: false
         });
     }
@@ -147,6 +146,8 @@ class RptAppointment extends Component {
                 LanguageSelection.push(Languages[langInd]);
             }
         })
+        var entry_date = moment(appointment.entryDate, "DD-MM-YYYY").format('L');
+        var app_date = moment(appointment.appointmentDate, "DD-MM-YYYY").format('L');
 
         if (appointment) {
             this.setState({
@@ -158,8 +159,8 @@ class RptAppointment extends Component {
                 SelectedInstituteName: AllInstitutions[instInd],
                 SelectedLanguageName: Languages[langId],
                 Type: appointment.type,
-                EntryDate: new Date(appointment.entryDate).toLocaleDateString(),
-                SelectedAppointmentDate: new Date(appointment.appointmentDate),
+                EntryDate: entry_date,
+                SelectedAppointmentDate: app_date,
                 displayEditDialog: true,
                 langList: LanguageSelection,
                 AttachmentFiles: appointment.attachments
@@ -222,8 +223,7 @@ class RptAppointment extends Component {
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
                                             <label htmlFor="float-input">Termin <span style={{ color: 'red' }}>*</span></label>
-                                            <DatePicker dateFormat="dd/MM/yyyy" placeholderText="Datum"
-                                                selected={this.state.SelectedAppointmentDate}
+                                            <input value={this.state.SelectedAppointmentDate} disabled={true}
                                                 className="p-inputtext normalbox" readOnly={true} />
                                         </span>
                                     </div>
@@ -246,7 +246,7 @@ class RptAppointment extends Component {
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <span className="ui-float-label">
                                             <label htmlFor="float-input">Typ: <span style={{ color: 'red' }}>*</span></label>
-                                            <div style={this.state.isTypeValid === true ? {} : errorBoxForCheckBox}>
+                                            <div>
                                                 {AppointmentType}
                                             </div>
                                         </span>
@@ -632,19 +632,50 @@ class RptAppointment extends Component {
 
     onChangeFilter(DateFrom, DateTo) {
         const { ListAllAppointments } = this.state;
-        debugger
         if (DateFrom && DateTo) {
-            var filteredData = ListAllAppointments.filter(x => new Date(x.appointment.appointmentDate) >= DateFrom
-                && new Date(x.appointment.appointmentDate) <= DateTo)
+            var Date_From = moment(DateFrom).format();
+            var Date_To = moment(DateTo).format();
 
+            var filteredData = ListAllAppointments.filter(x => {
+                let ap_date = moment(x.appointment.appointmentDate, 'DD.MM.YYYY').format();
+                return ap_date >= Date_From && ap_date <= Date_To
+            })
+
+            this.appointments = filteredData
             this.setState({
-                AllAppointments: filteredData
+                AllAppointments: filteredData,
+                filteredData
             })
         }
         this.setState({
             DateFrom, DateTo,
         })
     }
+
+    // rowClass(data) {
+    //     return {
+    //         "approvedRow": data.isApproved && data.isApproved === "Yes",
+    //         "needApprovalRow": !data.isApproved || data.isApproved === "No",
+    //     }
+    // }
+
+    sortAppointmentDates(e) {
+        this.appointments.sort((a, b) => {
+            let x = moment(a.appointment.appointmentDate, 'DD-MM-YYYY');
+            let y = moment(b.appointment.appointmentDate, 'DD-MM-YYYY');
+            return (x.valueOf() - y.valueOf()) * e.order;
+        })
+        return this.appointments;
+    }
+    sortApprovalDates(e) {
+        this.appointments.sort((a, b) => {
+            let x = moment(a.appointment.approvalDate, 'DD-MM-YYYY');
+            let y = moment(b.appointment.approvalDate, 'DD-MM-YYYY');
+            return (x.valueOf() - y.valueOf()) * e.order;
+        })
+        return this.appointments;
+    }
+
 
     render() {
         const { users, loading, filteredData, AllAppointments } = this.state;
@@ -696,22 +727,21 @@ class RptAppointment extends Component {
                         <h1>Terminliste</h1>
                         <div className="content-section implementation">
                             <DataTable ref={(el) => this.dt = el} onValueChange={filteredData => this.setState({ filteredData })}
-                                header={header} value={AllAppointments}
+                                header={header} value={this.appointments}
                                 // paginator={this.state.isLoading === false} rows={15}
                                 onRowDoubleClick={this.dblClickAppointment} responsive={true}
                                 selection={this.state.selectedAppointment}
                                 onSelectionChange={e => this.setState({ selectedAppointment: e.value })}
                                 resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/
                                 globalFilter={this.state.globalFilter}
-                                sortField="appointment.appointmentDate" sortOrder={-1}
                                 paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                                 dataKey="id"
                                 footerColumnGroup={footerGroup}
                                 style={{ fontSize: 12 }}
                             >
                                 <Column field="appointment.appointmentId" header="Aktenzeichen" sortable={true} />
-                                <Column field="appointment.appointmentDate" header="Termin" sortable={true} style={{ textAlign: 'center' }} />
-                                <Column field="appointment.approvalDate" header="bestätigtes Datum" sortable={true} style={{ textAlign: 'center' }} />
+                                <Column field="appointment.appointmentDate" sortFunction={(e) => this.sortAppointmentDates(e)} header="Termin" sortable={true} style={{ textAlign: 'center' }} />
+                                <Column field="appointment.approvalDate" sortFunction={(e) => this.sortApprovalDates(e)} header="bestätigtes Datum" sortable={true} style={{ textAlign: 'center' }} />
                                 <Column field="appointment.completionDate" header="vollendeter Tag" sortable={true} style={{ textAlign: 'center' }} />
                                 <Column field="appointment.translatorName" header="Dolmetscher/ Übersetzer" sortable={true} />
                                 <Column field="appointment.institutionName" header="Auftraggeber" sortable={true} />

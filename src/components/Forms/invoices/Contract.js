@@ -107,8 +107,8 @@ const PDF_File = (props) => {
                         <Text style={{ marginTop: 15 }}>{Invoice.institutionAddress}</Text>
                         <Text style={{ marginTop: 15 }}>als {Invoice.translatorType} für die Sprache {Invoice.language} eingesetzt.</Text>
                         <Text style={{ marginTop: 15 }}>Bitte melden Sie sich
-                            {/* {Invoice.appointmentDate} */} {moment(Invoice.appointmentDate).locale('de').format('dddd DD MMMM YYYY')} um  {Invoice.appointmentTime} Uhr in Saal {Invoice.roomNumber}.</Text>
-                        <Text style={{ marginTop: 15 }}>Nachdrücklich wird um Einhaltung des Termins gebeten.</Text>
+                            {/* {Invoice.appointmentDate} */} {moment(Invoice.appointmentDate, "DD-MM-YYYY").locale('de').format('dddd DD MMMM YYYY')} um  {Invoice.appointmentTime} Uhr in Saal {Invoice.roomNumber}.</Text>
+                        < Text style={{ marginTop: 15 }}>Nachdrücklich wird um Einhaltung des Termins gebeten.</Text>
                         <Text style={{ marginTop: 15 }}>Ihre Entschädigung erfolgt nach der mit Ihnen getroffenen Vereinbarung</Text>
                         <Text style={{ marginTop: 15 }}>Ich weise Sie darauf hin, dass alle Folgetermine in dieser Sache nur über uns abzurechnen sind.</Text>
                     </View>

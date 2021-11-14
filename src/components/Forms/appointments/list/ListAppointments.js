@@ -106,7 +106,10 @@ class ListAppointments extends Component {
     getAppointmentList() {
         this.service.GetAllIncomplete().then(data => {
             if (data && data !== "" && data.length > 0) {
-                data.forEach(x => x.appointmentDate = moment(x.appointmentDate).format('L'))
+                data.forEach(x => {
+                    x.appointmentDate = moment(x.appointmentDate).format('L')
+                    x.entryDate = moment(x.entryDate).format('L')
+                })
                 this.appointments = data;
                 this.setState({ AllAppointments: data })
             }
@@ -289,7 +292,6 @@ class ListAppointments extends Component {
     EditAppointment() {
         const { selectedAppointmentId, AppointmentId, Type, SelectedTranslatorName, SelectedLanguageName,
             SelectedInstituteName, SelectedAppointmentDate, AttachmentFiles, AppointmentTime, RoomNumber } = this.state
-
         let app = {
             Id: selectedAppointmentId,
             AppointmentId,
@@ -400,6 +402,8 @@ class ListAppointments extends Component {
                 }
             })
 
+            var entry_date = moment(appointment.entryDate, "DD-MM-YYYY").format('L');
+            var app_date = moment(appointment.appointmentDate, "DD-MM-YYYY");
             if (appointment) {
                 this.setState({
                     selectedAppointmentId: appointment.id,
@@ -413,8 +417,8 @@ class ListAppointments extends Component {
                     RoomNumber: appointment.roomNumber,
                     AppointmentTime: appointment.appointmentTime,
                     Status: appointment.status,
-                    EntryDate: new Date(appointment.entryDate).toLocaleDateString(),
-                    SelectedAppointmentDate: new Date(appointment.appointmentDate),
+                    EntryDate: entry_date,
+                    SelectedAppointmentDate: new Date(app_date),
                     langList: LanguageSelection,
                     AttachmentFiles: appointment.attachments
                 })
@@ -596,9 +600,10 @@ class ListAppointments extends Component {
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
                                             <label htmlFor="float-input">Termin <span style={{ color: 'red' }}>*</span></label>
-                                            <DatePicker dateFormat="dd/MM/yyyy" placeholderText="Datum"
+                                            <DatePicker dateFormat="dd.MM.yyyy" placeholderText="Datum"
                                                 selected={this.state.SelectedAppointmentDate}
                                                 onChange={date => this.setAppointmentDate(date)}
+                                                showTimeInput={false} showTimeSelect={false}
                                                 className={this.state.isAppointmentDateValid === true ? "p-inputtext normalbox" : "p-inputtext errorBox"} />
                                         </span>
                                     </div>
@@ -715,7 +720,7 @@ class ListAppointments extends Component {
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
                                             <label htmlFor="float-input">Datum</label>
-                                            <InputText placeholderText="Select Date" value={new Date().toLocaleDateString()} type="text" size="30" disabled={true} />
+                                            <InputText placeholderText="Select Date" value={moment().format('L')} type="text" size="30" disabled={true} />
                                         </span>
                                     </div>
                                 </div>
@@ -734,6 +739,7 @@ class ListAppointments extends Component {
                                             <label htmlFor="float-input">Termin <span style={{ color: 'red' }}>*</span></label>
                                             <DatePicker dateFormat="dd/MM/yyyy" placeholderText="Datum"
                                                 selected={this.state.SelectedAppointmentDate}
+                                                showTimeInput={false} showTimeSelect={false}
                                                 onChange={date => this.setAppointmentDate(date)}
                                                 className={this.state.isAppointmentDateValid === true ? "p-inputtext normalbox" : "p-inputtext errorBox"} />
                                         </span>
@@ -842,15 +848,12 @@ class ListAppointments extends Component {
     }
 
     sortDates(e) {
-        if (e.order != this.state.order) {
-            this.appointments.sort((a, b) => {
-                let x = moment(a.appointmentDate, 'DD-MM-YYYY');
-                let y = moment(b.appointmentDate, 'DD-MM-YYYY');
-                return (x.valueOf() - y.valueOf()) * e.order;
-            })
-            return this.appointments;
-        }
-
+        this.appointments.sort((a, b) => {
+            let x = moment(a.appointmentDate, 'DD-MM-YYYY');
+            let y = moment(b.appointmentDate, 'DD-MM-YYYY');
+            return (x.valueOf() - y.valueOf()) * e.order;
+        })
+        return this.appointments;
     }
     render() {
         var { disableFields, disableDeleteButton, disableApproveButton } = this.state
@@ -914,9 +917,9 @@ class ListAppointments extends Component {
                                 {
                                     <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>
                                         <div style={{ margin: 10 }}>
-                                            <label>Reason: </label>
+                                            <label>Bemerkungen: </label>
                                             <textarea value={this.state.Reason}
-                                                placeholder="Saal/Raum" className="form-control"
+                                                placeholder="Bemerkungen" className="form-control"
                                                 onChange={(e) => this.setState({ Reason: e.target.value })} />
                                         </div>
                                         <Button label="Yes" style={{ width: 100 }} className="p-button-danger" onClick={() => this.onDeleteAppointment()} />
