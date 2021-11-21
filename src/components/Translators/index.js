@@ -92,7 +92,7 @@ class TranslatorList extends Component {
         if (id != undefined && id != null && id != 0) {
             this.userSerivce.DeleteTranslator(id).then(() => {
                 var list = this.state.users.filter(x => x.id !== id)
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Translator Deleted Successfully' });
+                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Dolmetscher erfolgreich entfernt' });
                 this.setState({
                     users: [...list],
                     displayDeleteDialog: false,
@@ -121,7 +121,7 @@ class TranslatorList extends Component {
 
         let user = {
             Email: this.state.email,
-            Type: this.state.type,
+            // Type: this.state.type,
             Language: lngNames,
             CreatedAt: new Date(),
             FirstName: this.state.firstName,
@@ -139,7 +139,7 @@ class TranslatorList extends Component {
             .AddTranslator(user)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Translator Created' });
+                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Dolmetscher erfolgreich erstellt' });
                     var savedUser = data.user;
                     this.setState({
                         users: [...this.state.users, savedUser],
@@ -151,7 +151,7 @@ class TranslatorList extends Component {
                 }
             })
             .catch((error) => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Translator' });
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Dolmetscher hinzufügen' });
                 this.setState({ isLoading: false });
             })
     }
@@ -163,7 +163,7 @@ class TranslatorList extends Component {
         let user = {
             Id: this.state.selectedUserId,
             Email: this.state.email,
-            Type: this.state.type,
+            // Type: this.state.type,
             Language: lngNames,
             FirstName: this.state.firstName,
             LastName: this.state.lastName,
@@ -179,13 +179,13 @@ class TranslatorList extends Component {
             .EditTranslator(user)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Translator Updated' });
+                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Dolmetscher erfolgreich aktualisiert' });
                     var UsersList = this.state.users;
                     var ind = UsersList.findIndex(x => x.id == user.Id);
                     UsersList[ind] = {
                         id: user.Id,
                         email: user.Email,
-                        type: user.Type,
+                        // type: user.Type,
                         firstName: user.FirstName,
                         lastName: user.LastName,
                         contact: user.Contact,
@@ -206,7 +206,7 @@ class TranslatorList extends Component {
                 }
             })
             .catch((error) => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Translator' });
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Dolmetscher aktaulisieren' });
                 this.setState({ isLoading: false });
             })
     }
@@ -223,10 +223,10 @@ class TranslatorList extends Component {
                             error += "Sprache cannot be empty \n";
                         } else { this.setState({ ValidLanguage: true }); }
 
-                        if (this.state.type.trim() === '') {
-                            this.setState({ isTypeValid: false });
-                            error += "Type cannot be empty \n";
-                        } else { this.setState({ isTypeValid: true }); }
+                        // if (this.state.type.trim() === '') {
+                        //     this.setState({ isTypeValid: false });
+                        //     error += "Type cannot be empty \n";
+                        // } else { this.setState({ isTypeValid: true }); }
 
                         if (ValidFirstName == true && ValidLastName == true && ValidEmail == true && error == "") {
                             resolve(true);
@@ -244,7 +244,7 @@ class TranslatorList extends Component {
                     this.saveUser();
                 }
                 else {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Translator' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Dolmetscher hinzufügen' });
                     this.setState({ isLoading: false });
                 }
             });
@@ -258,7 +258,7 @@ class TranslatorList extends Component {
                     this.editUser();
                 }
                 else {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Translator' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Dolmetscher aktaulisieren' });
                     this.setState({ isLoading: false });
                 }
             });
@@ -297,7 +297,7 @@ class TranslatorList extends Component {
             this.setState({
                 selectedUserId: user.id,
                 email: user.email,
-                type: user.type,
+                // type: user.type,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 contact: user.contact,
@@ -369,7 +369,7 @@ class TranslatorList extends Component {
                             >
                                 <Column field="firstName" header="Name" sortable={true} />
                                 <Column field="email" header="E-Mail" sortable={true} />
-                                <Column field="type" header="Typ" sortable={true} />
+                                {/* <Column field="type" header="Typ" sortable={true} /> */}
                                 <Column field="language" header="Sprachen" sortable={true} />
                                 <Column header="Aktion" body={this.actionBodyTemplate}></Column>
                             </DataTable>
@@ -403,7 +403,7 @@ class TranslatorList extends Component {
                                 }
                             </Dialog>
 
-                            <Dialog style={{ width: '50vw' }} visible={this.state.displayCreateDialog} header="Create New Translator"
+                            <Dialog style={{ width: '50vw' }} visible={this.state.displayCreateDialog} header="neuen Dolmetscher hinzufügen"
                                 modal={true} onHide={() => this.setState({ displayCreateDialog: false }, () => this.onReset())}
                                 contentStyle={{ minHeight: "350px", maxHeight: "550px", overflow: "auto" }}>
                                 {
@@ -439,7 +439,7 @@ class TranslatorList extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
-                                                    <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                                                    {/* <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <span className="ui-float-label">
                                                             <label htmlFor="float-input">Typ: <span style={{ color: 'red' }}>*</span></label>
                                                             <div style={this.state.isTypeValid === true ? {} : errorBoxForCheckBox}>
@@ -453,7 +453,7 @@ class TranslatorList extends Component {
                                                                     checked={this.state.type === 'SPRACHEN'} />
                                                             </div>
                                                         </span>
-                                                    </div>
+                                                    </div> */}
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={this.state.ValidLanguage === false ? errorBoxForDDL : normalBoxForDDL}>
                                                         <span className="ui-float-label" >
                                                             <label htmlFor="float-input">Sprache<span style={{ color: 'red' }}>*</span></label>
@@ -576,8 +576,8 @@ class TranslatorList extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="row" style={{ marginBottom: 15 }}>
-                                                    <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <span className="ui-float-label">
+                                                    {/* <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                                                         <span className="ui-float-label">
                                                             <label htmlFor="float-input">Typ: <span style={{ color: 'red' }}>*</span></label>
                                                             <div style={this.state.isTypeValid === true ? {} : errorBoxForCheckBox}>
                                                                 <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">SCHREIBEN</span>
@@ -590,7 +590,7 @@ class TranslatorList extends Component {
                                                                     checked={this.state.type === 'SPRACHEN'} />
                                                             </div>
                                                         </span>
-                                                    </div>
+                                                    </div> */}
                                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                                         <span className="ui-float-label">
                                                             <label htmlFor="float-input">Sprache<span style={{ color: 'red' }}>*</span></label>

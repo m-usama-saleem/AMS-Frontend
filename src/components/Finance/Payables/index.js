@@ -147,7 +147,7 @@ class ListPayables extends Component {
         this.service.Edit(app)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Payable Updated' });
+                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Verbindlichkeiten erfolgreich aktualisiert' });
                     var editedPayable = data.finance;
                     var AllPayables = this.state.AllPayables;
                     var ind = AllPayables.findIndex(x => x.id == editedPayable.id);
@@ -180,7 +180,7 @@ class ListPayables extends Component {
                 }
             })
             .catch((error) => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating payable' });
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim aktualisieren von Verbindlichkeiten' });
                 this.setState({ isLoading: false });
             })
     }
@@ -232,7 +232,7 @@ class ListPayables extends Component {
                 Tax: payable.tax,
                 TicketCost: payable.ticketCost,
                 NetPayment: payable.netPayment,
-
+                InvoiceId: payable.invoiceID,
                 displayEditDialog: true,
             }, () => {
                 this.calculateTotal();
@@ -258,7 +258,7 @@ class ListPayables extends Component {
                 var ind = AllPayables.findIndex(x => x.id == id);
                 AllPayables[ind].status = "bestätigt";
 
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Paybale Paid Successfully' });
+                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Verbindlichkeiten getilgt' });
                 this.setState({
                     AllPayables,
                     displayApproveDialog: false,
@@ -268,7 +268,7 @@ class ListPayables extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayApproveDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error Paying Payable' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler beim Zahlen' });
                 });
         }
     }
@@ -293,7 +293,7 @@ class ListPayables extends Component {
                     AllPayables[ind].status = "bestätigt";
                 });
 
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'All Paybales Paid Successfully' });
+                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Alle Verbindlichkeiten wurden bezahlt' });
                 this.setState({
                     AllPayables,
                     displayMultiApproveDialog: false,
@@ -647,7 +647,6 @@ class ListPayables extends Component {
                                 onSelectionChange={e => this.setState({ selectedPayable: e.value })}
                                 resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/
                                 globalFilter={this.state.globalFilter}
-                                sortField="appointmentDate" sortOrder={1}
                                 paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                                 dataKey="id"
                                 style={{ fontSize: 12 }}
@@ -671,7 +670,7 @@ class ListPayables extends Component {
                                 }
                             </div>
 
-                            <Dialog visible={this.state.displayMultiApproveDialog} width="300px" header="You sure to mark all these Invoices Paid?"
+                            <Dialog visible={this.state.displayMultiApproveDialog} width="300px" header="Sind Sie sicher, alle diese Rechnungen bezahlt zu markieren?"
                                 modal={true} onHide={() => this.setState({ displayMultiApproveDialog: false })}>
                                 {
                                     <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>
@@ -681,7 +680,7 @@ class ListPayables extends Component {
                                 }
                             </Dialog>
 
-                            <Dialog visible={this.state.displayApproveDialog} width="300px" header="You sure to mark this Invoice Paid?"
+                            <Dialog visible={this.state.displayApproveDialog} width="300px" header="Möchten Sie diese Rechnung wirklich als bezahlt markieren?"
                                 modal={true} onHide={() => this.setState({ displayApproveDialog: false })}>
                                 {
                                     <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>

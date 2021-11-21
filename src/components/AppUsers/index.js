@@ -73,7 +73,7 @@ class AppUsers extends Component {
         if (id != undefined && id != null && id != 0) {
             this.userSerivce.DeleteAppUser(id).then(() => {
                 var list = this.state.users.filter(x => x.id !== id)
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'User Deleted Successfully' });
+                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Benutzer erfolgreich entfernt' });
                 this.setState({
                     users: [...list],
                     displayDeleteDialog: false,
@@ -102,7 +102,7 @@ class AppUsers extends Component {
             .AddAppUser(user)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'User Created' });
+                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Benutzer erfolgreich erstellt' });
                     var savedUser = data.user;
                     this.setState({
                         users: [...this.state.users, savedUser],
@@ -114,7 +114,7 @@ class AppUsers extends Component {
                 }
             })
             .catch((error) => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating User' });
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Benutzer erstellen' });
                 this.setState({ isLoading: false });
             })
     }
@@ -133,7 +133,7 @@ class AppUsers extends Component {
             .EditAppUser(user)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'User Updated' });
+                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Benutzer erfolgreich aktualisiert' });
                     var UsersList = this.state.users;
 
                     var ind = UsersList.findIndex(x => x.id == user.Id);
@@ -154,7 +154,7 @@ class AppUsers extends Component {
                 }
             })
             .catch((error) => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating User' });
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Benutzer aktualisieren' });
                 this.setState({ isLoading: false });
             })
     }
@@ -181,7 +181,7 @@ class AppUsers extends Component {
                     this.saveUser();
                 }
                 else {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating User' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Benutzer erstellen' });
                     this.setState({ isLoading: false });
                 }
             });
@@ -195,7 +195,7 @@ class AppUsers extends Component {
                     this.editUser();
                 }
                 else {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating User' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Benutzer aktualisieren' });
                     this.setState({ isLoading: false });
                 }
             });

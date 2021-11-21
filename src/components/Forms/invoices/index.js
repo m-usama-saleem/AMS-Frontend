@@ -32,6 +32,7 @@ export default class ShowReport extends Component {
 
     getReport() {
         if (this.state.Invoice) {
+            debugger
             if (this.state.Invoice.appointmentType === "SPRACHEN") {
                 return (
                     <div style={{ width: '100%', height: '85vh' }}>

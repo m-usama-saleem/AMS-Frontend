@@ -37,7 +37,8 @@ export default class TranslatorInvoice extends Component {
         }
     }
     componentDidMount() {
-        if (this.props && this.props.location && this.props.Invoice) {
+        debugger
+        if (this.props && this.props.Invoice) {
             const { wordCount, tax, rate, flatRate, postage, paragraph } = this.props.Invoice;
             var Lines = wordCount / CommonValues.WordsPerLine * rate;
             var TotalFlatRate = flatRate * CommonValues.FlatRateCost;
@@ -63,7 +64,6 @@ export default class TranslatorInvoice extends Component {
 
     render() {
         const { Invoice } = this.state;
-
         return (
             this.state.ready &&
             <PDFViewer style={{ width: '100%', height: '100%' }}>
@@ -116,7 +116,7 @@ const PDF_File = (props) => {
                         </View>
                         <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                             <Text style={{ fontWeight: 'bold' }}>Rechnungsnummer</Text>
-                            <Text>Will be provided</Text>
+                            <Text>{Invoice.invoiceID}</Text>
                         </View>
                         <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                             <Text>Datum</Text>
@@ -138,7 +138,7 @@ const PDF_File = (props) => {
                     }}>
                         <View style={[tableRow, { marginTop: 10 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Zeilen</Text>
-                            <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.wordCount / CommonValues.WordsPerLine} Zeilen x</Text>
+                            <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{parseFloat(Invoice.wordCount / CommonValues.WordsPerLine).toFixed(2)} Zeilen x</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>1,95 €</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>1,95 €</Text>
                         </View>

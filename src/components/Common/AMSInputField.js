@@ -129,6 +129,17 @@ export default class AMSInputField extends Component {
                             size="30" onChange={(e) => { this.onChange(e) }} />
                     </span>
                 );
+            case "text-area":
+                return (
+                    <span className="ui-float-label">
+                        <label htmlFor="float-input">{Label} {required} </label>
+                        <textarea className="form-control" id={id} value={Value != null ? Value : this.state.val} type={Type}
+                            style={this.state.isValid === false ? errorBox : normalBox}
+                            onBlur={() => this.checkForValidation()} disabled={Disabled} readOnly={ReadOnly}
+                            placeholder={PlaceholderText}
+                            size="30" onChange={(e) => { this.onChange(e) }} />
+                    </span>
+                );
             case "ddl_select":
                 return (
                     <div style={this.state.isValid === false ? errorBoxForDDL : normalBoxForDDL}>

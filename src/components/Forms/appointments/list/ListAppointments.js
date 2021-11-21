@@ -195,7 +195,7 @@ class ListAppointments extends Component {
                     this.SaveAppointment();
                 }
                 else {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Appointment' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Auftrag erstellen' });
                     this.setState({ isLoading: false });
                 }
             });
@@ -203,13 +203,14 @@ class ListAppointments extends Component {
     }
 
     SaveAppointment() {
-        const { AppointmentId, Type, SelectedTranslatorName, SelectedInstituteName,
+        const { AppointmentId, Type, SelectedTranslatorName, SelectedInstituteName, Remarks,
             SelectedLanguageName, SelectedAppointmentDate, AppointmentTime, RoomNumber } = this.state
         let app = {
             AppointmentId,
             Type,
             AppointmentTime,
             RoomNumber,
+            Remarks,
             EntryDate: new Date(),
             TranslatorId: SelectedTranslatorName.value,
             TranslatorName: SelectedTranslatorName.label,
@@ -237,7 +238,7 @@ class ListAppointments extends Component {
                 this.service.Add(app)
                     .then((data) => {
                         if (data.success == true) {
-                            this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Created' });
+                            this.growl.show({ severity: 'success', summary: 'Success', detail: 'Termin erfolgreich erstellt' });
                             this.setState({
                                 isLoading: false,
                                 displayCreateDialog: false
@@ -248,7 +249,7 @@ class ListAppointments extends Component {
                         }
                     })
                     .catch((error) => {
-                        this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Appointment' });
+                        this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Auftrag erstellen' });
                         this.setState({ isLoading: false });
                     })
             })
@@ -257,7 +258,7 @@ class ListAppointments extends Component {
             this.service.Add(app)
                 .then((data) => {
                     if (data.success == true) {
-                        this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Created' });
+                        this.growl.show({ severity: 'success', summary: 'Success', detail: 'Termin erfolgreich erstellt' });
                         this.setState({
                             isLoading: false,
                             displayCreateDialog: false
@@ -268,7 +269,7 @@ class ListAppointments extends Component {
                     }
                 })
                 .catch((error) => {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while creating Appointment' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Auftrag erstellen' });
                     this.setState({ isLoading: false });
                 })
         }
@@ -282,7 +283,7 @@ class ListAppointments extends Component {
                     this.EditAppointment();
                 }
                 else {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while editing Appointment' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Auftrag aktualisieren' });
                     this.setState({ isLoading: false });
                 }
             })
@@ -290,7 +291,7 @@ class ListAppointments extends Component {
     }
 
     EditAppointment() {
-        const { selectedAppointmentId, AppointmentId, Type, SelectedTranslatorName, SelectedLanguageName,
+        const { selectedAppointmentId, AppointmentId, Type, SelectedTranslatorName, SelectedLanguageName, Remarks,
             SelectedInstituteName, SelectedAppointmentDate, AttachmentFiles, AppointmentTime, RoomNumber } = this.state
         let app = {
             Id: selectedAppointmentId,
@@ -298,6 +299,7 @@ class ListAppointments extends Component {
             Type,
             RoomNumber,
             AppointmentTime,
+            Remarks,
             EntryDate: new Date(),
             TranslatorId: SelectedTranslatorName.value,
             TranslatorName: SelectedTranslatorName.label,
@@ -325,7 +327,7 @@ class ListAppointments extends Component {
                 this.service.Edit(app)
                     .then((data) => {
                         if (data.success == true) {
-                            this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Updated' });
+                            this.growl.show({ severity: 'success', summary: 'Success', detail: 'Termin erfolgreich aktualisiert' });
 
                             this.setState({
                                 isLoading: false,
@@ -337,7 +339,7 @@ class ListAppointments extends Component {
                         }
                     })
                     .catch((error) => {
-                        this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Appointment' });
+                        this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Auftrag aktualisieren' });
                         this.setState({ isLoading: false });
                     })
             });
@@ -348,7 +350,7 @@ class ListAppointments extends Component {
             this.service.Edit(app)
                 .then((data) => {
                     if (data.success == true) {
-                        this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Updated' });
+                        this.growl.show({ severity: 'success', summary: 'Success', detail: 'Termin erfolgreich aktualisiert' });
                         this.setState({
                             isLoading: false,
                             displayEditDialog: false
@@ -359,7 +361,7 @@ class ListAppointments extends Component {
                     }
                 })
                 .catch((error) => {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Appointment' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Auftrag aktualisieren' });
                     this.setState({ isLoading: false });
                 })
         }
@@ -404,6 +406,7 @@ class ListAppointments extends Component {
 
             var entry_date = moment(appointment.entryDate, "DD-MM-YYYY").format('L');
             var app_date = moment(appointment.appointmentDate, "DD-MM-YYYY");
+            debugger
             if (appointment) {
                 this.setState({
                     selectedAppointmentId: appointment.id,
@@ -420,7 +423,9 @@ class ListAppointments extends Component {
                     EntryDate: entry_date,
                     SelectedAppointmentDate: new Date(app_date),
                     langList: LanguageSelection,
-                    AttachmentFiles: appointment.attachments
+                    AttachmentFiles: appointment.attachments,
+                    Remarks: appointment.remarks,
+                    InvoiceID: appointment.invoiceID
                 })
             }
         })
@@ -452,7 +457,7 @@ class ListAppointments extends Component {
                 var ind = AllAppointments.findIndex(x => x.id == id);
                 AllAppointments[ind].status = "bestätigt";
 
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Approved Successfully' });
+                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Termin erfolgreich genehmigt' });
                 this.setState({
                     AllAppointments,
                     displayApproveDialog: false,
@@ -467,7 +472,7 @@ class ListAppointments extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayApproveDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error Approving Appointment' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler beim Genehmigen des Termins' });
                 });
         }
     }
@@ -479,7 +484,7 @@ class ListAppointments extends Component {
         if (id != undefined && id != null && id != 0) {
             this.service.Delete({ id, text, userId }).then(() => {
                 var list = this.state.AllAppointments.filter(x => x.id !== id)
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Appointment Deleted Successfully' });
+                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Termin erfolgreich entfernt' });
                 this.setState({
                     AllAppointments: [...list],
                     displayDeleteDialog: false,
@@ -489,7 +494,7 @@ class ListAppointments extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayDeleteDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error Deleting Appointment' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler beim Löschen des Termins' });
                 });
         }
     }
@@ -497,7 +502,7 @@ class ListAppointments extends Component {
     actionBodyTemplate(rowData) {
         var DisableApproveButton = false;
         var DisableEditButton = false;
-        if (rowData.status === "bestätigt" || rowData.status === "teilweise abgeschlossen") {
+        if (rowData.status !== "Ausstehend") {
             DisableApproveButton = true
         }
         if (rowData.status === "teilweise abgeschlossen") {
@@ -509,7 +514,7 @@ class ListAppointments extends Component {
                 <Button icon="pi pi-file" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-secondary p-mr-2"
                     onClick={() => this.viewInvoice(rowData)} title="Rechnung ansehen" />
                 <Button icon="pi pi-check" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-info p-mr-2"
-                    onClick={() => this.confirmApproveAppointment(rowData)} title="Approve" disabled={DisableApproveButton} />
+                    onClick={() => this.confirmApproveAppointment(rowData)} title="bestätigen" disabled={DisableApproveButton} />
                 <Button icon="pi pi-pencil" style={{ float: 'right', marginLeft: 10 }} className="p-button-rounded p-button-success p-mr-2"
                     onClick={() => this.editMode(rowData)} title="Bearbeiten" disabled={DisableEditButton} />
                 <Button icon="pi pi-trash" style={{ float: 'right' }} className="p-button-rounded p-button-danger"
@@ -655,7 +660,16 @@ class ListAppointments extends Component {
                                             </div>
                                         </span>
                                     </div>
-                                    <div className=" p-col-12 p-sm-12 p-md-6 p-lg-6" style={{ marginBottom: 20 }}>
+                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                                        <AMSInputField Label="Remarks" Type="text-area"
+                                            Value={this.state.Remarks} PlaceholderText="Remarks"
+                                            onChange={(val) => this.setState({ Remarks: val })}
+                                            ChangeIsValid={(val) => { }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <span className="ui-float-label">
                                             <label htmlFor="float-input">Anhänge</label>
                                             <div>
@@ -792,7 +806,16 @@ class ListAppointments extends Component {
                                             </div>
                                         </span>
                                     </div>
-                                    <div className=" p-col-12 p-sm-12 p-md-6 p-lg-6" style={{ marginBottom: 20 }}>
+                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                                        <AMSInputField Label="Remarks" Type="text-area"
+                                            Value={this.state.Remarks} PlaceholderText="Remarks"
+                                            onChange={(val) => this.setState({ Remarks: val })}
+                                            ChangeIsValid={(val) => { }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
                                         <span className="ui-float-label">
                                             <label htmlFor="float-input">Anhänge</label>
                                             <div>
@@ -912,7 +935,7 @@ class ListAppointments extends Component {
                                 }
                             </div>
 
-                            <Dialog visible={this.state.displayDeleteDialog} width="400px" header="You sure to delete this Appointment?"
+                            <Dialog visible={this.state.displayDeleteDialog} width="400px" header="Möchten Sie diesen Termin wirklich löschen?"
                                 modal={true} onHide={() => this.setState({ displayDeleteDialog: false })}>
                                 {
                                     <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>
@@ -928,7 +951,7 @@ class ListAppointments extends Component {
                                 }
                             </Dialog>
 
-                            <Dialog visible={this.state.displayApproveDialog} width="300px" header="You sure to Approve this Appointment?"
+                            <Dialog visible={this.state.displayApproveDialog} width="300px" header="Sind Sie sicher, dass Sie diesen Termin genehmigen?"
                                 modal={true} onHide={() => this.setState({ displayApproveDialog: false })}>
                                 {
                                     <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>

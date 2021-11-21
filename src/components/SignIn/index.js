@@ -57,6 +57,7 @@ class SignInFormBase extends Component {
                 type="text"
                 placeholder="Anmeldung"
                 autocomplete="off"
+                autoFocus={true}
               />
             </div>
             <div className="input-wrapper">

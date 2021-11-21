@@ -37,7 +37,7 @@ export default class TranslatorInvoiceSpeaking extends Component {
         }
     }
     componentDidMount() {
-        if (this.props && this.props && this.props.Invoice) {
+        if (this.props && this.props.Invoice) {
 
             const { totalHours, tax, rideCost, ticketCost, dailyAllowance } = this.props.Invoice;
 
@@ -62,9 +62,6 @@ export default class TranslatorInvoiceSpeaking extends Component {
     }
 
     render() {
-        const { Invoice } = this.state;
-
-
         return (
             this.state.ready && <PDFViewer style={{ width: '100%', height: '100%' }}>
                 <PDF_File Invoice={this.state.Invoice} />
@@ -117,7 +114,7 @@ const PDF_File = (props) => {
                         </View>
                         <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                             <Text>Rechnungsnummer</Text>
-                            <Text>Will be provided</Text>
+                            <Text>{Invoice.invoiceID}</Text>
                         </View>
                         <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                             <Text>Datum</Text>

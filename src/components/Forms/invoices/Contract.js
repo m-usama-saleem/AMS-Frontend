@@ -53,9 +53,7 @@ export default class TranslatorContract extends Component {
     }
 
     render() {
-        const { Invoice } = this.state;
-
-
+        debugger
         return (
             this.state.ready && <PDFViewer style={{ width: '100%', height: '100%' }}>
                 <PDF_File Invoice={this.state.Invoice} />
@@ -114,12 +112,23 @@ const PDF_File = (props) => {
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 90 }}>
                         <Text>mit freundlichen Grüßen</Text>
+                        <Text style={{ marginTop: 10 }}>A. Qureshi</Text>
                     </View>
-                    <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 20 }}>
-                        <Text>i. A. Huzaifa A. Sagri</Text>
-                        <Text>Anlage: Beleg für die Auszahlung der Vergütung von Dolmetschern</Text>
+                    <View style={{
+                        display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 20, alignItems: 'center'
+                    }}>
+                        <Text style={{
+                            textAlign: 'center', width: '80%', height: '100%'
+                        }}>{Invoice.remarks}</Text>
                     </View>
-                    <View style={{ marginTop: 180 }}>
+
+                    <View style={{ marginTop: 150, fontSize: 10 }}>
+                        <Text style={{}}>
+                            Nehmen Sie bitte die Kassenanweisung/Einsatzbestätigung (Bitte keine Eintragungen darin
+                            vornehmen) mit nach Hause und schicken Sie mir diese per Post zu!
+                        </Text>
+                    </View>
+                    <View style={{ marginTop: 10 }}>
                         <Text style={{ color: 'blue' }}>__________________________________________________</Text>
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'row', marginTop: 10 }}>

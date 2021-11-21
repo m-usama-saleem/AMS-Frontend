@@ -149,7 +149,7 @@ class ListReceivables extends Component {
         this.service.Edit(app)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Receivable Updated' });
+                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Forderungen erfolgreich aktualisiert' });
                     var AllReceivables = this.state.AllReceivables;
                     var editedReceivable = data.finance;
                     var ind = AllReceivables.findIndex(x => x.id == editedReceivable.id);
@@ -169,7 +169,7 @@ class ListReceivables extends Component {
                 }
             })
             .catch((error) => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error: while updating Receivable' });
+                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim aktualisieren von Forderungen' });
                 this.setState({ isLoading: false });
             })
     }
@@ -233,7 +233,7 @@ class ListReceivables extends Component {
                 var ind = AllReceivables.findIndex(x => x.id == id);
                 AllReceivables[ind].status = "bestätigt";
 
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Received Successfully' });
+                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Forderungen erhalten' });
                 this.setState({
                     AllReceivables,
                     displayApproveDialog: false,
@@ -243,7 +243,7 @@ class ListReceivables extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayApproveDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error Receiving' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler beim Erhalten' });
                 });
         }
     }
@@ -269,7 +269,7 @@ class ListReceivables extends Component {
                     AllReceivables[ind].status = "bestätigt";
                 });
 
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'All Received Successfully' });
+                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Alle Forderungen erhalten' });
                 this.setState({
                     AllReceivables,
                     displayMultiApproveDialog: false,
@@ -279,7 +279,7 @@ class ListReceivables extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayMultiApproveDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error Receiving' });
+                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler beim Erhalten' });
                 });
         }
     }
@@ -397,7 +397,6 @@ class ListReceivables extends Component {
                                 onSelectionChange={e => this.setState({ selectedReceivable: e.value })}
                                 resizableColumns={true} columnResizeMode="fit" /*rowClassName={this.rowClass}*/
                                 globalFilter={this.state.globalFilter}
-                                sortField="appointmentDate" sortOrder={1}
                                 paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                                 dataKey="id"
                                 style={{ fontSize: 12 }}
@@ -421,7 +420,7 @@ class ListReceivables extends Component {
                                 }
                             </div>
 
-                            <Dialog visible={this.state.displayApproveDialog} width="300px" header="You sure to mark this Invoice Received?"
+                            <Dialog visible={this.state.displayApproveDialog} width="300px" header="Möchten Sie diese Rechnung wirklich als erhalten markieren?"
                                 modal={true} onHide={() => this.setState({ displayApproveDialog: false })}>
                                 {
                                     <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>
@@ -431,7 +430,7 @@ class ListReceivables extends Component {
                                 }
                             </Dialog>
 
-                            <Dialog visible={this.state.displayMultiApproveDialog} width="300px" header="You sure to mark all these Invoices Received?"
+                            <Dialog visible={this.state.displayMultiApproveDialog} width="300px" header="Sind Sie sicher, dass Sie alle diese Rechnungen als erhalten markieren?"
                                 modal={true} onHide={() => this.setState({ displayMultiApproveDialog: false })}>
                                 {
                                     <div className="ui-dialog-buttonpane p-clearfix" style={{ textAlign: 'center' }}>

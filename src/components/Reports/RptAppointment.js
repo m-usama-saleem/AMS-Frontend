@@ -92,17 +92,20 @@ class RptAppointment extends Component {
                     x.payable.appointmentDate = moment(x.payable.appointmentDate).format('L')
                     x.receivable.appointmentDate = moment(x.receivable.appointmentDate).format('L')
 
+                    if (new Date(x.appointment.deletedDate).toLocaleDateString() == "1/1/1")
+                        x.appointment.deletedDate = ""
+                    else
+                        x.appointment.deletedDate = moment(x.appointment.deletedDate).format('L')
+
                     if (new Date(x.appointment.approvalDate).toLocaleDateString() == "1/1/1")
                         x.appointment.approvalDate = ""
                     else
                         x.appointment.approvalDate = moment(x.appointment.approvalDate).format('L')
-                    // x.appointment.approvalDate = new Date(x.appointment.approvalDate).toLocaleDateString()
 
                     if (new Date(x.appointment.completionDate).toLocaleDateString() == "1/1/1")
                         x.appointment.completionDate = ""
                     else
                         x.appointment.completionDate = moment(x.appointment.completionDate).format('L')
-                    // x.appointment.completionDate = new Date(x.appointment.completionDate).toLocaleDateString()
 
                 })
                 this.appointments = data;
@@ -163,6 +166,8 @@ class RptAppointment extends Component {
                 SelectedAppointmentDate: app_date,
                 displayEditDialog: true,
                 langList: LanguageSelection,
+                DeletedReason: appointment.deletedReason,
+                DeletedDate: appointment.deletedDate,
                 AttachmentFiles: appointment.attachments
             })
         }
@@ -191,7 +196,7 @@ class RptAppointment extends Component {
         }
 
         return (
-            <Dialog visible={this.state.displayEditDialog} style={{ width: '60vw' }} header="Termin Informationen"
+            <Dialog visible={this.state.displayEditDialog} style={{ width: '60vw' }} header="Termindetails"
                 modal={true} onHide={() => this.setState({ displayEditDialog: false }, () => this.onReset())}
                 contentStyle={{ maxHeight: "550px", overflow: "auto" }}>
                 {
@@ -250,6 +255,22 @@ class RptAppointment extends Component {
                                                 {AppointmentType}
                                             </div>
                                         </span>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                                        <span className="ui-float-label">
+                                            <AMSInputField Label="Gelöschtes Datum" Type="text" ReadOnly={true}
+                                                Value={this.state.DeletedDate}
+                                                ChangeIsValid={(val) => { }}
+                                            />
+                                        </span>
+                                    </div>
+                                    <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
+                                        <label htmlFor="float-input">Grund:</label>
+                                        <textarea className="form-control" readOnly={true}
+                                            value={this.state.DeletedReason ? this.state.DeletedReason : ""}
+                                        />
                                     </div>
                                 </div>
                                 <div className=" p-col-12 p-sm-12 p-md-6 p-lg-6" style={{ marginBottom: 20 }}>
@@ -453,7 +474,7 @@ class RptAppointment extends Component {
                 <Button icon="fa fa-file-archive-o" className="p-button-rounded p-button-secondary "
                     onClick={() => this.viewReceivable(rowData.receivable)} title="Informationen zu Forderungen" />
                 <Button icon="fa fa-tags" style={{ marginLeft: 5 }} className="p-button-rounded p-button-secondary"
-                    onClick={() => this.viewPayable(rowData.payable)} title="Payable Information" />
+                    onClick={() => this.viewPayable(rowData.payable)} title="Zahlungsinformationen" />
             </React.Fragment>
         );
     }
@@ -479,7 +500,7 @@ class RptAppointment extends Component {
                 {
                     <div className="p-grid p-fluid">
                         <div className="card card-w-title">
-                            <h1>Payable Information</h1>
+                            <h1>Zahlungsinformationen</h1>
                             <div className="p-grid" >
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
