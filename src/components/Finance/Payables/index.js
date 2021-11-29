@@ -355,7 +355,7 @@ class ListPayables extends Component {
 
     calculateHours() {
         const { StartOfTheTrip, EndOfTheTrip } = this.state;
-        if (StartOfTheTrip.length == 5 && EndOfTheTrip.length == 5) {
+        if (StartOfTheTrip && StartOfTheTrip.length == 5 && EndOfTheTrip && EndOfTheTrip.length == 5) {
             //create date format
             if (!isNaN(Date.parse(new Date("01/01/2021 " + StartOfTheTrip)))
                 && !isNaN(Date.parse(new Date("01/01/2021 " + EndOfTheTrip)))) {
