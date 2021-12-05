@@ -59,7 +59,7 @@ export default class TranslatorInvoice extends Component {
             this.props.Invoice.netPayment = NetPayment.toFixed(2);
             this.props.Invoice.rate = InvoiceRate;
             this.props.Invoice.wordRate = WordRate;
-            this.props.Invoice.wordRateTotal = WordRate * InvoiceRate;
+            this.props.Invoice.wordRateTotal = (WordRate * InvoiceRate).toFixed(2);
 
             this.setState({ Invoice: this.props.Invoice })
         }
@@ -149,13 +149,13 @@ const PDF_File = (props) => {
                         <View style={[tableRow, { marginTop: 15 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Pauschale</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.flatRate} x</Text>
-                            <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{CommonValues.FlatRateCost} €</Text>
+                            <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{CommonValues.FlatRateCost.toFixed(2)} €</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalFlatRate} €</Text>
                         </View>
                         <View style={[tableRow, { marginTop: 15 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>§7Abs 2</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.paragraph} Seiten x</Text>
-                            <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{CommonValues.ParagraphCost} €</Text>
+                            <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{CommonValues.ParagraphCost.toFixed(2)} €</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalParagraph} €</Text>
                         </View>
                         <View style={[tableRow, { marginTop: 15 }]}>
