@@ -62,7 +62,7 @@ class RptAppointment extends Component {
             { field: 'appointment.institutionName', header: 'Institution' },
             { field: 'appointment.type', header: 'Typ' },
             { field: 'appointment.status', header: 'Status' },
-            { field: 'payable.netPayment', header: 'Netto Betrag' },
+            { field: 'payable.netPayment', header: 'Insgesamt' },
             { field: 'receivable.netPayment', header: 'Forderungsbetrag' }
         ];
         this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
@@ -538,7 +538,7 @@ class RptAppointment extends Component {
                                 <hr style={{ lineHeight: 5, borderColor: 'black' }}></hr>
                                 <div className="row">
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <AMSInputField Label="Insgesamt" PlaceholderText="Insgesamt" Type="number"
+                                        <AMSInputField Label="Netto Betrag" PlaceholderText="Netto Betrag" Type="number"
                                             Value={this.state.SubTotal} ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
@@ -552,7 +552,7 @@ class RptAppointment extends Component {
                                 <hr style={{ lineHeight: 5, borderColor: 'black' }}></hr>
                                 <div className="row">
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
-                                        <AMSInputField Label="Netto Betrag" PlaceholderText="Netto Betrag" Type="number"
+                                        <AMSInputField Label="Insgesamt" PlaceholderText="Insgesamt" Type="number"
                                             Value={this.state.NetPayment} ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
@@ -608,7 +608,7 @@ class RptAppointment extends Component {
                                 <hr style={{ lineHeight: 5, borderColor: 'black' }}></hr>
                                 <div className="row">
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <AMSInputField Label="Insgesamt" PlaceholderText="Insgesamt" Type="number"
+                                        <AMSInputField Label="Netto Betrag" PlaceholderText="Netto Betrag" Type="number"
                                             Value={this.state.SubTotal} onChange={(val) => this.setState({ SubTotal: val }, () => this.calculateTotal())}
                                             ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
@@ -623,7 +623,7 @@ class RptAppointment extends Component {
                                 <hr style={{ lineHeight: 5, borderColor: 'black' }}></hr>
                                 <div className="row">
                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
-                                        <AMSInputField Label="Netto Betrag" PlaceholderText="Netto Betrag" Type="number"
+                                        <AMSInputField Label="Insgesamt" PlaceholderText="Insgesamt" Type="number"
                                             Value={this.state.NetPayment} ChangeIsValid={(val) => { }} ReadOnly={true}
                                         />
                                     </div>
@@ -768,7 +768,7 @@ class RptAppointment extends Component {
                                 <Column field="appointment.institutionName" header="Auftraggeber" sortable={true} />
                                 <Column field="appointment.type" header="Typ" sortable={true} />
                                 <Column field="appointment.status" header="Status" sortable={true} />
-                                <Column field="payable.netPayment" header="Netto Betrag" sortable={true} />
+                                <Column field="payable.netPayment" header="Insgesamt" sortable={true} />
                                 <Column field="receivable.netPayment" header="Forderungsbetrag" sortable={true} />
                                 <Column header="Aktion" body={this.actionBodyTemplate} ></Column>
                             </DataTable>

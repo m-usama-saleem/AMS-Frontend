@@ -362,7 +362,7 @@ class ListReceivables extends Component {
 
         if (Status == "Ausstehend") {
             UpdateReceivableButton = <span className="ui-float-label" style={{ float: 'right' }}>
-                <Button label="Update Receivable" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditReceivable()} />
+                <Button label="Forderungen aktualisieren" className="ui-btns" disabled={this.state.isLoading} onClick={() => this.onEditReceivable()} />
             </span>
         }
 
@@ -383,7 +383,7 @@ class ListReceivables extends Component {
                 <Toast ref={(el) => this.growl = el} />
                 <div className="p-grid p-fluid" >
                     <div className="card card-w-title">
-                        <h1>Receivables List</h1>
+                        <h1>Liste der Forderungen</h1>
                         <div className="p-grid" style={{ marginTop: '8px' }} ></div>
                         <div className="content-section implementation">
                             <DataTable ref={(el) => this.dt = el}
