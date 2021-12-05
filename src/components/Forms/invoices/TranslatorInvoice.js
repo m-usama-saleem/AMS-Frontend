@@ -37,14 +37,14 @@ export default class TranslatorInvoice extends Component {
         }
     }
     componentDidMount() {
-        debugger
         if (this.props && this.props.Invoice) {
             const { wordCount, tax, rate, flatRate, postage, paragraph } = this.props.Invoice;
             var Lines = wordCount / CommonValues.WordsPerLine * rate;
             var TotalFlatRate = flatRate * CommonValues.FlatRateCost;
             var TotalPostage = postage * CommonValues.PostageCost;
             var TotalParagraph = paragraph * CommonValues.ParagraphCost;
-
+            var InvoiceRate = parseFloat(rate) != 0 ? parseFloat(rate).toFixed(2) : CommonValues.RateCost.toFixed(2);
+            var WordRate = parseFloat(wordCount / CommonValues.WordsPerLine).toFixed(2);
             var SubTotal = Lines + TotalFlatRate + TotalPostage + TotalParagraph;
             var TotalTax = SubTotal * (tax / 100);
             var NetPayment = SubTotal + TotalTax
@@ -56,6 +56,10 @@ export default class TranslatorInvoice extends Component {
             this.props.Invoice.subTotal = SubTotal.toFixed(2);
             this.props.Invoice.totalTax = TotalTax.toFixed(2);
             this.props.Invoice.netPayment = NetPayment.toFixed(2);
+            this.props.Invoice.netPayment = NetPayment.toFixed(2);
+            this.props.Invoice.rate = InvoiceRate;
+            this.props.Invoice.wordRate = WordRate;
+            this.props.Invoice.wordRateTotal = WordRate * InvoiceRate;
 
             this.setState({ Invoice: this.props.Invoice })
         }
@@ -136,25 +140,25 @@ const PDF_File = (props) => {
                     <View style={{
                         display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10
                     }}>
-                        <View style={[tableRow, { marginTop: 10 }]}>
+                        <View style={[tableRow, { marginTop: 15 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Zeilen</Text>
-                            <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{parseFloat(Invoice.wordCount / CommonValues.WordsPerLine).toFixed(2)} Zeilen x</Text>
-                            <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>1,95 €</Text>
-                            <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>1,95 €</Text>
+                            <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.wordRate} Zeilen x</Text>
+                            <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.rate} €</Text>
+                            <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.wordRateTotal} €</Text>
                         </View>
-                        <View style={[tableRow, { marginTop: 10 }]}>
+                        <View style={[tableRow, { marginTop: 15 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Pauschale</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.flatRate} x</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{CommonValues.FlatRateCost} €</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalFlatRate} €</Text>
                         </View>
-                        <View style={[tableRow, { marginTop: 10 }]}>
+                        <View style={[tableRow, { marginTop: 15 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>§7Abs 2</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.paragraph} Seiten x</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{CommonValues.ParagraphCost} €</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalParagraph} €</Text>
                         </View>
-                        <View style={[tableRow, { marginTop: 10 }]}>
+                        <View style={[tableRow, { marginTop: 15 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Porto</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.postage}       x</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{CommonValues.PostageCost} €</Text>
@@ -169,7 +173,7 @@ const PDF_File = (props) => {
                             <Text style={{ display: 'flex', flex: 1 }}></Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.subTotal} €</Text>
                         </View>
-                        <View style={[tableRow, { marginTop: 10 }]}>
+                        <View style={[tableRow, { marginTop: 15 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>zzgl. MwSt. ({Invoice.tax}%):</Text>
                             <Text style={{ display: 'flex', flex: 1 }}></Text>
                             <Text style={{ display: 'flex', flex: 1 }}></Text>

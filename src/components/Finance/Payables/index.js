@@ -55,7 +55,7 @@ class ListPayables extends Component {
             { field: 'appointmentType', header: 'Typ' },
             { field: 'appointmentInstitute', header: 'Auftraggeber' },
             { field: 'appointmentTranslator', header: 'Dolmetscher/ Übersetzer' },
-            { field: 'netPayment', header: 'Netto Betrag' },
+            { field: 'netPayment', header: 'Insgesamt' },
             { field: 'status', header: 'Status' },
         ];
         this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
@@ -224,7 +224,7 @@ class ListPayables extends Component {
                 Postage: payable.postage,
                 Paragraph: payable.paragraph,
                 FlatRate: payable.flatRate,
-                Rate: payable.rate,
+                Rate: payable.rate != 0 ? payable.rate : CommonValues.RateCost,
                 Hours: payable.hours,
                 Discount: payable.discount,
                 RideDistance: payable.rideCost,
@@ -528,16 +528,16 @@ class ListPayables extends Component {
     getWritingFields() {
         return (
             <div>
-                <h3 style={{ borderBottomStyle: 'solid', borderBottomWidth: 2, borderColor: 'black' }}>Calculations</h3>
+                <h3 style={{ borderBottomStyle: 'solid', borderBottomWidth: 2, borderColor: 'black' }}>Berechnung</h3>
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Word Count" PlaceholderText="Word Count" Type="number"
+                        <AMSInputField Label="Zeilen" PlaceholderText="Zeilen" Type="number"
                             Value={this.state.WordCount} onChange={(val) => this.setState({ WordCount: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => this.setState({ ValidWordCount: val })}
                         />
                     </div>
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Rate" PlaceholderText="Rate" Type="number"
+                        <AMSInputField Label="Zeilenpreis" PlaceholderText="Zeilenpreis" Type="number"
                             Value={this.state.Rate} onChange={(val) => this.setState({ Rate: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => this.setState({ ValidRate: val })}
                         />
@@ -545,13 +545,13 @@ class ListPayables extends Component {
                 </div>
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Flat Rate" PlaceholderText="Flat Rate" Type="number"
+                        <AMSInputField Label="Pauschale" PlaceholderText="Pauschale" Type="number"
                             Value={this.state.FlatRate} onChange={(val) => this.setState({ FlatRate: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => this.setState({ ValidFlatRate: val })}
                         />
                     </div>
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Paragraph" PlaceholderText="Paragraph" Type="number"
+                        <AMSInputField Label="§7Abs 2 " PlaceholderText="§7Abs 2 " Type="number"
                             Value={this.state.Paragraph} onChange={(val) => this.setState({ Paragraph: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => this.setState({ ValidParagraph: val })}
                         />
@@ -559,7 +559,7 @@ class ListPayables extends Component {
                 </div>
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Postage" PlaceholderText="Postage" Type="number"
+                        <AMSInputField Label="Porto" PlaceholderText="Porto" Type="number"
                             Value={this.state.Postage} onChange={(val) => this.setState({ Postage: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => this.setState({ ValidPostage: val })}
                         />
@@ -655,7 +655,7 @@ class ListPayables extends Component {
                                 <Column field="appointmentType" header="Typ" sortable={true} />
                                 <Column field="appointmentInstitute" header="Auftraggeber" sortable={true} />
                                 <Column field="appointmentTranslator" header="Dolmetscher/ Übersetzer" sortable={true} />
-                                <Column field="netPayment" header="Netto Betrag" sortable={true} />
+                                <Column field="netPayment" header="Insgesamt" sortable={true} />
                                 <Column field="status" header="Status" sortable={true} />
                                 <Column header="Aktion" body={this.actionBodyTemplate}></Column>
                             </DataTable>
@@ -734,7 +734,7 @@ class ListPayables extends Component {
                                                 <hr style={{ lineHeight: 5, borderColor: 'black' }}></hr>
                                                 <div className="row">
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Insgesamt" PlaceholderText="Insgesamt" Type="number"
+                                                        <AMSInputField Label="Netto Betrag" PlaceholderText="Netto Betrag" Type="number"
                                                             Value={this.state.SubTotal} ReadOnly={true}
                                                         />
                                                     </div>
@@ -748,7 +748,7 @@ class ListPayables extends Component {
                                                 <hr style={{ lineHeight: 5, borderColor: 'black' }}></hr>
                                                 <div className="row">
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
-                                                        <AMSInputField Label="Netto Betrag" PlaceholderText="Netto Betrag" Type="number"
+                                                        <AMSInputField Label="Insgesamt" PlaceholderText="Insgesamt" Type="number"
                                                             Value={this.state.NetPayment} ReadOnly={true}
                                                         />
                                                     </div>

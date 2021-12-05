@@ -388,7 +388,7 @@ class RptAppointment extends Component {
                         />
                     </div>
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Paragraph" PlaceholderText="Paragraph" Type="number"
+                        <AMSInputField Label="Pauschale" PlaceholderText="Pauschale" Type="number"
                             Value={this.state.Paragraph} onChange={(val) => this.setState({ Paragraph: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => { }} ReadOnly={true}
                         />
@@ -396,7 +396,7 @@ class RptAppointment extends Component {
                 </div>
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                        <AMSInputField Label="Postage" PlaceholderText="Postage" Type="number"
+                        <AMSInputField Label="Porto" PlaceholderText="Porto" Type="number"
                             Value={this.state.Postage} onChange={(val) => this.setState({ Postage: val }, () => this.calculateTotal())}
                             ChangeIsValid={(val) => { }} ReadOnly={true}
                         />

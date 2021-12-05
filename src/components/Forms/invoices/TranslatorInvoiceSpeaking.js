@@ -107,7 +107,7 @@ const PDF_File = (props) => {
                         <Text style={{ fontSize: 10 }}>{Invoice.instituteAddress}</Text>
                         {/* <Text style={{ fontSize: 10 }}>30002 Hannover.</Text> */}
                     </View>
-                    <View style={{ display: 'flex', flex: 1, flexDirection: 'row', fontSize: 10, margin: 0 }}>
+                    <View style={{ display: 'flex', flex: 1, flexDirection: 'row', fontSize: 10, margin: 0, marginTop: -30 }}>
                         <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                             <Text>Ihr Zeichen / Ihre Nachricht  </Text>
                             <Text>{Invoice.appointmentId}</Text>
@@ -121,7 +121,7 @@ const PDF_File = (props) => {
                             <Text>{Invoice.appointmentDate}</Text>
                         </View>
                     </View>
-                    <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, margin: 0 }}>
+                    <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, margin: 0, marginTop: -20 }}>
                         <Text>Sehr geehrte Damen und Herren!</Text>
                         <Text style={{ marginTop: 20 }}>Für die Wahrnehmung des folgenden Termins gestatte ich mir, nach dem Justizvergütungs- und
                             Entschädigungsgesetz –JVEG, wie folgt zu berechnen:</Text>
@@ -136,24 +136,24 @@ const PDF_File = (props) => {
                             <Text style={{ display: 'flex', flex: 1 }}>Termin am:</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.appointmentDate}</Text>
                         </View>
-                        <View style={[{ marginTop: 10, marginLeft: 50 }]}>
+                        <View style={[{ marginTop: 15, marginLeft: 50 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Antritt der Reise:</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.startOfTheTrip} Uhr</Text>
                         </View>
-                        <View style={[{ marginTop: 10, marginLeft: 50 }]}>
+                        <View style={[{ marginTop: 15, marginLeft: 50 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Terminbeginn:</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.appointmentStart} Uhr</Text>
                         </View>
-                        <View style={[{ marginTop: 10, marginLeft: 50 }]}>
+                        <View style={[{ marginTop: 15, marginLeft: 50 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Ende des Termins:</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.endOfTheAppointment} Uhr</Text>
                         </View>
-                        <View style={[{ marginTop: 10, marginLeft: 50 }]}>
+                        <View style={[{ marginTop: 15, marginLeft: 50 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Ende der Reise: </Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.endOfTheTrip} Uhr</Text>
                         </View>
                     </View>
-                    <View style={{ fontSize: 10, marginTop: -20 }}>
+                    <View style={{ fontSize: 10, marginTop: 0 }}>
                         <View style={{ width: '100%', alignItems: 'center', marginTop: 0 }}>
                             <Text>_________________________________________________________________________</Text>
                         </View>
@@ -167,13 +167,13 @@ const PDF_File = (props) => {
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>85,00 €</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalHoursCost} €</Text>
                         </View>
-                        <View style={[tableRow, { marginTop: 10 }]}>
+                        <View style={[tableRow, { marginTop: 15 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Fahrtkosten:</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.rideCost}  km    x</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>0,42 € </Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalRideCost} €</Text>
                         </View>
-                        <View style={[tableRow, { marginTop: 10 }]}>
+                        <View style={[tableRow, { marginTop: 15 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Tagegeld:</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.dailyAllowance} Tage   x</Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>14,00 €</Text>
@@ -188,13 +188,13 @@ const PDF_File = (props) => {
                             <Text style={{ display: 'flex', flex: 1 }}></Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.subTotal} €</Text>
                         </View>
-                        <View style={[tableRow, { marginTop: 10 }]}>
+                        <View style={[tableRow, { marginTop: 15 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>zzgl. MwSt. ({Invoice.tax}%):</Text>
                             <Text style={{ display: 'flex', flex: 1 }}></Text>
                             <Text style={{ display: 'flex', flex: 1 }}></Text>
                             <Text style={{ display: 'flex', flex: 1, justifyContent: 'flex-end', textAlign: 'right' }}>{Invoice.totalTax} €</Text>
                         </View>
-                        <View style={[tableRow, { marginTop: 10 }]}>
+                        <View style={[tableRow, { marginTop: 15 }]}>
                             <Text style={{ display: 'flex', flex: 1 }}>Bahn/Parktickets::</Text>
                             <Text style={{ display: 'flex', flex: 1 }}></Text>
                             <Text style={{ display: 'flex', flex: 1 }}></Text>
