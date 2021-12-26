@@ -3,6 +3,8 @@ import { usePDF, PDFViewer, Document, Page, Text, View, StyleSheet, Image } from
 import companyLogo from '../../../assets/head_image.png'
 import { CommonValues } from '../../../constants/staticValues';
 import AppointmentService from '../../../api/appointments/appointmentservice';
+import moment from 'moment'
+import 'moment/locale/de';
 
 // Create styles
 const styles = StyleSheet.create({
@@ -124,7 +126,7 @@ const PDF_File = (props) => {
                         </View>
                         <View style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                             <Text>Datum</Text>
-                            <Text>{Invoice.appointmentDate}</Text>
+                            <Text>{moment().format('DD.MM.YYYY')}</Text>
                         </View>
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10 }}>
@@ -194,14 +196,14 @@ const PDF_File = (props) => {
                             u.a. Konto und verbleibe</Text>
                         <Text style={{ marginTop: 20 }}>mit freundlichen Grüßen</Text>
                     </View>
-                    <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginBottom: 10, marginTop: 10 }}>
+                    <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 70 }}>
                         <Text>i. A. Huzaifa A. Sagri</Text>
-                        <Text style={{ marginTop: 10 }}>Anlage: Zeilenangabe, Übersetzung, Original</Text>
+                        <Text style={{ marginTop: 5 }}>Anlage: Zeilenangabe, Übersetzung, Original</Text>
                     </View>
                     <View style={{ marginTop: 5 }}>
                         <Text style={{ color: 'blue' }}>__________________________________________________</Text>
                     </View>
-                    <View style={{ display: 'flex', flex: 1, flexDirection: 'row', marginTop: 10, fontSize: 10 }}>
+                    <View style={{ display: 'flex', flex: 1, flexDirection: 'row', marginTop: 5, fontSize: 10 }}>
                         <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 8 }}>
                             <Text>Übersetzungsbüro Qureshi</Text>
                             <Text>Jorindeweg 2</Text>

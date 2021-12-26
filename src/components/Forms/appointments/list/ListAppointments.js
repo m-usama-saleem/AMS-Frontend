@@ -115,8 +115,8 @@ class ListAppointments extends Component {
             }
         })
             .catch(err => {
-                // this.growl.show({ severity: 'error', summary: 'Error', detail: err });
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error:' });
+                // this.growl.show({ severity: 'error', summary: 'Fehler', detail: err });
+                this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Error:' });
             })
     }
 
@@ -195,7 +195,7 @@ class ListAppointments extends Component {
                     this.SaveAppointment();
                 }
                 else {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Auftrag erstellen' });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim Auftrag erstellen' });
                     this.setState({ isLoading: false });
                 }
             });
@@ -238,7 +238,7 @@ class ListAppointments extends Component {
                 this.service.Add(app)
                     .then((data) => {
                         if (data.success == true) {
-                            this.growl.show({ severity: 'success', summary: 'Success', detail: 'Termin erfolgreich erstellt' });
+                            this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Termin erfolgreich erstellt' });
                             this.setState({
                                 isLoading: false,
                                 displayCreateDialog: false
@@ -249,7 +249,7 @@ class ListAppointments extends Component {
                         }
                     })
                     .catch((error) => {
-                        this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Auftrag erstellen' });
+                        this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim Auftrag erstellen' });
                         this.setState({ isLoading: false });
                     })
             })
@@ -258,7 +258,7 @@ class ListAppointments extends Component {
             this.service.Add(app)
                 .then((data) => {
                     if (data.success == true) {
-                        this.growl.show({ severity: 'success', summary: 'Success', detail: 'Termin erfolgreich erstellt' });
+                        this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Termin erfolgreich erstellt' });
                         this.setState({
                             isLoading: false,
                             displayCreateDialog: false
@@ -269,7 +269,7 @@ class ListAppointments extends Component {
                     }
                 })
                 .catch((error) => {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Auftrag erstellen' });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim Auftrag erstellen' });
                     this.setState({ isLoading: false });
                 })
         }
@@ -283,7 +283,7 @@ class ListAppointments extends Component {
                     this.EditAppointment();
                 }
                 else {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Auftrag aktualisieren' });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim Auftrag aktualisieren' });
                     this.setState({ isLoading: false });
                 }
             })
@@ -327,7 +327,7 @@ class ListAppointments extends Component {
                 this.service.Edit(app)
                     .then((data) => {
                         if (data.success == true) {
-                            this.growl.show({ severity: 'success', summary: 'Success', detail: 'Termin erfolgreich aktualisiert' });
+                            this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Termin erfolgreich aktualisiert' });
 
                             this.setState({
                                 isLoading: false,
@@ -339,7 +339,7 @@ class ListAppointments extends Component {
                         }
                     })
                     .catch((error) => {
-                        this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Auftrag aktualisieren' });
+                        this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim Auftrag aktualisieren' });
                         this.setState({ isLoading: false });
                     })
             });
@@ -350,7 +350,7 @@ class ListAppointments extends Component {
             this.service.Edit(app)
                 .then((data) => {
                     if (data.success == true) {
-                        this.growl.show({ severity: 'success', summary: 'Success', detail: 'Termin erfolgreich aktualisiert' });
+                        this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Termin erfolgreich aktualisiert' });
                         this.setState({
                             isLoading: false,
                             displayEditDialog: false
@@ -361,14 +361,13 @@ class ListAppointments extends Component {
                     }
                 })
                 .catch((error) => {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Auftrag aktualisieren' });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim Auftrag aktualisieren' });
                     this.setState({ isLoading: false });
                 })
         }
     }
 
     onTranslatorSelected(obj) {
-        debugger
         var LanguageSelection = [];
         const translator_languages = obj.languages.split(',');
         translator_languages.forEach(name => {
@@ -406,7 +405,6 @@ class ListAppointments extends Component {
 
             var entry_date = moment(appointment.entryDate, "DD-MM-YYYY").format('L');
             var app_date = moment(appointment.appointmentDate, "DD-MM-YYYY");
-            debugger
             if (appointment) {
                 this.setState({
                     selectedAppointmentId: appointment.id,
@@ -457,7 +455,7 @@ class ListAppointments extends Component {
                 var ind = AllAppointments.findIndex(x => x.id == id);
                 AllAppointments[ind].status = "bestätigt";
 
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Termin erfolgreich genehmigt' });
+                this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Termin erfolgreich genehmigt' });
                 this.setState({
                     AllAppointments,
                     displayApproveDialog: false,
@@ -472,7 +470,7 @@ class ListAppointments extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayApproveDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler beim Genehmigen des Termins' });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Genehmigen des Termins' });
                 });
         }
     }
@@ -484,7 +482,7 @@ class ListAppointments extends Component {
         if (id != undefined && id != null && id != 0) {
             this.service.Delete({ id, text, userId }).then(() => {
                 var list = this.state.AllAppointments.filter(x => x.id !== id)
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Termin erfolgreich entfernt' });
+                this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Termin erfolgreich entfernt' });
                 this.setState({
                     AllAppointments: [...list],
                     displayDeleteDialog: false,
@@ -494,7 +492,7 @@ class ListAppointments extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayDeleteDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler beim Löschen des Termins' });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Löschen des Termins' });
                 });
         }
     }
@@ -661,8 +659,8 @@ class ListAppointments extends Component {
                                         </span>
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <AMSInputField Label="Remarks" Type="text-area"
-                                            Value={this.state.Remarks} PlaceholderText="Remarks"
+                                        <AMSInputField Label="Bemerkungen" Type="text-area"
+                                            Value={this.state.Remarks} PlaceholderText="Bemerkungen"
                                             onChange={(val) => this.setState({ Remarks: val })}
                                             ChangeIsValid={(val) => { }}
                                         />
@@ -807,8 +805,8 @@ class ListAppointments extends Component {
                                         </span>
                                     </div>
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                        <AMSInputField Label="Remarks" Type="text-area"
-                                            Value={this.state.Remarks} PlaceholderText="Remarks"
+                                        <AMSInputField Label="Bemerkungen" Type="text-area"
+                                            Value={this.state.Remarks} PlaceholderText="Bemerkungen"
                                             onChange={(val) => this.setState({ Remarks: val })}
                                             ChangeIsValid={(val) => { }}
                                         />

@@ -63,7 +63,7 @@ class InstitutionList extends Component {
             })
             .catch(error => {
                 this.setState({ loading: false, error: error })
-                this.growl.show({ severity: 'error', summary: 'Error', detail: error });
+                this.growl.show({ severity: 'error', summary: 'Fehler', detail: error });
             });
     }
 
@@ -82,7 +82,7 @@ class InstitutionList extends Component {
         if (id != undefined && id != null && id != 0) {
             this.userSerivce.DeleteInstitution(id).then(() => {
                 var list = this.state.users.filter(x => x.id !== id)
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Auftraggeber erfolgreich entfernt' });
+                this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Auftraggeber erfolgreich entfernt' });
                 this.setState({
                     users: [...list],
                     displayDeleteDialog: false,
@@ -92,7 +92,7 @@ class InstitutionList extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayDeleteDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: error });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: error });
                 });
         }
     }
@@ -119,7 +119,7 @@ class InstitutionList extends Component {
             .AddInstitution(user)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Auftraggeber erfolgreich erstellt' });
+                    this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Auftraggeber erfolgreich erstellt' });
                     var savedUser = data.user;
                     this.setState({
                         users: [...this.state.users, savedUser],
@@ -130,7 +130,7 @@ class InstitutionList extends Component {
                 }
             })
             .catch((error) => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Arbeitgeber hinzufügen' });
+                this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim Arbeitgeber hinzufügen' });
                 this.setState({ isLoading: false });
             })
     }
@@ -148,7 +148,7 @@ class InstitutionList extends Component {
             .EditInstitution(user)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Auftraggeber erfolgreich aktualisiert' });
+                    this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Auftraggeber erfolgreich aktualisiert' });
                     var UsersList = this.state.users;
 
                     var ind = UsersList.findIndex(x => x.id == user.Id);
@@ -170,7 +170,7 @@ class InstitutionList extends Component {
                 }
             })
             .catch((error) => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Arbeitgeber aktualisieren' });
+                this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim Arbeitgeber aktualisieren' });
                 this.setState({ isLoading: false });
             })
     }
@@ -198,7 +198,7 @@ class InstitutionList extends Component {
                     this.saveUser();
                 }
                 else {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Arbeitgeber hinzufügen' });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim Arbeitgeber hinzufügen' });
                     this.setState({ isLoading: false });
                 }
             });
@@ -211,7 +211,7 @@ class InstitutionList extends Component {
                     this.editUser();
                 }
                 else {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Arbeitgeber aktualisieren' });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim Arbeitgeber aktualisieren' });
                     this.setState({ isLoading: false });
                 }
             });

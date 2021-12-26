@@ -53,7 +53,6 @@ export default class TranslatorContract extends Component {
     }
 
     render() {
-        debugger
         return (
             this.state.ready && <PDFViewer style={{ width: '100%', height: '100%' }}>
                 <PDF_File Invoice={this.state.Invoice} />
@@ -65,6 +64,24 @@ export default class TranslatorContract extends Component {
 
 const PDF_File = (props) => {
     const [Invoice, setInvoice] = useState(props.Invoice)
+    const [MainText, setMainText] = useState("");
+    
+    //  <Text style={{ marginTop: 15 }}>Wie mit Ihnen vereinbart, werden Sie beim</Text>
+    //                     <Text style={{ marginTop: 15 }}>{Invoice.institutionAddress}</Text>
+    //                     <Text style={{ marginTop: 15 }}>als {Invoice.translatorType} für die Sprache {Invoice.language} eingesetzt.</Text>
+    //                     <Text style={{ marginTop: 15 }}>Bitte melden Sie sich
+    //                         {/* {Invoice.appointmentDate} */} {moment(Invoice.appointmentDate, "DD-MM-YYYY").locale('de').format('dddd DD MMMM YYYY')} um  {Invoice.appointmentTime} Uhr in Saal {Invoice.roomNumber}.</Text>
+    //                     < Text style={{ marginTop: 15 }}>Nachdrücklich wird um Einhaltung des Termins gebeten.</Text>
+    //                     <Text style={{ marginTop: 15 }}>Ihre Entschädigung erfolgt nach der mit Ihnen getroffenen Vereinbarung</Text>
+    //                     <Text style={{ marginTop: 15 }}>Ich weise Sie darauf hin, dass alle Folgetermine in dieser Sache nur über uns abzurechnen sind.</Text>
+    
+    useEffect(() => {
+        var txt = "Wie mit Ihnen vereinbart, werden Sie beim " + Invoice.institutionAddress +
+            " als " + Invoice.translatorType + " für die Sprache " + Invoice.language + " eingesetzt. Bitte melden Sie sich" +
+            moment(Invoice.appointmentDate, "DD-MM-YYYY").locale('de').format('dddd DD MMMM YYYY') + " um  " + Invoice.appointmentTime + " Uhr in Saal" + Invoice.roomNumber + "." +
+            " Nachdrücklich wird um Einhaltung des Termins gebeten. Ihre Entschädigung erfolgt nach der mit Ihnen getroffenen Vereinbarung Ich weise Sie darauf hin, dass alle Folgetermine in dieser Sache nur über uns abzurechnen sind.";
+        setMainText(txt);
+    });
 
     return (
         <Document>
@@ -101,14 +118,7 @@ const PDF_File = (props) => {
                         <Text>Sehr geehrte Damen und Herren!</Text>
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 10 }}>
-                        <Text style={{ marginTop: 15 }}>Wie mit Ihnen vereinbart, werden Sie beim</Text>
-                        <Text style={{ marginTop: 15 }}>{Invoice.institutionAddress}</Text>
-                        <Text style={{ marginTop: 15 }}>als {Invoice.translatorType} für die Sprache {Invoice.language} eingesetzt.</Text>
-                        <Text style={{ marginTop: 15 }}>Bitte melden Sie sich
-                            {/* {Invoice.appointmentDate} */} {moment(Invoice.appointmentDate, "DD-MM-YYYY").locale('de').format('dddd DD MMMM YYYY')} um  {Invoice.appointmentTime} Uhr in Saal {Invoice.roomNumber}.</Text>
-                        < Text style={{ marginTop: 15 }}>Nachdrücklich wird um Einhaltung des Termins gebeten.</Text>
-                        <Text style={{ marginTop: 15 }}>Ihre Entschädigung erfolgt nach der mit Ihnen getroffenen Vereinbarung</Text>
-                        <Text style={{ marginTop: 15 }}>Ich weise Sie darauf hin, dass alle Folgetermine in dieser Sache nur über uns abzurechnen sind.</Text>
+                       <Text>{MainText}</Text>
                     </View>
                     <View style={{ display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 90 }}>
                         <Text>mit freundlichen Grüßen</Text>
@@ -117,9 +127,9 @@ const PDF_File = (props) => {
                     <View style={{
                         display: 'flex', flex: 1, flexDirection: 'column', fontSize: 10, marginTop: 20, alignItems: 'center'
                     }}>
-                        <Text style={{
-                            textAlign: 'center', width: '80%', height: '100%'
-                        }}>{Invoice.remarks}</Text>
+                        <Text style={{ textAlign: 'center', marginTop: 20,marginBottom: 10  }}>Bemerkungen</Text>
+                        <Text style={{ color: 'black', marginTop: -10 }}>____________</Text>
+                        <Text style={{ textAlign: 'center', width: '80%', height: '100%', marginTop: 20 }}>{Invoice.remarks}</Text>
                     </View>
 
                     <View style={{ marginTop: 150, fontSize: 10 }}>

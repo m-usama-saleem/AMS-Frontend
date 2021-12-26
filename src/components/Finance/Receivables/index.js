@@ -85,7 +85,7 @@ class ListReceivables extends Component {
             }
         })
             .catch(err => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: err });
+                this.growl.show({ severity: 'error', summary: 'Fehler', detail: err });
             })
     }
 
@@ -149,7 +149,7 @@ class ListReceivables extends Component {
         this.service.Edit(app)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Forderungen erfolgreich aktualisiert' });
+                    this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Forderungen erfolgreich aktualisiert' });
                     var AllReceivables = this.state.AllReceivables;
                     var editedReceivable = data.finance;
                     var ind = AllReceivables.findIndex(x => x.id == editedReceivable.id);
@@ -169,7 +169,7 @@ class ListReceivables extends Component {
                 }
             })
             .catch((error) => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim aktualisieren von Forderungen' });
+                this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim aktualisieren von Forderungen' });
                 this.setState({ isLoading: false });
             })
     }
@@ -233,7 +233,7 @@ class ListReceivables extends Component {
                 var ind = AllReceivables.findIndex(x => x.id == id);
                 AllReceivables[ind].status = "bestätigt";
 
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Forderungen erhalten' });
+                this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Forderungen erhalten' });
                 this.setState({
                     AllReceivables,
                     displayApproveDialog: false,
@@ -243,7 +243,7 @@ class ListReceivables extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayApproveDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler beim Erhalten' });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Erhalten' });
                 });
         }
     }
@@ -269,7 +269,7 @@ class ListReceivables extends Component {
                     AllReceivables[ind].status = "bestätigt";
                 });
 
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Alle Forderungen erhalten' });
+                this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Alle Forderungen erhalten' });
                 this.setState({
                     AllReceivables,
                     displayMultiApproveDialog: false,
@@ -279,7 +279,7 @@ class ListReceivables extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayMultiApproveDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler beim Erhalten' });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Erhalten' });
                 });
         }
     }

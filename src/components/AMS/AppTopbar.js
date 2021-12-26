@@ -3,6 +3,7 @@ import { InputText } from 'primereact/inputtext';
 import PropTypes from 'prop-types';
 import { Menu } from 'primereact/menu';
 import AuthenticationService from '../../api/user';
+import * as ROUTES from '../../constants/routes';
 
 export class AppTopbar extends Component {
 
@@ -24,6 +25,10 @@ export class AppTopbar extends Component {
     signOut = () => {
         this.authenticationService.logout();
     }
+    userManagement = () => {
+        window.location.hash = ROUTES.USER_LIST;
+    }
+
     toggleMenu() {
         if (this.state.showMenu == "none") {
             this.setState({ showMenu: 'block' })
@@ -38,6 +43,12 @@ export class AppTopbar extends Component {
                 label: 'abmelden', icon: 'pi pi-sign-out',
                 command: (event) => {
                     this.signOut();
+                }
+            },
+             {
+                label: 'Auftragnehmer', icon: 'fa fa-user-plus',
+                command: (event) => {
+                    this.userManagement();
                 }
             },
         ];
@@ -68,17 +79,17 @@ export class AppTopbar extends Component {
                     <button className="p-link" onClick={(event) => { this.menuSettings.toggle(event) }}>
                         <span className="layout-topbar-item-text">Settings</span>
                         <span className="layout-topbar-icon pi pi-cog" />
-                    </button>
+                    </button> */}
                     <Menu style={{ right: 0 }} className="" model={userItems} popup={true} ref={el => this.menuUserItem = el} />
                     <button className="p-link" onClick={(event) => { this.menuUserItem.toggle(event) }}>
                         <span className="layout-topbar-item-text">User</span>
                         <span className="layout-topbar-icon pi pi-user" />
-                    </button> */}
-                    <div className="dropdown">
+                    </button>
+                    {/* <div className="dropdown">
                         <button className="btn btn-secondary dropdown-toggle" onClick={() => this.toggleMenu()}>
                             {this.props.authUser.name}
                         </button>
-                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{ display: this.state.showMenu }}
+                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{ marginRight:20, display: this.state.showMenu }}
                             onClick={() => this.signOut()} >
                             <button className="p-link layout-menu-button" >
                                 <span style={{ fontSize: 16, color: 'black' }}>abmelden</span>
@@ -87,7 +98,7 @@ export class AppTopbar extends Component {
                                 <span style={{ fontSize: 16, float: 'right', marginRight: 20, color: 'black' }} className="pi pi-sign-out" />
                             </button>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div >
         );

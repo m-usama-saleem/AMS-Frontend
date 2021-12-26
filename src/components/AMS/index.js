@@ -25,12 +25,9 @@ import ListAppointments from '../Forms/appointments/list/ListAppointments';
 import InstitutiontList from '../Institutions';
 import TranslatorList from '../Translators';
 import AppUsers from '../AppUsers';
-import TranslatorInvoice from '../Forms/invoices/TranslatorInvoice';
-import TranslatorInvoiceSpeaking from '../Forms/invoices/TranslatorInvoiceSpeaking';
 import ListPayables from '../Finance/Payables';
 import ListReceivables from '../Finance/Receivables';
 import '../SignIn/SignIn.scss';
-import { TranslatorContract } from '../Forms/invoices/Contract';
 import RptAppointment from '../Reports/RptAppointment';
 import ShowReport from '../Forms/invoices';
 
@@ -155,9 +152,9 @@ class AuthenticatedApp extends Component {
             {
                 label: 'Auftraggeber', icon: 'fa fa-university', to: ROUTES.INSTITUTION_LIST
             },
-            {
-                label: 'Auftragnehmer', icon: 'fa fa-user-plus', to: ROUTES.USER_LIST
-            },
+            // {
+            //     label: 'Auftragnehmer', icon: 'fa fa-user-plus', to: ROUTES.USER_LIST
+            // },
             {
                 label: 'Berichte', icon: 'fa fa-file',
                 items: [

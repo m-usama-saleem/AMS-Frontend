@@ -76,7 +76,7 @@ class ListPayables extends Component {
             }
         })
             .catch(err => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: err });
+                this.growl.show({ severity: 'error', summary: 'Fehler', detail: err });
             })
     }
 
@@ -147,7 +147,7 @@ class ListPayables extends Component {
         this.service.Edit(app)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Verbindlichkeiten erfolgreich aktualisiert' });
+                    this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Verbindlichkeiten erfolgreich aktualisiert' });
                     var editedPayable = data.finance;
                     var AllPayables = this.state.AllPayables;
                     var ind = AllPayables.findIndex(x => x.id == editedPayable.id);
@@ -180,7 +180,7 @@ class ListPayables extends Component {
                 }
             })
             .catch((error) => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim aktualisieren von Verbindlichkeiten' });
+                this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim aktualisieren von Verbindlichkeiten' });
                 this.setState({ isLoading: false });
             })
     }
@@ -258,7 +258,7 @@ class ListPayables extends Component {
                 var ind = AllPayables.findIndex(x => x.id == id);
                 AllPayables[ind].status = "bestätigt";
 
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Verbindlichkeiten getilgt' });
+                this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Verbindlichkeiten getilgt' });
                 this.setState({
                     AllPayables,
                     displayApproveDialog: false,
@@ -268,7 +268,7 @@ class ListPayables extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayApproveDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler beim Zahlen' });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Zahlen' });
                 });
         }
     }
@@ -293,7 +293,7 @@ class ListPayables extends Component {
                     AllPayables[ind].status = "bestätigt";
                 });
 
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Alle Verbindlichkeiten wurden bezahlt' });
+                this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Alle Verbindlichkeiten wurden bezahlt' });
                 this.setState({
                     AllPayables,
                     displayMultiApproveDialog: false,
@@ -303,7 +303,7 @@ class ListPayables extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayMultiApproveDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Error Paying Payables' });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Error Paying Payables' });
                 });
         }
     }
@@ -734,7 +734,7 @@ class ListPayables extends Component {
                                                 <hr style={{ lineHeight: 5, borderColor: 'black' }}></hr>
                                                 <div className="row">
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }}>
-                                                        <AMSInputField Label="Netto Betrag" PlaceholderText="Netto Betrag" Type="number"
+                                                        <AMSInputField Label="Insgesamt" PlaceholderText="Insgesamt" Type="number"
                                                             Value={this.state.SubTotal} ReadOnly={true}
                                                         />
                                                     </div>
@@ -748,7 +748,7 @@ class ListPayables extends Component {
                                                 <hr style={{ lineHeight: 5, borderColor: 'black' }}></hr>
                                                 <div className="row">
                                                     <div className=" col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
-                                                        <AMSInputField Label="Insgesamt" PlaceholderText="Insgesamt" Type="number"
+                                                        <AMSInputField Label="Netto Betrag" PlaceholderText="Netto Betrag" Type="number"
                                                             Value={this.state.NetPayment} ReadOnly={true}
                                                         />
                                                     </div>

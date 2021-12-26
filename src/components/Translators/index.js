@@ -73,7 +73,7 @@ class TranslatorList extends Component {
             })
             .catch(error => {
                 this.setState({ loading: false, error: error })
-                this.growl.show({ severity: 'error', summary: 'Error', detail: error });
+                this.growl.show({ severity: 'error', summary: 'Fehler', detail: error });
             });
     }
 
@@ -92,7 +92,7 @@ class TranslatorList extends Component {
         if (id != undefined && id != null && id != 0) {
             this.userSerivce.DeleteTranslator(id).then(() => {
                 var list = this.state.users.filter(x => x.id !== id)
-                this.growl.show({ severity: 'success', summary: 'Success', detail: 'Dolmetscher erfolgreich entfernt' });
+                this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Dolmetscher erfolgreich entfernt' });
                 this.setState({
                     users: [...list],
                     displayDeleteDialog: false,
@@ -102,7 +102,7 @@ class TranslatorList extends Component {
             })
                 .catch(error => {
                     this.setState({ loading: false, error: error, displayDeleteDialog: false, })
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: error });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: error });
                 });
         }
     }
@@ -139,7 +139,7 @@ class TranslatorList extends Component {
             .AddTranslator(user)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Dolmetscher erfolgreich erstellt' });
+                    this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Dolmetscher erfolgreich erstellt' });
                     var savedUser = data.user;
                     this.setState({
                         users: [...this.state.users, savedUser],
@@ -151,7 +151,7 @@ class TranslatorList extends Component {
                 }
             })
             .catch((error) => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Dolmetscher hinzufügen' });
+                this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim Dolmetscher hinzufügen' });
                 this.setState({ isLoading: false });
             })
     }
@@ -179,7 +179,7 @@ class TranslatorList extends Component {
             .EditTranslator(user)
             .then((data) => {
                 if (data.success == true) {
-                    this.growl.show({ severity: 'success', summary: 'Success', detail: 'Dolmetscher erfolgreich aktualisiert' });
+                    this.growl.show({ severity: 'success', summary: 'Erfolg', detail: 'Dolmetscher erfolgreich aktualisiert' });
                     var UsersList = this.state.users;
                     var ind = UsersList.findIndex(x => x.id == user.Id);
                     UsersList[ind] = {
@@ -206,7 +206,7 @@ class TranslatorList extends Component {
                 }
             })
             .catch((error) => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Dolmetscher aktaulisieren' });
+                this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim Dolmetscher aktaulisieren' });
                 this.setState({ isLoading: false });
             })
     }
@@ -244,7 +244,7 @@ class TranslatorList extends Component {
                     this.saveUser();
                 }
                 else {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Dolmetscher hinzufügen' });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim Dolmetscher hinzufügen' });
                     this.setState({ isLoading: false });
                 }
             });
@@ -258,7 +258,7 @@ class TranslatorList extends Component {
                     this.editUser();
                 }
                 else {
-                    this.growl.show({ severity: 'error', summary: 'Error', detail: 'Fehler: beim Dolmetscher aktaulisieren' });
+                    this.growl.show({ severity: 'error', summary: 'Fehler', detail: 'Fehler: beim Dolmetscher aktaulisieren' });
                     this.setState({ isLoading: false });
                 }
             });

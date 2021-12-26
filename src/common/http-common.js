@@ -8,20 +8,19 @@ export const handleResponseError = (error) => {
   if (error !== undefined && error !== null) {
     if (error.response !== undefined && error.response !== null) {
       if ([401, 403].indexOf(error.response.status) !== -1) {
-        const errorMsg = "Access Denied, Request Admin for Access";
-        console.log("Denied!!!!")
+        const errorMsg = "Zugriff verweigert, Admin für Zugriff anfordern";
         return errorMsg
       }
       else if (error.response.status === 304) {
-        const errorMsg = "No change found in given data to update";
+        const errorMsg = "Keine Änderung in den gegebenen Daten zur Aktualisierung gefunden";
         return errorMsg;
       }
       else if (error.response.status === 500) {
-        const errorMsg = "Internal Server Error, Contact Support";
+        const errorMsg = "Interner Serverfehler, Support kontaktieren";
         return errorMsg;
       }
     } else {
-      const errorMsg = "Internal Server Error, Contact Support";
+      const errorMsg = "Interner Serverfehler, Support kontaktieren";
       return errorMsg;
     }
   }

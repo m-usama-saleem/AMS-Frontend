@@ -92,7 +92,7 @@ class RptAppointment extends Component {
                     x.payable.appointmentDate = moment(x.payable.appointmentDate).format('L')
                     x.receivable.appointmentDate = moment(x.receivable.appointmentDate).format('L')
 
-                    if (new Date(x.appointment.deletedDate).toLocaleDateString() == "1/1/1")
+                    if (x.appointment.deletedDate == null || new Date(x.appointment.deletedDate).toLocaleDateString() == "1/1/1")
                         x.appointment.deletedDate = ""
                     else
                         x.appointment.deletedDate = moment(x.appointment.deletedDate).format('L')
@@ -117,7 +117,7 @@ class RptAppointment extends Component {
             }
         })
             .catch(err => {
-                this.growl.show({ severity: 'error', summary: 'Error', detail: err });
+                this.growl.show({ severity: 'error', summary: 'Fehler', detail: err });
             })
     }
 
@@ -151,6 +151,7 @@ class RptAppointment extends Component {
         })
         var entry_date = moment(appointment.entryDate, "DD-MM-YYYY").format('L');
         var app_date = moment(appointment.appointmentDate, "DD-MM-YYYY").format('L');
+        var dlt_date =appointment.deletedDate ?  moment(appointment.deletedDate, "DD-MM-YYYY").format('L') : "";
 
         if (appointment) {
             this.setState({
@@ -167,7 +168,7 @@ class RptAppointment extends Component {
                 displayEditDialog: true,
                 langList: LanguageSelection,
                 DeletedReason: appointment.deletedReason,
-                DeletedDate: appointment.deletedDate,
+                DeletedDate: dlt_date,
                 AttachmentFiles: appointment.attachments
             })
         }
@@ -635,18 +636,7 @@ class RptAppointment extends Component {
             </Dialog>
         )
     }
-
-    // exportPdf() {
-    //     import('jspdf').then(jsPDF => {
-    //         import('jspdf-autotable').then(() => {
-    //             const doc = new jsPDF.default(0, 0);
-    //             debugger
-    //             doc.autoTable(this.exportColumns, this.state.AllAppointments);
-    //             doc.save('data.pdf');
-    //         })
-    //     })
-    // }
-
+    
     exportCSV(selectionOnly) {
         this.dt.exportCSV({ selectionOnly });
     }

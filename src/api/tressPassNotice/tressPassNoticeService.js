@@ -105,7 +105,6 @@ class TressPassNoticeService {
                 .then(response => {
                     if (response.data !== null) {
                         resolve(response.data)
-                        debugger
                     }
                 })
                 .catch(function (error) {
