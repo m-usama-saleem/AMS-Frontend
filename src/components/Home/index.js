@@ -49,21 +49,21 @@ class HomePage extends Component {
         <div className="row">
           <div className="card col col-md-6" style={{ height: 300, marginLeft: 10 }}>
             <h3>Abgeschlossene Verbindlichkeiten</h3>
-            <AMS_BarChart Data={CompletePayables} Label1="SCHREIBEN" Label2="SPRACHEN" Type="type" />
+            <AMS_BarChart Data={CompletePayables} Label1="Dolmetschen" Label2="Übersetzen" Type="type" />
           </div>
           <div className="card col col-md-6" style={{ height: 300, marginLeft: 10, marginRight: 10 }}>
             <h3>Abgeschlossene Forderungen</h3>
-            <AMS_BarChart Data={CompleteReceivables} Label1="SCHREIBEN" Label2="SPRACHEN" Type="type" />
+            <AMS_BarChart Data={CompleteReceivables} Label1="Dolmetschen" Label2="Übersetzen" Type="type" />
           </div>
         </div>
         <div className="row">
           <div className="card col col-md-6" style={{ height: 300, marginLeft: 10 }}>
             <h3>Ausstehende Verbindlichkeiten</h3>
-            <AMS_BarChart Data={IncompletePayables} Label1="SCHREIBEN" Label2="SPRACHEN" Type="type" />
+            <AMS_BarChart Data={IncompletePayables} Label1="Dolmetschen" Label2="Übersetzen" Type="type" />
           </div>
           <div className="card col col-md-6" style={{ height: 300, marginLeft: 10, marginRight: 10 }}>
             <h3>Ausstehende Forderungen</h3>
-            <AMS_BarChart Data={IncompleteReceivables} Label1="SCHREIBEN" Label2="SPRACHEN" Type="type" />
+            <AMS_BarChart Data={IncompleteReceivables} Label1="Dolmetschen" Label2="Übersetzen" Type="type" />
           </div>
         </div>
       </div>

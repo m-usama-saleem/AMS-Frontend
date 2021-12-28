@@ -52,7 +52,7 @@ class ListPayables extends Component {
         this.exportCSV = this.exportCSV.bind(this);
         this.cols = [
             { field: 'appointmentId', header: 'Aktenzeichen' },
-            { field: 'appointmentType', header: 'Typ' },
+            { field: 'app_type', header: 'Typ' },
             { field: 'appointmentInstitute', header: 'Auftraggeber' },
             { field: 'appointmentTranslator', header: 'Dolmetscher/ Übersetzer' },
             { field: 'netPayment', header: 'Insgesamt' },
@@ -72,6 +72,10 @@ class ListPayables extends Component {
     getPayableList() {
         this.service.GetAll().then(data => {
             if (data && data !== "" && data.length > 0) {
+                data.forEach(obj => {
+                    var app_type = ListAppointmentType.find(x => x.value === obj.appointmentType);
+                    obj.app_type = app_type.name;
+                });
                 this.setState({ AllPayables: data, filteredData: data })
             }
         })
@@ -652,7 +656,7 @@ class ListPayables extends Component {
                                 style={{ fontSize: 12 }}
                             >
                                 <Column field="appointmentId" header="Aktenzeichen" sortable={true} />
-                                <Column field="appointmentType" header="Typ" sortable={true} />
+                                <Column field="app_type" header="Typ" sortable={true} />
                                 <Column field="appointmentInstitute" header="Auftraggeber" sortable={true} />
                                 <Column field="appointmentTranslator" header="Dolmetscher/ Übersetzer" sortable={true} />
                                 <Column field="netPayment" header="Insgesamt" sortable={true} />

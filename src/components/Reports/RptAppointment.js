@@ -60,7 +60,7 @@ class RptAppointment extends Component {
             { field: 'appointment.appointmentDate', header: 'Termin' },
             { field: 'appointment.translatorName', header: 'Dolmetscher/ Übersetzer' },
             { field: 'appointment.institutionName', header: 'Institution' },
-            { field: 'appointment.type', header: 'Typ' },
+            { field: 'appointment.app_type', header: 'Typ' },
             { field: 'appointment.status', header: 'Status' },
             { field: 'payable.netPayment', header: 'Insgesamt' },
             { field: 'receivable.netPayment', header: 'Forderungsbetrag' }
@@ -107,6 +107,8 @@ class RptAppointment extends Component {
                     else
                         x.appointment.completionDate = moment(x.appointment.completionDate).format('L')
 
+                    var app_type = ListAppointmentType.find(y => y.value === x.appointment.type);
+                    x.appointment.app_type = app_type.name;
                 })
                 this.appointments = data;
                 this.setState({
@@ -180,7 +182,7 @@ class RptAppointment extends Component {
 
         var AppointmentType = ListAppointmentType.map(obj =>
             <div key={obj.value} style={{ display: 'inline-block' }}>
-                <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">{obj.value}</span>
+                <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">{obj.name}</span>
                 <RadioButton value={obj.value} name="Typ" disabled={true}
                     onChange={(e) => this.setState({ Type: e.value })}
                     checked={this.state.Type === obj.value} />
@@ -756,7 +758,7 @@ class RptAppointment extends Component {
                                 <Column field="appointment.completionDate" header="vollendeter Tag" sortable={true} style={{ textAlign: 'center' }} />
                                 <Column field="appointment.translatorName" header="Dolmetscher/ Übersetzer" sortable={true} />
                                 <Column field="appointment.institutionName" header="Auftraggeber" sortable={true} />
-                                <Column field="appointment.type" header="Typ" sortable={true} />
+                                <Column field="appointment.app_type" header="Typ" sortable={true} />
                                 <Column field="appointment.status" header="Status" sortable={true} />
                                 <Column field="payable.netPayment" header="Insgesamt" sortable={true} />
                                 <Column field="receivable.netPayment" header="Forderungsbetrag" sortable={true} />

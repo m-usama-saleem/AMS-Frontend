@@ -179,11 +179,11 @@ export const Languages = [
 
 export const ListAppointmentType = [
     {
-        name: "SCHREIBEN",
+        name: "Dolmetschen",
         value: "SCHREIBEN"
     },
     {
-        name: "SPRACHEN",
+        name: "Übersetzen",
         value: "SPRACHEN"
     },
 ]

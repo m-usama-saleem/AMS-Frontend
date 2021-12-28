@@ -109,6 +109,9 @@ class ListAppointments extends Component {
                 data.forEach(x => {
                     x.appointmentDate = moment(x.appointmentDate).format('L')
                     x.entryDate = moment(x.entryDate).format('L')
+                    
+                    var app_type = ListAppointmentType.find(y => y.value === x.type);
+                    x.app_type = app_type.name;
                 })
                 this.appointments = data;
                 this.setState({ AllAppointments: data })
@@ -547,7 +550,7 @@ class ListAppointments extends Component {
 
         var AppointmentType = ListAppointmentType.map(obj =>
             <div key={obj.value} style={{ display: 'inline-block' }}>
-                <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">{obj.value}</span>
+                <span className="p-col-4 p-sm-4 p-md-3 p-lg-3">{obj.name}</span>
                 <RadioButton value={obj.value} name="Typ"
                     onChange={(e) => this.setState({ Type: e.value })}
                     checked={this.state.Type === obj.value} />
@@ -918,7 +921,7 @@ class ListAppointments extends Component {
                                 <Column field="appointmentDate" header="Termin" sortFunction={(e) => this.sortDates(e)} sortable={true} style={{ textAlign: 'center' }} />
                                 <Column field="translatorName" header="Dolmetscher/ Übersetzer" sortable={true} />
                                 <Column field="institutionName" header="Auftraggeber" sortable={true} />
-                                <Column field="type" header="Typ" sortable={true} />
+                                <Column field="app_type" header="Typ" sortable={true} />
                                 <Column field="status" header="Status" sortable={true} />
                                 <Column header="Aktion" body={this.actionBodyTemplate} style={{ width: 250 }}></Column>
                             </DataTable>
