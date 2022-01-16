@@ -412,7 +412,7 @@ class InstitutionList extends Component {
                                                     </div>
                                                     <div className="col-sm-12 col-md-6 col-lg-6">
                                                         <AMSInputField Label="E-Mail" Type="email" IsRequired={true}
-                                                            Value={this.state.email} ReadOnly={true}
+                                                            Value={this.state.email} 
                                                             onChange={(val) => this.setState({ email: val })}
                                                             ChangeIsValid={(val) => this.setState({ ValidEmail: val })}
                                                             CheckField={this.state.CheckFields}

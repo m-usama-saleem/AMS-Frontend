@@ -71,7 +71,7 @@ class AppointmentFields extends Component {
                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                         <span className="ui-float-label">
                             <label htmlFor="float-input">Datum</label>
-                            <InputText placeholderText="Select Date" value={new Date().toDateString()} type="text" size="30" disabled={true} />
+                            <InputText placeholderText="Datum auswählen" value={new Date().toDateString()} type="text" size="30" disabled={true} />
                         </span>
                     </div>
                 </div>

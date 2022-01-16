@@ -216,7 +216,7 @@ class RptAppointment extends Component {
                                     <div className="col-sm-12 col-md-6 col-lg-6" style={{ marginBottom: 20 }} >
                                         <span className="ui-float-label">
                                             <label htmlFor="float-input">Date</label>
-                                            <InputText placeholderText="Select Date" value={this.state.EntryDate}
+                                            <InputText placeholderText="Datum auswählen" value={this.state.EntryDate}
                                                 type="text" size="30" disabled={true} />
                                         </span>
                                     </div>
@@ -699,12 +699,12 @@ class RptAppointment extends Component {
             </div>
             <div className="col-sm-6 col-md-5 col-lg-5" style={{ display: 'inline-flex' }}>
                 <div className="col-md-5">
-                    <DatePicker className="form-control " dateFormat="dd/MM/yyyy" placeholderText="Select Date"
+                    <DatePicker className="form-control " dateFormat="dd/MM/yyyy" placeholderText="Datum auswählen"
                         selected={this.state.DateFrom} onChange={date => this.onChangeFilter(date, this.state.DateTo)} />
                 </div>
                 <span className="col-md-2" style={{ marginTop: 5 }}> - To - </span>
                 <div className="col-md-5">
-                    <DatePicker className="form-control" dateFormat="dd/MM/yyyy" placeholderText="Select Date"
+                    <DatePicker className="form-control" dateFormat="dd/MM/yyyy" placeholderText="Datum auswählen"
                         selected={this.state.DateTo} onChange={date => this.onChangeFilter(this.state.DateFrom, date)} />
                 </div>
             </div>
